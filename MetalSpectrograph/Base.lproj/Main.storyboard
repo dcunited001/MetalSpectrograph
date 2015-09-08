@@ -670,14 +670,35 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="SpectrographController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="866" height="516"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vZH-pM-gqC" customClass="EZAudioPlot">
+                                <rect key="frame" x="0.0" y="0.0" width="866" height="516"/>
+                                <animations/>
+                            </customView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AE9-na-rG3">
+                                <rect key="frame" x="14" y="468" width="66" height="32"/>
+                                <animations/>
+                                <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VhK-3N-6EV">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="didClickPlay:" target="XfG-lQ-9wD" id="Gcq-fJ-yTi"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <animations/>
                     </view>
+                    <connections>
+                        <outlet property="audioPlot" destination="vZH-pM-gqC" id="Cs7-UU-9pI"/>
+                        <outlet property="btnPlay" destination="AE9-na-rG3" id="X8M-uu-rXB"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="2" y="826"/>
         </scene>
     </scenes>
 </document>

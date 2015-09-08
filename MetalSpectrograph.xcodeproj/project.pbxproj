@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		28AC1FE967E9A51757BEBA2D /* Pods_MetalSpectrograph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3C2A4C027948817E7FDFE24 /* Pods_MetalSpectrograph.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F661B9E5B6D0032B120 /* AppDelegate.swift */; };
-		43199F6B1B9E5B6D0032B120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43199F6A1B9E5B6D0032B120 /* Assets.xcassets */; };
 		43199F6E1B9E5B6D0032B120 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43199F6C1B9E5B6D0032B120 /* Main.storyboard */; };
 		43199F791B9E5B6D0032B120 /* MetalSpectrographTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */; };
 		43199F841B9E5B6D0032B120 /* MetalSpectrographUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */; };
 		43199F921B9E5F100032B120 /* SpectrographController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F911B9E5F100032B120 /* SpectrographController.swift */; settings = {ASSET_TAGS = (); }; };
+		439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB9091B9E86970022BD57 /* come-with-me.mp3 */; settings = {ASSET_TAGS = (); }; };
+		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
+		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +39,6 @@
 		0CB7BD44A089D32869BAAA06 /* Pods-MetalSpectrograph.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalSpectrograph.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MetalSpectrograph/Pods-MetalSpectrograph.debug.xcconfig"; sourceTree = "<group>"; };
 		43199F631B9E5B6D0032B120 /* MetalSpectrograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalSpectrograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43199F661B9E5B6D0032B120 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		43199F6A1B9E5B6D0032B120 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		43199F6D1B9E5B6D0032B120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		43199F6F1B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43199F741B9E5B6D0032B120 /* MetalSpectrographTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetalSpectrographTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +48,9 @@
 		43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalSpectrographUITests.swift; sourceTree = "<group>"; };
 		43199F851B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43199F911B9E5F100032B120 /* SpectrographController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrographController.swift; sourceTree = "<group>"; };
+		439BB9091B9E86970022BD57 /* come-with-me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "come-with-me.mp3"; sourceTree = "<group>"; };
+		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
+		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
 		8F61A2C54C542F45C30821AC /* Pods-MetalSpectrograph.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalSpectrograph.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetalSpectrograph/Pods-MetalSpectrograph.release.xcconfig"; sourceTree = "<group>"; };
 		D3C2A4C027948817E7FDFE24 /* Pods_MetalSpectrograph.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalSpectrograph.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -103,9 +107,11 @@
 			isa = PBXGroup;
 			children = (
 				43199F661B9E5B6D0032B120 /* AppDelegate.swift */,
-				43199F6A1B9E5B6D0032B120 /* Assets.xcassets */,
 				43199F6C1B9E5B6D0032B120 /* Main.storyboard */,
 				43199F6F1B9E5B6D0032B120 /* Info.plist */,
+				439BB9091B9E86970022BD57 /* come-with-me.mp3 */,
+				439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */,
+				439BB90B1B9E86970022BD57 /* good-guys.mp3 */,
 				43199F911B9E5F100032B120 /* SpectrographController.swift */,
 			);
 			path = MetalSpectrograph;
@@ -252,7 +258,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43199F6B1B9E5B6D0032B120 /* Assets.xcassets in Resources */,
+				439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */,
+				439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */,
+				439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */,
 				43199F6E1B9E5B6D0032B120 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
