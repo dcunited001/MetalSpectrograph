@@ -11,11 +11,9 @@ import Cocoa
 import EZAudio
 import MetalKit
 
-class MetalWaveformController: NSViewController, EZAudioPlayerDelegate, EZAudioFFTDelegate {
-    
+class MetalLooperController: BaseMetalController, EZAudioPlayerDelegate, EZAudioFFTDelegate, MetalViewControllerDelegate {
     var player: EZAudioPlayer!
     var audioFile: EZAudioFile!
-    
     
     @IBOutlet weak var btnPlay: NSButton!
     
@@ -31,8 +29,9 @@ class MetalWaveformController: NSViewController, EZAudioPlayerDelegate, EZAudioF
         self.audioFile = EZAudioFile(URL: fileUrl)
         self.player.audioFile = self.audioFile
         
-        
         setupPlayerNotifications()
+        
+        self.metalViewControllerDelegate = self
     }
     
     override var representedObject: AnyObject? {
@@ -40,7 +39,7 @@ class MetalWaveformController: NSViewController, EZAudioPlayerDelegate, EZAudioF
             // Update the view, if already loaded.
         }
     }
-
+    
     @IBAction func didClickPlay(sender: NSButton) {
         self.btnPlay.enabled = false
         self.player.play()
@@ -63,5 +62,16 @@ class MetalWaveformController: NSViewController, EZAudioPlayerDelegate, EZAudioF
         
     }
     
+    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
+        
+    }
+    
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
+        
+    }
+    
+    override func setupRenderPipeline() {
+        
+    }
     
 }
