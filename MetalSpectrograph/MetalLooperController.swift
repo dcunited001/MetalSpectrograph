@@ -25,7 +25,7 @@ class MetalLooperController: BaseMetalController, EZAudioPlayerDelegate, EZAudio
         super.viewDidLoad()
         
         self.player = EZAudioPlayer(delegate: self)
-        self.player.shouldLoop = false
+        self.player.shouldLoop = true
         self.audioFile = EZAudioFile(URL: fileUrl)
         self.player.audioFile = self.audioFile
         
