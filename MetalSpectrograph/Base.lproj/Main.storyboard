@@ -658,12 +658,42 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                     </window>
                     <connections>
-                        <segue destination="zDz-tq-fVd" kind="relationship" relationship="window.shadowedContentViewController" id="EGY-dv-tU4"/>
+                        <segue destination="zDz-tq-fVd" kind="relationship" relationship="window.shadowedContentViewController" id="9Dg-za-2aN"/>
                     </connections>
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
+        </scene>
+        <!--Metal Waveform Controller-->
+        <scene sceneID="1Yb-M1-xgB">
+            <objects>
+                <viewController id="0k2-O8-uYY" customClass="MetalWaveformController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="Pu7-fq-cqr" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="702" height="547"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mWH-B9-ggx">
+                                <rect key="frame" x="22" y="499" width="66" height="32"/>
+                                <animations/>
+                                <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9K0-54-Iwu">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="didClickPlay:" target="0k2-O8-uYY" id="MKV-9o-pKH"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                    </view>
+                    <connections>
+                        <outlet property="btnPlay" destination="mWH-B9-ggx" id="4M4-Sz-Hl7"/>
+                    </connections>
+                </viewController>
+                <customObject id="eWh-XF-qI9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="84" y="813.5"/>
         </scene>
         <!--Metal Controller-->
         <scene sceneID="C5c-OF-1Fw">
@@ -677,7 +707,7 @@
                 </viewController>
                 <customObject id="1aQ-yW-Eem" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="707" y="858"/>
+            <point key="canvasLocation" x="861" y="798"/>
         </scene>
         <!--Spectrograph Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -712,7 +742,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-364" y="868"/>
+            <point key="canvasLocation" x="-732" y="762"/>
         </scene>
     </scenes>
 </document>
