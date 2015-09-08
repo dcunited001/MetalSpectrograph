@@ -1,0 +1,497 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F661B9E5B6D0032B120 /* AppDelegate.swift */; };
+		43199F691B9E5B6D0032B120 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F681B9E5B6D0032B120 /* ViewController.swift */; };
+		43199F6B1B9E5B6D0032B120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43199F6A1B9E5B6D0032B120 /* Assets.xcassets */; };
+		43199F6E1B9E5B6D0032B120 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43199F6C1B9E5B6D0032B120 /* Main.storyboard */; };
+		43199F791B9E5B6D0032B120 /* MetalSpectrographTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */; };
+		43199F841B9E5B6D0032B120 /* MetalSpectrographUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		43199F751B9E5B6D0032B120 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43199F5B1B9E5B6D0032B120 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 43199F621B9E5B6D0032B120;
+			remoteInfo = MetalSpectrograph;
+		};
+		43199F801B9E5B6D0032B120 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43199F5B1B9E5B6D0032B120 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 43199F621B9E5B6D0032B120;
+			remoteInfo = MetalSpectrograph;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		43199F631B9E5B6D0032B120 /* MetalSpectrograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalSpectrograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		43199F661B9E5B6D0032B120 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		43199F681B9E5B6D0032B120 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		43199F6A1B9E5B6D0032B120 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		43199F6D1B9E5B6D0032B120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		43199F6F1B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		43199F741B9E5B6D0032B120 /* MetalSpectrographTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetalSpectrographTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalSpectrographTests.swift; sourceTree = "<group>"; };
+		43199F7A1B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		43199F7F1B9E5B6D0032B120 /* MetalSpectrographUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetalSpectrographUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalSpectrographUITests.swift; sourceTree = "<group>"; };
+		43199F851B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		43199F601B9E5B6D0032B120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F711B9E5B6D0032B120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F7C1B9E5B6D0032B120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		43199F5A1B9E5B6D0032B120 = {
+			isa = PBXGroup;
+			children = (
+				43199F651B9E5B6D0032B120 /* MetalSpectrograph */,
+				43199F771B9E5B6D0032B120 /* MetalSpectrographTests */,
+				43199F821B9E5B6D0032B120 /* MetalSpectrographUITests */,
+				43199F641B9E5B6D0032B120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		43199F641B9E5B6D0032B120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				43199F631B9E5B6D0032B120 /* MetalSpectrograph.app */,
+				43199F741B9E5B6D0032B120 /* MetalSpectrographTests.xctest */,
+				43199F7F1B9E5B6D0032B120 /* MetalSpectrographUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		43199F651B9E5B6D0032B120 /* MetalSpectrograph */ = {
+			isa = PBXGroup;
+			children = (
+				43199F661B9E5B6D0032B120 /* AppDelegate.swift */,
+				43199F681B9E5B6D0032B120 /* ViewController.swift */,
+				43199F6A1B9E5B6D0032B120 /* Assets.xcassets */,
+				43199F6C1B9E5B6D0032B120 /* Main.storyboard */,
+				43199F6F1B9E5B6D0032B120 /* Info.plist */,
+			);
+			path = MetalSpectrograph;
+			sourceTree = "<group>";
+		};
+		43199F771B9E5B6D0032B120 /* MetalSpectrographTests */ = {
+			isa = PBXGroup;
+			children = (
+				43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */,
+				43199F7A1B9E5B6D0032B120 /* Info.plist */,
+			);
+			path = MetalSpectrographTests;
+			sourceTree = "<group>";
+		};
+		43199F821B9E5B6D0032B120 /* MetalSpectrographUITests */ = {
+			isa = PBXGroup;
+			children = (
+				43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */,
+				43199F851B9E5B6D0032B120 /* Info.plist */,
+			);
+			path = MetalSpectrographUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		43199F621B9E5B6D0032B120 /* MetalSpectrograph */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43199F881B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrograph" */;
+			buildPhases = (
+				43199F5F1B9E5B6D0032B120 /* Sources */,
+				43199F601B9E5B6D0032B120 /* Frameworks */,
+				43199F611B9E5B6D0032B120 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MetalSpectrograph;
+			productName = MetalSpectrograph;
+			productReference = 43199F631B9E5B6D0032B120 /* MetalSpectrograph.app */;
+			productType = "com.apple.product-type.application";
+		};
+		43199F731B9E5B6D0032B120 /* MetalSpectrographTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43199F8B1B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrographTests" */;
+			buildPhases = (
+				43199F701B9E5B6D0032B120 /* Sources */,
+				43199F711B9E5B6D0032B120 /* Frameworks */,
+				43199F721B9E5B6D0032B120 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				43199F761B9E5B6D0032B120 /* PBXTargetDependency */,
+			);
+			name = MetalSpectrographTests;
+			productName = MetalSpectrographTests;
+			productReference = 43199F741B9E5B6D0032B120 /* MetalSpectrographTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		43199F7E1B9E5B6D0032B120 /* MetalSpectrographUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43199F8E1B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrographUITests" */;
+			buildPhases = (
+				43199F7B1B9E5B6D0032B120 /* Sources */,
+				43199F7C1B9E5B6D0032B120 /* Frameworks */,
+				43199F7D1B9E5B6D0032B120 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				43199F811B9E5B6D0032B120 /* PBXTargetDependency */,
+			);
+			name = MetalSpectrographUITests;
+			productName = MetalSpectrographUITests;
+			productReference = 43199F7F1B9E5B6D0032B120 /* MetalSpectrographUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		43199F5B1B9E5B6D0032B120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = Voxxel;
+				TargetAttributes = {
+					43199F621B9E5B6D0032B120 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					43199F731B9E5B6D0032B120 = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 43199F621B9E5B6D0032B120;
+					};
+					43199F7E1B9E5B6D0032B120 = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 43199F621B9E5B6D0032B120;
+					};
+				};
+			};
+			buildConfigurationList = 43199F5E1B9E5B6D0032B120 /* Build configuration list for PBXProject "MetalSpectrograph" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 43199F5A1B9E5B6D0032B120;
+			productRefGroup = 43199F641B9E5B6D0032B120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				43199F621B9E5B6D0032B120 /* MetalSpectrograph */,
+				43199F731B9E5B6D0032B120 /* MetalSpectrographTests */,
+				43199F7E1B9E5B6D0032B120 /* MetalSpectrographUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		43199F611B9E5B6D0032B120 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43199F6B1B9E5B6D0032B120 /* Assets.xcassets in Resources */,
+				43199F6E1B9E5B6D0032B120 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F721B9E5B6D0032B120 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F7D1B9E5B6D0032B120 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		43199F5F1B9E5B6D0032B120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43199F691B9E5B6D0032B120 /* ViewController.swift in Sources */,
+				43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F701B9E5B6D0032B120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43199F791B9E5B6D0032B120 /* MetalSpectrographTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43199F7B1B9E5B6D0032B120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43199F841B9E5B6D0032B120 /* MetalSpectrographUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		43199F761B9E5B6D0032B120 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 43199F621B9E5B6D0032B120 /* MetalSpectrograph */;
+			targetProxy = 43199F751B9E5B6D0032B120 /* PBXContainerItemProxy */;
+		};
+		43199F811B9E5B6D0032B120 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 43199F621B9E5B6D0032B120 /* MetalSpectrograph */;
+			targetProxy = 43199F801B9E5B6D0032B120 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		43199F6C1B9E5B6D0032B120 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				43199F6D1B9E5B6D0032B120 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		43199F861B9E5B6D0032B120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		43199F871B9E5B6D0032B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		43199F891B9E5B6D0032B120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrograph/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrograph;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		43199F8A1B9E5B6D0032B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrograph/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrograph;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		43199F8C1B9E5B6D0032B120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrographTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrographTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MetalSpectrograph.app/Contents/MacOS/MetalSpectrograph";
+			};
+			name = Debug;
+		};
+		43199F8D1B9E5B6D0032B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrographTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrographTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MetalSpectrograph.app/Contents/MacOS/MetalSpectrograph";
+			};
+			name = Release;
+		};
+		43199F8F1B9E5B6D0032B120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrographUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrographUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = MetalSpectrograph;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		43199F901B9E5B6D0032B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MetalSpectrographUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxxel.MetalSpectrographUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = MetalSpectrograph;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		43199F5E1B9E5B6D0032B120 /* Build configuration list for PBXProject "MetalSpectrograph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				43199F861B9E5B6D0032B120 /* Debug */,
+				43199F871B9E5B6D0032B120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		43199F881B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrograph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				43199F891B9E5B6D0032B120 /* Debug */,
+				43199F8A1B9E5B6D0032B120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		43199F8B1B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrographTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				43199F8C1B9E5B6D0032B120 /* Debug */,
+				43199F8D1B9E5B6D0032B120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		43199F8E1B9E5B6D0032B120 /* Build configuration list for PBXNativeTarget "MetalSpectrographUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				43199F8F1B9E5B6D0032B120 /* Debug */,
+				43199F901B9E5B6D0032B120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 43199F5B1B9E5B6D0032B120 /* Project object */;
+}
