@@ -669,7 +669,7 @@
         <scene sceneID="C5c-OF-1Fw">
             <objects>
                 <viewController id="zDz-tq-fVd" customClass="MetalController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="K7e-9E-d3g">
+                    <view key="view" id="K7e-9E-d3g" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="756" height="536"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>

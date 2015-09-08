@@ -10,15 +10,20 @@ import Foundation
 import Cocoa
 import MetalKit
 
+let AAPLBuffersInflightBuffers: Int = 3;
 
-class MetalController: NSViewController {
+class MetalController: NSViewController, MTKViewDelegate {
     
+    var inflightSemaphore: dispatch_semaphore_t?
+    
+    var _view: MTKView!
     var device: MTLDevice!
     var metalLayer: CAMetalLayer!
     var pipelineState: MTLRenderPipelineState!
     var commandQueue: MTLCommandQueue!
     var displayLink: CVDisplayLink?
     
+    var vertexBuffer: MTLBuffer!
     let vertexData:[Float] = [
         0.0, 1.0, 0.0,
         -1.0, -1.0, 0.0,
@@ -29,61 +34,55 @@ class MetalController: NSViewController {
     // [,,1z] [z2]
     // [,,,1] [1 ]
     
-    var vertexBuffer: MTLBuffer! = nil
+    override var representedObject: AnyObject? {
+        didSet {
+            // Update the view, if already loaded.
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         device = MTLCreateSystemDefaultDevice()
-        metalLayer = CAMetalLayer()
-        setupMetalLayer()
+        
+        self._view = (self.view as! MTKView)
+        _view.delegate = self
+        _view.device = device
+        
+        inflightSemaphore = dispatch_semaphore_create(AAPLBuffersInflightBuffers)
+        commandQueue = device.newCommandQueue()
         
         let dataSize = vertexData.count * sizeofValue(vertexData[0])
         
         vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
-        
         setupRenderPipeline()
-        commandQueue = device.newCommandQueue()
-        
-//        var displayLinkPointer: Unmanaged<CVDisplayLink>?
-        var displayLinkPointer: UnsafeMutablePointer<CVDisplayLink?> = UnsafeMutablePointer<CVDisplayLink?>.alloc(1)
-        var error: CVReturn = CVDisplayLinkCreateWithActiveCGDisplays(displayLinkPointer)
-        if (error != kCVReturnSuccess) {
-            print("DisplayLink created with error \(error)")
-            displayLink = nil
+    }
+    
+    func mtkView(view: MTKView, drawableSizeWillChange: CGSize) {
+        self.reshape()
+    }
+    
+    func drawInMTKView(view: MTKView) {
+        autoreleasepool { () -> () in
+            self.render()
         }
-        displayLink = displayLinkPointer.memory //get value at pointer
-        
-        //(CVDisplayLink, UnsafePointer<CVTimeStamp>, UnsafePointer<CVTimeStamp>, CVOptionFlags, UnsafeMutablePointer<CVOptionFlags>) -> CVReturn
-//        CVDisplayLinkSetOutputHandler(displayLink!) { (dLink, timestamp, timestamp2, optionFlags, optionFlagsPointer) -> CVReturn in
-//            return self.render()
-//        }
-        
-        //(CVDisplayLink, UnsafePointer<CVTimeStamp>, UnsafePointer<CVTimeStamp>, CVOptionFlags, UnsafeMutablePointer<CVOptionFlags>, UnsafeMutablePointer<Void>)
-        CVDisplayLinkSetOutputCallback(displayLink!,
-            { (displayLink, timestamp, timestamp2, optionFlags, optionFlagsPointer, displayContext) -> CVReturn in
-                let self_ = UnsafeMutablePointer<MetalController>(displayContext).memory
-                self_.render()
-                return 0
-        }, UnsafeMutablePointer<MetalController>(unsafeAddressOf(self)))
-        
-        error = CVDisplayLinkStart(displayLink!)
-        print(error)
-        print(kCVReturnDisplayLinkCallbacksNotSet)
+    }
+    
+    func reshape() {
+//        let aspect: CGFloat = fabs(self.view.bounds.size.width / self.view.bounds.size.height)
     }
     
     func render() -> CVReturn {
-        var drawable = metalLayer.nextDrawable()
-        
-        let renderPassDescriptor = MTLRenderPassDescriptor()
-        renderPassDescriptor.colorAttachments[0].texture = drawable!.texture
-        renderPassDescriptor.colorAttachments[0].loadAction = .Clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
-        
-        //create a command buffer
+        let renderPassDescriptor = _view.currentRenderPassDescriptor
+        let drawable = _view.currentDrawable
         let commandBuffer = commandQueue.commandBuffer()
         
+        renderPassDescriptor!.colorAttachments[0].texture = drawable!.texture
+        renderPassDescriptor!.colorAttachments[0].loadAction = .Clear
+        renderPassDescriptor!.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        
         //create a render encoder & tell it to draw the triangle
-        let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
+        let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor!)
         renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
         renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
@@ -93,21 +92,6 @@ class MetalController: NSViewController {
         commandBuffer.commit()
         
         return kCVReturnSuccess
-    }
-
-    override var representedObject: AnyObject? {
-        didSet {
-            // Update the view, if already loaded.
-        }
-    }
-
-    func setupMetalLayer() {
-        view.layer = view.makeBackingLayer()
-        metalLayer.device = device
-        metalLayer.pixelFormat = .BGRA8Unorm
-        metalLayer.framebufferOnly = true
-        metalLayer.frame = view.layer!.frame
-        view.layer!.addSublayer(metalLayer)
     }
     
     func setupRenderPipeline() {
