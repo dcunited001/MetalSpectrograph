@@ -18,6 +18,7 @@ class ParticleLabView: MetalView, MetalViewDelegate {
     private var imageWidthFloatBuffer: MTLBuffer!
     private var imageHeightFloatBuffer: MTLBuffer!
     
+    weak var particleLabDelegate: ParticleLabDelegate?
     var computePipelineState: MTLComputePipelineState!
     
     let bytesPerRow: Int
@@ -50,8 +51,6 @@ class ParticleLabView: MetalView, MetalViewDelegate {
     let boolSize = sizeof(Bool)
     let floatSize = sizeof(Float)
     
-    weak var particleLabDelegate: ParticleLabDelegate?
-    
     var particleColor = ParticleLabColor(R: 1, G: 0.5, B: 0.2, A: 1)
     var dragFactor: Float = 0.97
     var respawnOutOfBoundsParticles = true
@@ -80,6 +79,7 @@ class ParticleLabView: MetalView, MetalViewDelegate {
         particlesMemoryByteSize = particleCount * sizeof(ParticleLab)
         
         super.init(frame: CGRect(x: 0,y: 0,width: size.width,height: size.height), device: nil)
+        self.metalViewDelegate = self
         
         particlesBufferNoCopy = device!.newBufferWithBytesNoCopy(particlesMemory, length: Int(particlesMemoryByteSize), options: MTLResourceOptions.StorageModeShared, deallocator: nil)
     }
@@ -100,16 +100,11 @@ class ParticleLabView: MetalView, MetalViewDelegate {
         free(particlesMemory)
     }
     
-    func setupRenderPrograms() {
+    override func setupRenderPipeline() {
         kernelFunction = defaultLibrary.newFunctionWithName("particleRendererShader")
-    }
-    
-    func setupRenderPipelineDescriptor() {
-        //TODO: change to optional?
-    }
-    
-    func setupRenderPipelineState() {
-
+        
+        setupComputePipelineState()
+        setupImageBuffers()
     }
     
     func setupComputePipelineState() {
@@ -126,6 +121,15 @@ class ParticleLabView: MetalView, MetalViewDelegate {
         threadgroupsPerGrid = MTLSize(width:particleCount / threadExecutionWidth, height:1, depth:1)
     }
     
+    func setupImageBuffers() {
+        var imageWidthFloat = Float(imageWidth)
+        var imageHeightFloat = Float(imageHeight)
+        
+        imageWidthFloatBuffer =  device!.newBufferWithBytes(&imageWidthFloat, length: sizeof(Float), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        
+        imageHeightFloatBuffer = device!.newBufferWithBytes(&imageHeightFloat, length: sizeof(Float), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+    }
+    
     private func setupParticles() {
         posix_memalign(&particlesMemory, alignment, particlesMemoryByteSize)
         
@@ -138,7 +142,51 @@ class ParticleLabView: MetalView, MetalViewDelegate {
     }
     
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-
+        
+        let commandEncoder = commandBuffer.computeCommandEncoder()
+        
+        commandEncoder.setComputePipelineState(computePipelineState)
+        
+        commandEncoder.setBuffer(particlesBufferNoCopy, offset: 0, atIndex: 0)
+        commandEncoder.setBuffer(particlesBufferNoCopy, offset: 0, atIndex: 1)
+        
+        commandEncoder.setBytes(&gravityWellParticle, length: particleSize, atIndex: 2)
+        commandEncoder.setBytes(&particleColor, length: particleColorSize, atIndex: 3)
+        
+        commandEncoder.setBuffer(imageWidthFloatBuffer, offset: 0, atIndex: 4)
+        commandEncoder.setBuffer(imageHeightFloatBuffer, offset: 0, atIndex: 5)
+        
+        commandEncoder.setBytes(&dragFactor, length: floatSize, atIndex: 6)
+        commandEncoder.setBytes(&respawnOutOfBoundsParticles, length: boolSize, atIndex: 7)
+        
+        guard let drawable = currentDrawable else
+        {
+            print("currentDrawable returned nil")
+            
+            return
+        }
+        
+        if clearOnStep
+        {
+            drawable.texture.replaceRegion(self.region, mipmapLevel: 0, withBytes: blankBitmapRawData, bytesPerRow: bytesPerRow)
+        }
+        
+        let textureDesc = MTLTextureDescriptor()
+        textureDesc.usage = MTLTextureUsage(rawValue: MTLTextureUsage.)
+        
+//        print(drawable.texture.usage)
+//        drawable.texture.usage = .MTLTextureUsageShaderWrite
+        commandEncoder.setTexture(drawable.texture, atIndex: 0)
+        commandEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+        commandEncoder.endEncoding()
+        
+        commandBuffer.presentDrawable(drawable)
+        commandBuffer.commit()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0))
+            {
+                particleLabDelegate?.particleLabDidUpdate()
+        }
     }
 
     func updateLogic(timeSinseLastUpdate: CFTimeInterval) {

@@ -658,7 +658,7 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                     </window>
                     <connections>
-                        <segue destination="zDz-tq-fVd" kind="relationship" relationship="window.shadowedContentViewController" id="cnG-4E-lwJ"/>
+                        <segue destination="N4e-Bg-lMQ" kind="relationship" relationship="window.shadowedContentViewController" id="Ow7-DK-pfK"/>
                     </connections>
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -694,6 +694,20 @@
                 <customObject id="eWh-XF-qI9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="84" y="813.5"/>
+        </scene>
+        <!--Particle Controller-->
+        <scene sceneID="dzI-0C-IFJ">
+            <objects>
+                <viewController id="N4e-Bg-lMQ" customClass="ParticleController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="BdA-LH-XBf" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="663" height="461"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="KJ2-H1-6FS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="794.5" y="179.5"/>
         </scene>
         <!--Metal Controller-->
         <scene sceneID="C5c-OF-1Fw">
