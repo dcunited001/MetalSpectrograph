@@ -21,12 +21,10 @@ protocol MetalViewControllerDelegate: class {
 }
 
 class BaseMetalController: NSViewController, MTKViewDelegate {
-    
     var inflightSemaphore: dispatch_semaphore_t?
     
     var _view: MTKView!
     var device: MTLDevice!
-    var metalLayer: CAMetalLayer!
     var pipelineState: MTLRenderPipelineState!
     var commandQueue: MTLCommandQueue!
     var displayLink: CVDisplayLink?
