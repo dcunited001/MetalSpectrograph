@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		28AC1FE967E9A51757BEBA2D /* Pods_MetalSpectrograph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3C2A4C027948817E7FDFE24 /* Pods_MetalSpectrograph.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4304EB711BA0292000F7A9A8 /* MetalTriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */; settings = {ASSET_TAGS = (); }; };
 		430677121B9F9E1400D7D3E3 /* BaseMetalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */; settings = {ASSET_TAGS = (); }; };
+		430677141B9FF92500D7D3E3 /* ParticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677131B9FF92500D7D3E3 /* ParticleController.swift */; settings = {ASSET_TAGS = (); }; };
+		430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677161B9FFA7500D7D3E3 /* MetalView.swift */; settings = {ASSET_TAGS = (); }; };
+		430677191BA0021B00D7D3E3 /* ParticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677181BA0021B00D7D3E3 /* ParticleView.swift */; settings = {ASSET_TAGS = (); }; };
+		4306771B1BA005BA00D7D3E3 /* ParticleLab.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */; settings = {ASSET_TAGS = (); }; };
 		43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F661B9E5B6D0032B120 /* AppDelegate.swift */; };
 		43199F6E1B9E5B6D0032B120 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43199F6C1B9E5B6D0032B120 /* Main.storyboard */; };
 		43199F791B9E5B6D0032B120 /* MetalSpectrographTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */; };
@@ -41,7 +46,12 @@
 
 /* Begin PBXFileReference section */
 		0CB7BD44A089D32869BAAA06 /* Pods-MetalSpectrograph.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalSpectrograph.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MetalSpectrograph/Pods-MetalSpectrograph.debug.xcconfig"; sourceTree = "<group>"; };
+		4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalTriangleView.swift; sourceTree = "<group>"; };
 		430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMetalController.swift; sourceTree = "<group>"; };
+		430677131B9FF92500D7D3E3 /* ParticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleController.swift; sourceTree = "<group>"; };
+		430677161B9FFA7500D7D3E3 /* MetalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
+		430677181BA0021B00D7D3E3 /* ParticleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleView.swift; sourceTree = "<group>"; };
+		4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = ParticleLab.metal; sourceTree = "<group>"; };
 		43199F631B9E5B6D0032B120 /* MetalSpectrograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalSpectrograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43199F661B9E5B6D0032B120 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43199F6D1B9E5B6D0032B120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -125,6 +135,11 @@
 				439BB9141B9EA4480022BD57 /* Shaders.metal */,
 				43DC06201B9F9ABD0087357D /* MetalLooperController.swift */,
 				430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */,
+				430677131B9FF92500D7D3E3 /* ParticleController.swift */,
+				430677161B9FFA7500D7D3E3 /* MetalView.swift */,
+				430677181BA0021B00D7D3E3 /* ParticleView.swift */,
+				4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */,
+				4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */,
 			);
 			path = MetalSpectrograph;
 			sourceTree = "<group>";
@@ -346,11 +361,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4304EB711BA0292000F7A9A8 /* MetalTriangleView.swift in Sources */,
+				430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */,
 				430677121B9F9E1400D7D3E3 /* BaseMetalController.swift in Sources */,
 				43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */,
+				4306771B1BA005BA00D7D3E3 /* ParticleLab.metal in Sources */,
 				439BB9151B9EA4480022BD57 /* Shaders.metal in Sources */,
 				43199F921B9E5F100032B120 /* SpectrographController.swift in Sources */,
 				43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */,
+				430677141B9FF92500D7D3E3 /* ParticleController.swift in Sources */,
+				430677191BA0021B00D7D3E3 /* ParticleView.swift in Sources */,
 				439BB9101B9E951A0022BD57 /* MetalController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
