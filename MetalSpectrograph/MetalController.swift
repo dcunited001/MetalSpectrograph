@@ -15,7 +15,7 @@ import Foundation
 import Cocoa
 import MetalKit
 
-class MetalController: BaseMetalController, MetalViewControllerDelegate {
+class MetalController: NSViewController, MetalViewDelegate, MetalPipelineDelegate {
     
     var vertexBuffer: MTLBuffer!
     let vertexData:[Float] = [
@@ -28,13 +28,20 @@ class MetalController: BaseMetalController, MetalViewControllerDelegate {
     // [,,1z] [z2]
     // [,,,1] [1 ]
     
+    var pipelineStateDescriptor: MTLRenderPipelineDescriptor?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.metalViewControllerDelegate = self
+        var rect = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         
+        var metalView = MetalView(frame: rect, device: MTLCreateSystemDefaultDevice(), pipelineDelegate: self)
+        
+        self.view.addSubview(metalView)
+        
+        //move to render pipeline
         let dataSize = vertexData.count * sizeofValue(vertexData[0])
-        vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        vertexBuffer = view.device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
     }
     
     override var representedObject: AnyObject? {
@@ -60,22 +67,38 @@ class MetalController: BaseMetalController, MetalViewControllerDelegate {
         
     }
     
-    override func setupRenderPipeline() {
-        super.setupRenderPipeline()
-        
-        let defaultLibrary = device.newDefaultLibrary()
-        let fragmentProgram = defaultLibrary!.newFunctionWithName("basic_fragment")
-        let vertexProgram = defaultLibrary!.newFunctionWithName("basic_vertex")
-        
-        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+//     MetalPipelineDelegate
+    
+    func setupRenderPrograms() {
+        let dataSize = vertexData.count * sizeofValue(vertexData[0])
+        vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
+    }
+    
+    func setupRenderPipelineDescriptor() {
+        pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
+        
+    }
+    
+    func setupRenderPipelineState() {
         
         do {
             try pipelineState = device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
         } catch(let err) {
             print("Failed to create pipeline state, error \(err)")
         }
+        
+        
+    }
+    
+    
+    override func setupRenderPipeline() {
+        super.setupRenderPipeline()
+        
+        let defaultLibrary = device.newDefaultLibrary()
+        let fragmentProgram = defaultLibrary!.newFunctionWithName("basic_fragment")
+        let vertexProgram = defaultLibrary!.newFunctionWithName("basic_vertex")
     }
 }
