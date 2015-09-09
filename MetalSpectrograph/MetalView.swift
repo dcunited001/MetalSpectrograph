@@ -123,13 +123,4 @@ class MetalView: MTKView {
         }
     }
     
-    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-        
-    }
-    
-    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
-        
-    }
-    
-    
 }

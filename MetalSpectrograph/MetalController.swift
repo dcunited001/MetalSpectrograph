@@ -32,6 +32,7 @@ class MetalController: NSViewController, MetalViewDelegate {
         let rect = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         
         metalView = MetalTriangleView(frame: rect, device: MTLCreateSystemDefaultDevice())
+        metalView.metalViewDelegate = self
         
         self.view.addSubview(metalView)
     }

@@ -11,7 +11,7 @@ import Cocoa
 import MetalKit
 import GameplayKit
 
-class ParticleLabView: MetalView, MetalViewDelegate{
+class ParticleLabView: MetalView, MetalViewDelegate {
     let imageWidth: UInt
     let imageHeight: UInt
     
@@ -135,6 +135,14 @@ class ParticleLabView: MetalView, MetalViewDelegate{
         
         resetParticles()
         resetGravityWells()
+    }
+    
+    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
+
+    }
+
+    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
+        
     }
     
     func resetGravityWells()
