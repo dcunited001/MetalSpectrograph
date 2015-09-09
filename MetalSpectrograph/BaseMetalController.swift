@@ -10,8 +10,6 @@ import Foundation
 import Cocoa
 import MetalKit
 
-let AAPLBuffersInflightBuffers: Int = 3;
-
 protocol MetalViewControllerDelegate: class {
     // updates game state
     func updateLogic(timeSinceLastUpdate: CFTimeInterval)

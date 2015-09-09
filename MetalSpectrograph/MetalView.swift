@@ -10,15 +10,7 @@ import Foundation
 import Cocoa
 import MetalKit
 
-//let AAPLBuffersInflightBuffers: Int = 3;
-
-protocol MetalPipelineDelegate: class {
-    //vars?
-    func setupRenderPrograms()
-    func setupRenderPipelineDescriptor()
-    func setupRenderPipelineState()
-    func setupComputePipelineState()
-}
+let AAPLBuffersInflightBuffers: Int = 3;
 
 protocol MetalViewDelegate: class {
     func updateLogic(timeSinseLastUpdate: CFTimeInterval)
@@ -30,8 +22,7 @@ protocol MetalViewDelegate: class {
 class MetalView: MTKView {
     var inflightSemaphore: dispatch_semaphore_t?
     
-    var pipelineState: MTLRenderPipelineState!
-    var computePipelineState: MTLComputePipelineState!
+//    var computePipelineState: MTLComputePipelineState!
     var commandQueue: MTLCommandQueue!
     var displayLink: CVDisplayLink?
     var defaultLibrary:MTLLibrary!
@@ -40,11 +31,10 @@ class MetalView: MTKView {
     var thisFrameStart: CFAbsoluteTime!
 
     weak var metalViewDelegate: MetalViewDelegate?
-    weak var pipelineDelegate: MetalPipelineDelegate?
     
     var renderPassDescriptor: MTLRenderPassDescriptor?
     
-    init(frame frameRect: CGRect, device: MTLDevice?, pipelineDelegate: MetalPipelineDelegate?) {
+    override init(frame frameRect: CGRect, device: MTLDevice?) {
         // TODO: create device if not already present
         super.init(frame: frameRect, device: device)
         
@@ -52,8 +42,6 @@ class MetalView: MTKView {
         colorPixelFormat = MTLPixelFormat.BGRA8Unorm
         sampleCount = 1
         preferredFramesPerSecond = 60
-        
-        self.pipelineDelegate = pipelineDelegate
         
         beforeSetupMetal()
         setupMetal()
@@ -64,10 +52,6 @@ class MetalView: MTKView {
         
         lastFrameStart = CFAbsoluteTimeGetCurrent()
         thisFrameStart = CFAbsoluteTimeGetCurrent()
-    }
-    
-    convenience override init(frame frameRect: CGRect, device: MTLDevice?) {
-        self.init(frame: frameRect, device: device, pipelineDelegate: nil)
     }
     
     required init(coder: NSCoder) {
@@ -121,10 +105,7 @@ class MetalView: MTKView {
     }
     
     func setupRenderPipeline() {
-        self.pipelineDelegate?.setupRenderPrograms()
-//        pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        self.pipelineDelegate?.setupRenderPipelineDescriptor()
-        self.pipelineDelegate?.setupRenderPipelineState()
+        //override in subclass
     }
     
     // TODO: determine which mtkView gets called when there's no MTKViewDelegate?
@@ -141,16 +122,6 @@ class MetalView: MTKView {
             self.render()
         }
     }
-    
-    //  MetalViewDelegate
-    
-//    func setupPipelineState() {
-//        do {
-//            try pipelineState = device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
-//        } catch(let err) {
-//            print("Failed to create pipeline state, error \(err)")
-//        }
-//    }
     
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
         

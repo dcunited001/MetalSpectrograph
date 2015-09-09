@@ -15,33 +15,25 @@ import Foundation
 import Cocoa
 import MetalKit
 
-class MetalController: NSViewController, MetalViewDelegate, MetalPipelineDelegate {
+class MetalController: NSViewController, MetalViewDelegate {
     
-    var vertexBuffer: MTLBuffer!
-    let vertexData:[Float] = [
-        0.0, 1.0, 0.0,
-        -1.0, -1.0, 0.0,
-        1.0, -1.0, 0.0]
     
     // [1,,x] [x2]
     // [,1,y] [y2] ....
     // [,,1z] [z2]
     // [,,,1] [1 ]
     
+    var metalView: MetalTriangleView!
     var pipelineStateDescriptor: MTLRenderPipelineDescriptor?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var rect = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        let rect = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         
-        var metalView = MetalView(frame: rect, device: MTLCreateSystemDefaultDevice(), pipelineDelegate: self)
+        metalView = MetalTriangleView(frame: rect, device: MTLCreateSystemDefaultDevice())
         
         self.view.addSubview(metalView)
-        
-        //move to render pipeline
-        let dataSize = vertexData.count * sizeofValue(vertexData[0])
-        vertexBuffer = view.device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
     }
     
     override var representedObject: AnyObject? {
@@ -50,6 +42,7 @@ class MetalController: NSViewController, MetalViewDelegate, MetalPipelineDelegat
         }
     }
     
+    //TODO: move to MetalTriangleView (partially?)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .Clear
@@ -57,48 +50,13 @@ class MetalController: NSViewController, MetalViewDelegate, MetalPipelineDelegat
         
         //create a render encoder & tell it to draw the triangle
         let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
-        renderEncoder.setRenderPipelineState(pipelineState)
-        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
+        renderEncoder.setRenderPipelineState(metalView.pipelineState)
+        renderEncoder.setVertexBuffer(metalView.vertexBuffer, offset: 0, atIndex: 0)
         renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
         renderEncoder.endEncoding()
     }
     
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         
-    }
-    
-//     MetalPipelineDelegate
-    
-    func setupRenderPrograms() {
-        let dataSize = vertexData.count * sizeofValue(vertexData[0])
-        vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
-    }
-    
-    func setupRenderPipelineDescriptor() {
-        pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        pipelineStateDescriptor.vertexFunction = vertexProgram
-        pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
-        
-    }
-    
-    func setupRenderPipelineState() {
-        
-        do {
-            try pipelineState = device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
-        } catch(let err) {
-            print("Failed to create pipeline state, error \(err)")
-        }
-        
-        
-    }
-    
-    
-    override func setupRenderPipeline() {
-        super.setupRenderPipeline()
-        
-        let defaultLibrary = device.newDefaultLibrary()
-        let fragmentProgram = defaultLibrary!.newFunctionWithName("basic_fragment")
-        let vertexProgram = defaultLibrary!.newFunctionWithName("basic_vertex")
     }
 }

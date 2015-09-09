@@ -11,16 +11,14 @@ import Cocoa
 import MetalKit
 import GameplayKit
 
-class ParticleLabView: MetalView
-    ,MetalViewDelegate
-    ,MetalPipelineDelegate
-{
-    
+class ParticleLabView: MetalView, MetalViewDelegate{
     let imageWidth: UInt
     let imageHeight: UInt
     
     private var imageWidthFloatBuffer: MTLBuffer!
     private var imageHeightFloatBuffer: MTLBuffer!
+    
+    var computePipelineState: MTLComputePipelineState!
     
     let bytesPerRow: Int
     let region: MTLRegion
@@ -70,7 +68,7 @@ class ParticleLabView: MetalView
 //        self.init(size: defaultSize, numParticles: numParticles)
 //    }
 
-    init(size: CGSize, numParticles: ParticleLabCount, pipelineDelegate: MetalPipelineDelegate) {
+    init(size: CGSize, numParticles: ParticleLabCount) {
         particleCount = numParticles.rawValue
         self.imageWidth = UInt(size.width)
         self.imageHeight = UInt(size.height)
@@ -81,7 +79,7 @@ class ParticleLabView: MetalView
         blankBitmapRawData = [UInt8](count: Int(imageWidth * imageHeight * 4), repeatedValue: 0)
         particlesMemoryByteSize = particleCount * sizeof(ParticleLab)
         
-        super.init(frame: CGRect(x: 0,y: 0,width: size.width,height: size.height), device: nil, pipelineDelegate: pipelineDelegate)
+        super.init(frame: CGRect(x: 0,y: 0,width: size.width,height: size.height), device: nil)
         
         particlesBufferNoCopy = device!.newBufferWithBytesNoCopy(particlesMemory, length: Int(particlesMemoryByteSize), options: MTLResourceOptions.StorageModeShared, deallocator: nil)
     }
