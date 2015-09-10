@@ -12,9 +12,10 @@ import MetalKit
 
 let AAPLBuffersInflightBuffers: Int = 3;
 
-protocol MetalViewDelegate: class {
+@objc protocol MetalViewDelegate: class {
     func updateLogic(timeSinseLastUpdate: CFTimeInterval)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
+    optional func afterRender()
 }
 
 //TODO: set default behaviors when setup delegates aren't implemented?
@@ -34,13 +35,15 @@ class MetalView: MTKView {
     
     var renderPassDescriptor: MTLRenderPassDescriptor?
     
+    var depthPixelFormat: MTLPixelFormat?
+    var stencilPixelFormat: MTLPixelFormat?
+//    var sampleCount: Int? // already in MTKView
+    
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         // TODO: create device if not already present
         super.init(frame: frameRect, device: device)
         
         framebufferOnly = false
-        colorPixelFormat = MTLPixelFormat.BGRA8Unorm
-        sampleCount = 1
         preferredFramesPerSecond = 60
         
         beforeSetupMetal()
@@ -106,6 +109,7 @@ class MetalView: MTKView {
         commandBuffer.presentDrawable(drawable)
         commandBuffer.commit()
         
+        self.metalViewDelegate?.afterRender?()
     }
     
     func setupRenderPipeline() {

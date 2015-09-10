@@ -164,28 +164,21 @@ class ParticleLabView: MetalView, MetalViewDelegate {
             drawable.texture.replaceRegion(self.region, mipmapLevel: 0, withBytes: blankBitmapRawData, bytesPerRow: bytesPerRow)
         }
         
-        //TODO: fix access for texture
-        
         let textureDesc = MTLTextureDescriptor()
-//        textureDesc.usage = MTLTextureUsage(rawValue: MTLTextureUsage.)
-        
-//        print(drawable.texture.usage)
-//        drawable.texture.usage = .MTLTextureUsageShaderWrite
         commandEncoder.setTexture(drawable.texture, atIndex: 0)
         commandEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
-        
-        commandBuffer.presentDrawable(drawable)
-        commandBuffer.commit()
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0))
-            {
-                particleLabDelegate?.particleLabDidUpdate()
-        }
     }
 
     func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
         
+    }
+    
+    func afterRender() {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0))
+            {
+                particleLabDelegate?.particleLabDidUpdate()
+        }
     }
     
     func resetGravityWells()
