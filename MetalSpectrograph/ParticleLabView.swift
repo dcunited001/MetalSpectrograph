@@ -159,20 +159,15 @@ class ParticleLabView: MetalView, MetalViewDelegate {
         commandEncoder.setBytes(&dragFactor, length: floatSize, atIndex: 6)
         commandEncoder.setBytes(&respawnOutOfBoundsParticles, length: boolSize, atIndex: 7)
         
-        guard let drawable = currentDrawable else
-        {
-            print("currentDrawable returned nil")
-            
-            return
-        }
-        
         if clearOnStep
         {
             drawable.texture.replaceRegion(self.region, mipmapLevel: 0, withBytes: blankBitmapRawData, bytesPerRow: bytesPerRow)
         }
         
+        //TODO: fix access for texture
+        
         let textureDesc = MTLTextureDescriptor()
-        textureDesc.usage = MTLTextureUsage(rawValue: MTLTextureUsage.)
+//        textureDesc.usage = MTLTextureUsage(rawValue: MTLTextureUsage.)
         
 //        print(drawable.texture.usage)
 //        drawable.texture.usage = .MTLTextureUsageShaderWrite

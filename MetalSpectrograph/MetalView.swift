@@ -91,15 +91,19 @@ class MetalView: MTKView {
         // setup CFAbsoluteTimeGetCurrent()
         
         let renderPassDescriptor = currentRenderPassDescriptor
-        let drawable = currentDrawable
         let commandBuffer = commandQueue.commandBuffer()
         
-        if (drawable != nil) {
-            self.metalViewDelegate?.renderObjects(drawable!, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
+        guard let drawable = currentDrawable else
+        {
+            print("currentDrawable returned nil")
+
+            return
         }
         
+        self.metalViewDelegate?.renderObjects(drawable, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
+        
         // hmm drawable! will still blow up here if nil. guard?
-        commandBuffer.presentDrawable(drawable!)
+        commandBuffer.presentDrawable(drawable)
         commandBuffer.commit()
         
     }
