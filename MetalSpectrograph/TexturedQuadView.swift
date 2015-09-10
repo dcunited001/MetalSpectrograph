@@ -12,21 +12,8 @@ import Cocoa
 import MetalKit
 import simd
 
-class TexturedQuadView: MetalView, MetalViewDelegate {
+class TexturedQuadView: MTKView {
     
-    override func setupRenderPipeline() {
-            
-    }
-    
-    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-        
-        
-    }
-    
-    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
-        
-        
-    }
 }
 
 class TexturedQuad: NSObject {
@@ -43,8 +30,6 @@ class TexturedQuad: NSObject {
             float2(1.0, 1.0)
         ]
     }
-    
-    
     
     struct Vertices {
         static let cnt = TexCoords.cnt
@@ -143,8 +128,6 @@ class TexturedQuad: NSObject {
             }
         }
     }
-    
-
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(mVertexBuffer, offset: 0, atIndex: vertexIndex)
