@@ -13,11 +13,10 @@ import MetalKit
 
 let AAPLBuffersInflightBuffers: Int = 3;
 
-@objc protocol MetalViewDelegate: class {
+protocol MetalViewDelegate: class {
     func updateLogic(timeSinseLastUpdate: CFTimeInterval)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
-    optional func encode(renderEncoder: MTLRenderCommandEncoder)
-    optional func afterRender()
+    func encode(renderEncoder: MTLRenderCommandEncoder)
 }
 
 //TODO: set default behaviors when setup delegates aren't implemented?
@@ -108,8 +107,6 @@ class MetalView: MTKView {
         
         setupRenderPassDescriptor(drawable)
         self.metalViewDelegate?.renderObjects(drawable, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
-        
-        self.metalViewDelegate?.afterRender?()
     }
     
     func setupRenderPassDescriptor(drawable: CAMetalDrawable) {
