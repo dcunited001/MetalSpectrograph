@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		28AC1FE967E9A51757BEBA2D /* Pods_MetalSpectrograph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3C2A4C027948817E7FDFE24 /* Pods_MetalSpectrograph.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		4304EB711BA0292000F7A9A8 /* MetalTriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */; settings = {ASSET_TAGS = (); }; };
-		430677121B9F9E1400D7D3E3 /* BaseMetalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */; settings = {ASSET_TAGS = (); }; };
+		4304EB711BA0292000F7A9A8 /* BasicTriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4304EB701BA0292000F7A9A8 /* BasicTriangleView.swift */; settings = {ASSET_TAGS = (); }; };
 		430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677161B9FFA7500D7D3E3 /* MetalView.swift */; settings = {ASSET_TAGS = (); }; };
 		430677191BA0021B00D7D3E3 /* ParticleLabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430677181BA0021B00D7D3E3 /* ParticleLabView.swift */; settings = {ASSET_TAGS = (); }; };
 		4306771B1BA005BA00D7D3E3 /* ParticleLab.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */; settings = {ASSET_TAGS = (); }; };
@@ -32,7 +31,6 @@
 		439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB9091B9E86970022BD57 /* come-with-me.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
-		439BB9101B9E951A0022BD57 /* MetalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439BB90F1B9E951A0022BD57 /* MetalController.swift */; settings = {ASSET_TAGS = (); }; };
 		439BB9151B9EA4480022BD57 /* BasicTriangle.metal in Sources */ = {isa = PBXBuildFile; fileRef = 439BB9141B9EA4480022BD57 /* BasicTriangle.metal */; settings = {ASSET_TAGS = (); }; };
 		43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */; settings = {ASSET_TAGS = (); }; };
 		43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18121BA0F341004174C1 /* texturedQuad.metal */; settings = {ASSET_TAGS = (); }; };
@@ -59,8 +57,7 @@
 
 /* Begin PBXFileReference section */
 		0CB7BD44A089D32869BAAA06 /* Pods-MetalSpectrograph.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalSpectrograph.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MetalSpectrograph/Pods-MetalSpectrograph.debug.xcconfig"; sourceTree = "<group>"; };
-		4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalTriangleView.swift; sourceTree = "<group>"; };
-		430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMetalController.swift; sourceTree = "<group>"; };
+		4304EB701BA0292000F7A9A8 /* BasicTriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTriangleView.swift; sourceTree = "<group>"; };
 		430677161B9FFA7500D7D3E3 /* MetalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		430677181BA0021B00D7D3E3 /* ParticleLabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleLabView.swift; sourceTree = "<group>"; };
 		4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = ParticleLab.metal; sourceTree = "<group>"; };
@@ -89,7 +86,6 @@
 		439BB9091B9E86970022BD57 /* come-with-me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "come-with-me.mp3"; sourceTree = "<group>"; };
 		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
-		439BB90F1B9E951A0022BD57 /* MetalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalController.swift; sourceTree = "<group>"; };
 		439BB9141B9EA4480022BD57 /* BasicTriangle.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BasicTriangle.metal; sourceTree = "<group>"; };
 		43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadView.swift; sourceTree = "<group>"; };
 		43AD18121BA0F341004174C1 /* texturedQuad.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = texturedQuad.metal; sourceTree = "<group>"; };
@@ -154,10 +150,8 @@
 				436D3F3D1BA2891300F50C71 /* UI */,
 				43199F911B9E5F100032B120 /* SpectrographController.swift */,
 				43DC06201B9F9ABD0087357D /* MetalLooperController.swift */,
-				430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */,
 				430677161B9FFA7500D7D3E3 /* MetalView.swift */,
-				439BB90F1B9E951A0022BD57 /* MetalController.swift */,
-				4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */,
+				4304EB701BA0292000F7A9A8 /* BasicTriangleView.swift */,
 				430677181BA0021B00D7D3E3 /* ParticleLabView.swift */,
 				434F333D1BA03289000B87A2 /* ParticleController.swift */,
 				43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */,
@@ -475,11 +469,10 @@
 			files = (
 				436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */,
 				435841551BA31433005609FD /* BasicCube.swift in Sources */,
-				4304EB711BA0292000F7A9A8 /* MetalTriangleView.swift in Sources */,
+				4304EB711BA0292000F7A9A8 /* BasicTriangleView.swift in Sources */,
 				436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */,
 				430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */,
 				43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */,
-				430677121B9F9E1400D7D3E3 /* BaseMetalController.swift in Sources */,
 				43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */,
 				436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */,
 				435841571BA3148A005609FD /* Objects.swift in Sources */,
@@ -494,7 +487,6 @@
 				43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */,
 				430677191BA0021B00D7D3E3 /* ParticleLabView.swift in Sources */,
 				436D3F461BA2C0EB00F50C71 /* BasicTriangleRenderer.swift in Sources */,
-				439BB9101B9E951A0022BD57 /* MetalController.swift in Sources */,
 				436D3F3B1BA288D200F50C71 /* TexturedQuad.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
