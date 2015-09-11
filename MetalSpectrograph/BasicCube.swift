@@ -10,28 +10,49 @@ import simd
 import Metal
 
 // TODO: how to dynamically swap out vertex colors?
-// TODO: how to make truly generic?
-class Cube: Node<ColorVertex> {
+class Cube<T: Vertexable>: Node<T> {
     
-    class func cubeVertices() -> [ColorVertex] {
+    // TODO: how to make truly generic?
+    //  i.e. make cube that works with Vertex & ColorVertex
+    //  where a single cubeVertices method produces either Vertex/ColorVertex
+    class func cubeVertices() -> [T] {
         return [
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4(-1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4(-1.0, -1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            ColorVertex(vertex: float4( 1.0,  1.0,  1.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0))
+            T(chunks: [float4(-1.0,  1.0,  1.0, 1.0), float4(1.0, 1.0, 1.0, 0.0)]),
+            T(chunks: [float4(-1.0, -1.0,  1.0, 1.0), float4(0.0, 1.0, 1.0, 0.0)]),
+            T(chunks: [float4( 1.0, -1.0,  1.0, 1.0), float4(1.0, 0.0, 1.0, 0.0)]),
+            T(chunks: [float4( 1.0,  1.0,  1.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
+            T(chunks: [float4(-1.0,  1.0, -1.0, 1.0), float4(0.0, 0.0, 1.0, 0.0)]),
+            T(chunks: [float4( 1.0,  1.0, -1.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)]),
+            T(chunks: [float4(-1.0, -1.0, -1.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
+            T(chunks: [float4( 1.0, -1.0, -1.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)])
         ]
     }
     
-    class func cubeVerticesArray(A: ColorVertex) -> [ColorVertex] {
+    class func verticesToTriangles(vertices: [T]) -> [T] {
+        let A = vertices[0]
+        let B = vertices[1]
+        let C = vertices[2]
+        let D = vertices[3]
+        let Q = vertices[4]
+        let R = vertices[5]
+        let S = vertices[6]
+        let T = vertices[7]
         
+        return [
+            A,B,C ,A,C,D,   //Front
+            R,T,S ,Q,R,S,   //Back
+            
+            Q,S,B ,Q,B,A,   //Left
+            D,C,T ,D,T,R,   //Right
+            
+            Q,A,D ,Q,D,R,   //Top
+            B,S,T ,B,T,C]   //Bottom
     }
     
-    init(devices: MTLDevice) {
-        let vertices = Cube.constructCube()
-        super.init(name: "Cube", vertices: )
+    init(device: MTLDevice) {
+        let baseVertices = Cube<T>.cubeVertices()
+        let triangleVertices = Cube<T>.verticesToTriangles(baseVertices)
+        super.init(name: "Cube", vertices: triangleVertices, device: device)
     }
 }
+
