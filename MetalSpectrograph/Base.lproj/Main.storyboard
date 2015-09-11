@@ -700,6 +700,20 @@
             </objects>
             <point key="canvasLocation" x="-1058" y="835.5"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="YqR-Pz-VtG">
+            <objects>
+                <viewController id="x9Z-0p-LHC" sceneMemberID="viewController">
+                    <view key="view" id="aau-ng-rhG">
+                        <rect key="frame" x="0.0" y="0.0" width="702" height="524"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="jxT-pQ-K8X" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1058" y="1448"/>
+        </scene>
         <!--Textured Quad View Controller-->
         <scene sceneID="dzI-0C-IFJ">
             <objects>
@@ -752,7 +766,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hog-b2-Plf">
-                                        <rect key="frame" x="150" y="468" width="97" height="32"/>
+                                        <rect key="frame" x="14" y="427" width="97" height="32"/>
                                         <animations/>
                                         <buttonCell key="cell" type="push" title="Isosceles" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5Ja-AA-BKe">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -763,7 +777,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNF-Md-xqm">
-                                        <rect key="frame" x="252" y="468" width="94" height="32"/>
+                                        <rect key="frame" x="145" y="468" width="94" height="32"/>
                                         <animations/>
                                         <buttonCell key="cell" type="push" title="TexQuad" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2nO-4W-1Tk">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -784,8 +798,16 @@
                                             <action selector="didClickPlay:" target="XfG-lQ-9wD" id="Gcq-fJ-yTi"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YyV-x3-HeM">
+                                        <rect key="frame" x="115" y="427" width="73" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Cube" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IuD-ek-pvv">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jb0-qU-6cH">
-                                        <rect key="frame" x="346" y="468" width="121" height="32"/>
+                                        <rect key="frame" x="239" y="468" width="121" height="32"/>
                                         <animations/>
                                         <buttonCell key="cell" type="push" title="Particle Lab" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f8f-2A-3AH">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -797,11 +819,13 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" id="1f8-nH-FrD"/>
                                     <constraint firstItem="uSA-cz-zKe" firstAttribute="leading" secondItem="AE9-na-rG3" secondAttribute="trailing" constant="10" id="2kk-Hd-xCD"/>
                                     <constraint firstItem="AE9-na-rG3" firstAttribute="top" secondItem="vZH-pM-gqC" secondAttribute="top" constant="20" id="3QN-K1-8kb"/>
                                     <constraint firstItem="AE9-na-rG3" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="4Df-6w-1lz"/>
-                                    <constraint firstItem="Hog-b2-Plf" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" constant="10" id="hDZ-Hm-6x0"/>
-                                    <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="Hog-b2-Plf" secondAttribute="trailing" constant="10" id="vma-nY-PhV"/>
+                                    <constraint firstItem="Hog-b2-Plf" firstAttribute="top" secondItem="AE9-na-rG3" secondAttribute="bottom" constant="20" id="cvZ-6Z-bJj"/>
+                                    <constraint firstItem="Hog-b2-Plf" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="eGX-To-vhV"/>
+                                    <constraint firstItem="YyV-x3-HeM" firstAttribute="leading" secondItem="Hog-b2-Plf" secondAttribute="trailing" constant="10" id="pNq-Vg-dk4"/>
                                     <constraint firstItem="jb0-qU-6cH" firstAttribute="leading" secondItem="fNF-Md-xqm" secondAttribute="trailing" constant="10" id="zB9-m2-jdE"/>
                                 </constraints>
                                 <animations/>

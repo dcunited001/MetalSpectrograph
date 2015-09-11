@@ -20,6 +20,7 @@
 		434F333E1BA03289000B87A2 /* ParticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434F333D1BA03289000B87A2 /* ParticleController.swift */; settings = {ASSET_TAGS = (); }; };
 		435841551BA31433005609FD /* BasicCube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435841541BA31433005609FD /* BasicCube.swift */; settings = {ASSET_TAGS = (); }; };
 		435841571BA3148A005609FD /* Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435841561BA3148A005609FD /* Objects.swift */; settings = {ASSET_TAGS = (); }; };
+		435841591BA33F45005609FD /* CubeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435841581BA33F45005609FD /* CubeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F2E1BA1374100F50C71 /* Transforms.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F311BA1524E00F50C71 /* MetalTexture.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F341BA1571300F50C71 /* Default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 436D3F331BA1571300F50C71 /* Default.jpg */; settings = {ASSET_TAGS = (); }; };
@@ -32,7 +33,7 @@
 		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB9151B9EA4480022BD57 /* BasicTriangle.metal in Sources */ = {isa = PBXBuildFile; fileRef = 439BB9141B9EA4480022BD57 /* BasicTriangle.metal */; settings = {ASSET_TAGS = (); }; };
-		43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */; settings = {ASSET_TAGS = (); }; };
+		43AD18101BA0F302004174C1 /* TexturedQuadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD180F1BA0F302004174C1 /* TexturedQuadViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18121BA0F341004174C1 /* texturedQuad.metal */; settings = {ASSET_TAGS = (); }; };
 		43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18171BA104A5004174C1 /* MetalRenderer.swift */; settings = {ASSET_TAGS = (); }; };
 		43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DC06201B9F9ABD0087357D /* MetalLooperController.swift */; settings = {ASSET_TAGS = (); }; };
@@ -75,6 +76,7 @@
 		434F333D1BA03289000B87A2 /* ParticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleController.swift; sourceTree = "<group>"; };
 		435841541BA31433005609FD /* BasicCube.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicCube.swift; sourceTree = "<group>"; };
 		435841561BA3148A005609FD /* Objects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Objects.swift; sourceTree = "<group>"; };
+		435841581BA33F45005609FD /* CubeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CubeViewController.swift; sourceTree = "<group>"; };
 		436D3F2E1BA1374100F50C71 /* Transforms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transforms.swift; sourceTree = "<group>"; };
 		436D3F311BA1524E00F50C71 /* MetalTexture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalTexture.swift; sourceTree = "<group>"; };
 		436D3F331BA1571300F50C71 /* Default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Default.jpg; sourceTree = "<group>"; };
@@ -87,7 +89,7 @@
 		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
 		439BB9141B9EA4480022BD57 /* BasicTriangle.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BasicTriangle.metal; sourceTree = "<group>"; };
-		43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadView.swift; sourceTree = "<group>"; };
+		43AD180F1BA0F302004174C1 /* TexturedQuadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadViewController.swift; sourceTree = "<group>"; };
 		43AD18121BA0F341004174C1 /* texturedQuad.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = texturedQuad.metal; sourceTree = "<group>"; };
 		43AD18171BA104A5004174C1 /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		43DC06201B9F9ABD0087357D /* MetalLooperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalLooperController.swift; sourceTree = "<group>"; };
@@ -154,7 +156,8 @@
 				4304EB701BA0292000F7A9A8 /* BasicTriangleView.swift */,
 				430677181BA0021B00D7D3E3 /* ParticleLabView.swift */,
 				434F333D1BA03289000B87A2 /* ParticleController.swift */,
-				43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */,
+				43AD180F1BA0F302004174C1 /* TexturedQuadViewController.swift */,
+				435841581BA33F45005609FD /* CubeViewController.swift */,
 				436D3F371BA2888F00F50C71 /* Objects */,
 				436D3F331BA1571300F50C71 /* Default.jpg */,
 				436D3F301BA1523700F50C71 /* TextureLoader */,
@@ -472,11 +475,12 @@
 				4304EB711BA0292000F7A9A8 /* BasicTriangleView.swift in Sources */,
 				436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */,
 				430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */,
+				435841591BA33F45005609FD /* CubeViewController.swift in Sources */,
 				43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */,
 				43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */,
 				436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */,
 				435841571BA3148A005609FD /* Objects.swift in Sources */,
-				43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */,
+				43AD18101BA0F302004174C1 /* TexturedQuadViewController.swift in Sources */,
 				43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */,
 				436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */,
 				436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */,
