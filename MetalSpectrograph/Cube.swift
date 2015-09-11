@@ -57,6 +57,7 @@ class Cube<T: Vertexable>: Node<T> {
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 1)
     }
 }
 
