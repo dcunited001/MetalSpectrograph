@@ -22,6 +22,9 @@
 		436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F2E1BA1374100F50C71 /* Transforms.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F311BA1524E00F50C71 /* MetalTexture.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F341BA1571300F50C71 /* Default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 436D3F331BA1571300F50C71 /* Default.jpg */; settings = {ASSET_TAGS = (); }; };
+		436D3F3B1BA288D200F50C71 /* TexturedQuad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */; settings = {ASSET_TAGS = (); }; };
+		436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */; settings = {ASSET_TAGS = (); }; };
+		436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F401BA28A6400F50C71 /* ParticleLab.swift */; settings = {ASSET_TAGS = (); }; };
 		439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB9091B9E86970022BD57 /* come-with-me.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
@@ -72,6 +75,9 @@
 		436D3F2E1BA1374100F50C71 /* Transforms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transforms.swift; sourceTree = "<group>"; };
 		436D3F311BA1524E00F50C71 /* MetalTexture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalTexture.swift; sourceTree = "<group>"; };
 		436D3F331BA1571300F50C71 /* Default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Default.jpg; sourceTree = "<group>"; };
+		436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuad.swift; sourceTree = "<group>"; };
+		436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadRenderer.swift; sourceTree = "<group>"; };
+		436D3F401BA28A6400F50C71 /* ParticleLab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleLab.swift; sourceTree = "<group>"; };
 		439BB9091B9E86970022BD57 /* come-with-me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "come-with-me.mp3"; sourceTree = "<group>"; };
 		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
@@ -136,10 +142,21 @@
 		43199F651B9E5B6D0032B120 /* MetalSpectrograph */ = {
 			isa = PBXGroup;
 			children = (
+				43AD18171BA104A5004174C1 /* MetalRenderer.swift */,
+				436D3F3D1BA2891300F50C71 /* UI */,
+				43199F911B9E5F100032B120 /* SpectrographController.swift */,
+				43DC06201B9F9ABD0087357D /* MetalLooperController.swift */,
+				430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */,
+				430677161B9FFA7500D7D3E3 /* MetalView.swift */,
+				439BB90F1B9E951A0022BD57 /* MetalController.swift */,
+				4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */,
+				430677181BA0021B00D7D3E3 /* ParticleLabView.swift */,
+				434F333D1BA03289000B87A2 /* ParticleController.swift */,
+				43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */,
+				436D3F371BA2888F00F50C71 /* Objects */,
 				436D3F331BA1571300F50C71 /* Default.jpg */,
 				436D3F301BA1523700F50C71 /* TextureLoader */,
 				436D3F2D1BA1373800F50C71 /* Math */,
-				43AD18141BA1048D004174C1 /* Renderer */,
 				43AD18111BA0F321004174C1 /* Shaders */,
 				43199F661B9E5B6D0032B120 /* AppDelegate.swift */,
 				43199F6C1B9E5B6D0032B120 /* Main.storyboard */,
@@ -147,15 +164,6 @@
 				439BB9091B9E86970022BD57 /* come-with-me.mp3 */,
 				439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */,
 				439BB90B1B9E86970022BD57 /* good-guys.mp3 */,
-				43199F911B9E5F100032B120 /* SpectrographController.swift */,
-				439BB90F1B9E951A0022BD57 /* MetalController.swift */,
-				43DC06201B9F9ABD0087357D /* MetalLooperController.swift */,
-				430677111B9F9E1400D7D3E3 /* BaseMetalController.swift */,
-				430677161B9FFA7500D7D3E3 /* MetalView.swift */,
-				430677181BA0021B00D7D3E3 /* ParticleLabView.swift */,
-				4304EB701BA0292000F7A9A8 /* MetalTriangleView.swift */,
-				434F333D1BA03289000B87A2 /* ParticleController.swift */,
-				43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */,
 			);
 			path = MetalSpectrograph;
 			sourceTree = "<group>";
@@ -194,22 +202,55 @@
 			name = TextureLoader;
 			sourceTree = "<group>";
 		};
+		436D3F371BA2888F00F50C71 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				436D3F3C1BA2890300F50C71 /* ParticleLab */,
+				436D3F391BA288B700F50C71 /* Cube */,
+				436D3F381BA288A500F50C71 /* TexturedQuad */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+		436D3F381BA288A500F50C71 /* TexturedQuad */ = {
+			isa = PBXGroup;
+			children = (
+				43AD18121BA0F341004174C1 /* texturedQuad.metal */,
+				436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */,
+				436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */,
+			);
+			name = TexturedQuad;
+			sourceTree = "<group>";
+		};
+		436D3F391BA288B700F50C71 /* Cube */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Cube;
+			sourceTree = "<group>";
+		};
+		436D3F3C1BA2890300F50C71 /* ParticleLab */ = {
+			isa = PBXGroup;
+			children = (
+				4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */,
+				436D3F401BA28A6400F50C71 /* ParticleLab.swift */,
+			);
+			name = ParticleLab;
+			sourceTree = "<group>";
+		};
+		436D3F3D1BA2891300F50C71 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		43AD18111BA0F321004174C1 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
 				439BB9141B9EA4480022BD57 /* Shaders.metal */,
-				4306771A1BA005BA00D7D3E3 /* ParticleLab.metal */,
-				43AD18121BA0F341004174C1 /* texturedQuad.metal */,
 			);
 			name = Shaders;
-			sourceTree = "<group>";
-		};
-		43AD18141BA1048D004174C1 /* Renderer */ = {
-			isa = PBXGroup;
-			children = (
-				43AD18171BA104A5004174C1 /* MetalRenderer.swift */,
-			);
-			name = Renderer;
 			sourceTree = "<group>";
 		};
 		468F52DDB606F7B8DF81FC9A /* Frameworks */ = {
@@ -412,6 +453,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */,
 				4304EB711BA0292000F7A9A8 /* MetalTriangleView.swift in Sources */,
 				436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */,
 				430677171B9FFA7500D7D3E3 /* MetalView.swift in Sources */,
@@ -421,6 +463,7 @@
 				436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */,
 				43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */,
 				43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */,
+				436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */,
 				434F333E1BA03289000B87A2 /* ParticleController.swift in Sources */,
 				4306771B1BA005BA00D7D3E3 /* ParticleLab.metal in Sources */,
 				439BB9151B9EA4480022BD57 /* Shaders.metal in Sources */,
@@ -428,6 +471,7 @@
 				43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */,
 				430677191BA0021B00D7D3E3 /* ParticleLabView.swift in Sources */,
 				439BB9101B9E951A0022BD57 /* MetalController.swift in Sources */,
+				436D3F3B1BA288D200F50C71 /* TexturedQuad.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

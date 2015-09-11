@@ -658,7 +658,7 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                     </window>
                     <connections>
-                        <segue destination="zDz-tq-fVd" kind="relationship" relationship="window.shadowedContentViewController" id="C6l-yv-HaX"/>
+                        <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="piC-dG-deJ"/>
                     </connections>
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -673,7 +673,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="702" height="547"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mWH-B9-ggx">
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mWH-B9-ggx">
                                 <rect key="frame" x="22" y="499" width="66" height="32"/>
                                 <animations/>
                                 <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9K0-54-Iwu">
@@ -685,20 +685,25 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="mWH-B9-ggx" firstAttribute="leading" secondItem="Pu7-fq-cqr" secondAttribute="leading" constant="20" id="A4K-sr-9ic"/>
+                            <constraint firstItem="mWH-B9-ggx" firstAttribute="top" secondItem="Pu7-fq-cqr" secondAttribute="top" constant="20" id="r4X-GX-urN"/>
+                        </constraints>
                         <animations/>
                     </view>
                     <connections>
+                        <outlet property="btnFft" destination="uSA-cz-zKe" id="Pi4-x2-2lj"/>
                         <outlet property="btnPlay" destination="mWH-B9-ggx" id="4M4-Sz-Hl7"/>
                     </connections>
                 </viewController>
                 <customObject id="eWh-XF-qI9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="84" y="813.5"/>
+            <point key="canvasLocation" x="-1058" y="835.5"/>
         </scene>
-        <!--Particle Controller-->
+        <!--Textured Quad View Controller-->
         <scene sceneID="dzI-0C-IFJ">
             <objects>
-                <viewController id="N4e-Bg-lMQ" customClass="ParticleController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="N4e-Bg-lMQ" customClass="TexturedQuadViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="BdA-LH-XBf" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="663" height="461"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -707,11 +712,12 @@
                 </viewController>
                 <customObject id="KJ2-H1-6FS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="794.5" y="179.5"/>
+            <point key="canvasLocation" x="492.5" y="809.5"/>
         </scene>
         <!--Metal Controller-->
         <scene sceneID="C5c-OF-1Fw">
             <objects>
+                <customObject id="1aQ-yW-Eem" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <viewController id="zDz-tq-fVd" customClass="MetalController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="K7e-9E-d3g" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="756" height="536"/>
@@ -719,9 +725,8 @@
                         <animations/>
                     </view>
                 </viewController>
-                <customObject id="1aQ-yW-Eem" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="861" y="798"/>
+            <point key="canvasLocation" x="-265" y="866"/>
         </scene>
         <!--Spectrograph Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -731,21 +736,64 @@
                         <rect key="frame" x="0.0" y="0.0" width="866" height="516"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vZH-pM-gqC" customClass="EZAudioPlot">
+                            <customView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vZH-pM-gqC" customClass="EZAudioPlot">
                                 <rect key="frame" x="0.0" y="0.0" width="866" height="516"/>
+                                <subviews>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uSA-cz-zKe">
+                                        <rect key="frame" x="82" y="468" width="63" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="FFT" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0ys-hj-Mf7">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="didClickFft:" target="0k2-O8-uYY" id="4EE-ww-fsM"/>
+                                            <segue destination="0k2-O8-uYY" kind="show" id="knQ-WA-uc1"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hog-b2-Plf">
+                                        <rect key="frame" x="150" y="468" width="97" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Isosceles" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5Ja-AA-BKe">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="zDz-tq-fVd" kind="show" id="uVI-4o-aLC"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNF-Md-xqm">
+                                        <rect key="frame" x="252" y="468" width="94" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="TexQuad" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2nO-4W-1Tk">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="N4e-Bg-lMQ" kind="show" id="5ft-jX-zcB"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AE9-na-rG3">
+                                        <rect key="frame" x="16" y="468" width="66" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VhK-3N-6EV">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="didClickPlay:" target="XfG-lQ-9wD" id="Gcq-fJ-yTi"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="uSA-cz-zKe" firstAttribute="leading" secondItem="AE9-na-rG3" secondAttribute="trailing" constant="10" id="2kk-Hd-xCD"/>
+                                    <constraint firstItem="AE9-na-rG3" firstAttribute="top" secondItem="vZH-pM-gqC" secondAttribute="top" constant="20" id="3QN-K1-8kb"/>
+                                    <constraint firstItem="AE9-na-rG3" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="4Df-6w-1lz"/>
+                                    <constraint firstItem="Hog-b2-Plf" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" constant="10" id="hDZ-Hm-6x0"/>
+                                    <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="Hog-b2-Plf" secondAttribute="trailing" constant="10" id="vma-nY-PhV"/>
+                                </constraints>
                                 <animations/>
                             </customView>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AE9-na-rG3">
-                                <rect key="frame" x="14" y="468" width="66" height="32"/>
-                                <animations/>
-                                <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VhK-3N-6EV">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="didClickPlay:" target="XfG-lQ-9wD" id="Gcq-fJ-yTi"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <animations/>
                     </view>
@@ -756,7 +804,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-732" y="762"/>
+            <point key="canvasLocation" x="-688" y="98"/>
         </scene>
     </scenes>
 </document>
