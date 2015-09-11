@@ -14,7 +14,7 @@ import MetalKit
 let AAPLBuffersInflightBuffers: Int = 3;
 
 protocol MetalViewDelegate: class {
-    func updateLogic(timeSinseLastUpdate: CFTimeInterval)
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
     func encode(renderEncoder: MTLRenderCommandEncoder)
 }

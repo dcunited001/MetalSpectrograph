@@ -88,7 +88,7 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.commit()
     }
     
-    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         
         
     }

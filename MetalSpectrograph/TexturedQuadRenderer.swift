@@ -170,7 +170,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.commit()
     }
     
-    @objc func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
+    @objc func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         
         
     }

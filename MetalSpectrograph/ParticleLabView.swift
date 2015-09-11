@@ -169,8 +169,12 @@ class ParticleLabView: MetalView, MetalViewDelegate {
         commandEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
     }
+    
+    func encode(renderEncoder: MTLRenderCommandEncoder) {
+        
+    }
 
-    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         
     }
     
