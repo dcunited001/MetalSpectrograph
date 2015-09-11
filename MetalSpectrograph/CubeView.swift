@@ -14,7 +14,7 @@ class CubeView: MetalView {
     override func setupRenderPassDescriptor(drawable: CAMetalDrawable) {
         renderPassDescriptor!.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor!.colorAttachments[0].loadAction = .Clear
-        renderPassDescriptor!.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
+        renderPassDescriptor!.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1.0)
     }
 }
 
@@ -29,12 +29,13 @@ class CubeViewController: NSViewController {
         renderer = CubeRenderer()
         metalView = CubeView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
+        positionObject()
         metalView.metalViewDelegate = renderer
         self.view.addSubview(metalView)
     }
     
     func positionObject() {
-        renderer.object?.modelScale = 0.8
-        
+        renderer.object?.modelPosition = float3(0.0,0.0,2.0)
+        renderer.object?.modelScale = float3(0.6)
     }
 }
