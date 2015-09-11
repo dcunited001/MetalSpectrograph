@@ -700,10 +700,10 @@
             </objects>
             <point key="canvasLocation" x="-1058" y="835.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Cube View Controller-->
         <scene sceneID="YqR-Pz-VtG">
             <objects>
-                <viewController id="x9Z-0p-LHC" sceneMemberID="viewController">
+                <viewController id="x9Z-0p-LHC" customClass="CubeViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="aau-ng-rhG">
                         <rect key="frame" x="0.0" y="0.0" width="702" height="524"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -773,7 +773,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <segue destination="zDz-tq-fVd" kind="show" id="uVI-4o-aLC"/>
+                                            <segue destination="zDz-tq-fVd" kind="show" id="pE0-h4-9Dd"/>
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNF-Md-xqm">
@@ -805,6 +805,9 @@
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <segue destination="x9Z-0p-LHC" kind="show" id="q6M-ez-5Cs"/>
+                                        </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jb0-qU-6cH">
                                         <rect key="frame" x="239" y="468" width="121" height="32"/>
