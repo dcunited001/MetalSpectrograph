@@ -1,3 +1,4 @@
+
 //
 //  MetalView.swift
 //  MetalSpectrograph
@@ -15,6 +16,7 @@ let AAPLBuffersInflightBuffers: Int = 3;
 @objc protocol MetalViewDelegate: class {
     func updateLogic(timeSinseLastUpdate: CFTimeInterval)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
+    optional func encode(renderEncoder: MTLRenderCommandEncoder)
     optional func afterRender()
 }
 
@@ -42,7 +44,6 @@ class MetalView: MTKView {
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         // TODO: create device if not already present
         super.init(frame: frameRect, device: device)
-        
         framebufferOnly = false
         preferredFramesPerSecond = 60
         
@@ -90,10 +91,12 @@ class MetalView: MTKView {
         
     }
     
-    private func render() {
+    func render() {
         // setup CFAbsoluteTimeGetCurrent()
         
-        let renderPassDescriptor = currentRenderPassDescriptor
+        renderPassDescriptor = currentRenderPassDescriptor
+        
+        // test renderpassdescriptor
         let commandBuffer = commandQueue.commandBuffer()
         
         guard let drawable = currentDrawable else
@@ -103,6 +106,7 @@ class MetalView: MTKView {
             return
         }
         
+        setupRenderPassDescriptor(drawable)
         self.metalViewDelegate?.renderObjects(drawable, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
         
         // hmm drawable! will still blow up here if nil. guard?
@@ -110,6 +114,10 @@ class MetalView: MTKView {
         commandBuffer.commit()
         
         self.metalViewDelegate?.afterRender?()
+    }
+    
+    func setupRenderPassDescriptor(drawable: CAMetalDrawable) {
+        //override in subclass
     }
     
     func setupRenderPipeline() {
