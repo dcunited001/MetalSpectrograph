@@ -38,9 +38,9 @@ class TexturedQuad {
         ]
     }
     
-    var vertexIndex: Int // unsigned?  NSUInteger?
-    var texCoordIndex: Int
-    var samplerIndex: Int
+    var vertexIndex: Int = 0 // unsigned?  NSUInteger?
+    var texCoordIndex: Int = 1
+    var samplerIndex: Int = 0
     
     var size: CGSize
     var aspect: Float
@@ -61,10 +61,6 @@ class TexturedQuad {
         //  TODO: guard against fail/nil?
         mTexCoordBuffer = device.newBufferWithBytes(TexCoords.coords, length: TexCoords.sz, options: MTLResourceOptions.OptionCPUCacheModeDefault)
         mTexCoordBuffer.label = "quad texcoords"
-        
-        vertexIndex = 0
-        texCoordIndex = 1
-        samplerIndex = 0
         
         size = CGSize(width: 0.0, height: 0.0)
         bounds = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
