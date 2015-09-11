@@ -25,6 +25,8 @@
 		436D3F3B1BA288D200F50C71 /* TexturedQuad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F401BA28A6400F50C71 /* ParticleLab.swift */; settings = {ASSET_TAGS = (); }; };
+		436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F431BA2C0E000F50C71 /* BasicTriangle.swift */; settings = {ASSET_TAGS = (); }; };
+		436D3F461BA2C0EB00F50C71 /* BasicTriangleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F451BA2C0EB00F50C71 /* BasicTriangleRenderer.swift */; settings = {ASSET_TAGS = (); }; };
 		439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB9091B9E86970022BD57 /* come-with-me.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
@@ -78,6 +80,8 @@
 		436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuad.swift; sourceTree = "<group>"; };
 		436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadRenderer.swift; sourceTree = "<group>"; };
 		436D3F401BA28A6400F50C71 /* ParticleLab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleLab.swift; sourceTree = "<group>"; };
+		436D3F431BA2C0E000F50C71 /* BasicTriangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTriangle.swift; sourceTree = "<group>"; };
+		436D3F451BA2C0EB00F50C71 /* BasicTriangleRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTriangleRenderer.swift; sourceTree = "<group>"; };
 		439BB9091B9E86970022BD57 /* come-with-me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "come-with-me.mp3"; sourceTree = "<group>"; };
 		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
@@ -205,6 +209,7 @@
 		436D3F371BA2888F00F50C71 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				436D3F421BA2C0CB00F50C71 /* BasicTriangle */,
 				436D3F3C1BA2890300F50C71 /* ParticleLab */,
 				436D3F391BA288B700F50C71 /* Cube */,
 				436D3F381BA288A500F50C71 /* TexturedQuad */,
@@ -245,10 +250,19 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
-		43AD18111BA0F321004174C1 /* Shaders */ = {
+		436D3F421BA2C0CB00F50C71 /* BasicTriangle */ = {
 			isa = PBXGroup;
 			children = (
 				439BB9141B9EA4480022BD57 /* Shaders.metal */,
+				436D3F431BA2C0E000F50C71 /* BasicTriangle.swift */,
+				436D3F451BA2C0EB00F50C71 /* BasicTriangleRenderer.swift */,
+			);
+			name = BasicTriangle;
+			sourceTree = "<group>";
+		};
+		43AD18111BA0F321004174C1 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -463,6 +477,7 @@
 				436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */,
 				43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */,
 				43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */,
+				436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */,
 				436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */,
 				434F333E1BA03289000B87A2 /* ParticleController.swift in Sources */,
 				4306771B1BA005BA00D7D3E3 /* ParticleLab.metal in Sources */,
@@ -470,6 +485,7 @@
 				43199F921B9E5F100032B120 /* SpectrographController.swift in Sources */,
 				43199F671B9E5B6D0032B120 /* AppDelegate.swift in Sources */,
 				430677191BA0021B00D7D3E3 /* ParticleLabView.swift in Sources */,
+				436D3F461BA2C0EB00F50C71 /* BasicTriangleRenderer.swift in Sources */,
 				439BB9101B9E951A0022BD57 /* MetalController.swift in Sources */,
 				436D3F3B1BA288D200F50C71 /* TexturedQuad.swift in Sources */,
 			);

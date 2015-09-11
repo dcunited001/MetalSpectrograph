@@ -645,7 +645,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MetalSpectrograph" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="-688" y="-676"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -663,7 +663,7 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="250"/>
+            <point key="canvasLocation" x="-688" y="-428"/>
         </scene>
         <!--Metal Looper Controller-->
         <scene sceneID="1Yb-M1-xgB">
@@ -714,12 +714,12 @@
             </objects>
             <point key="canvasLocation" x="492.5" y="809.5"/>
         </scene>
-        <!--Metal Controller-->
+        <!--Metal Triangle Controller-->
         <scene sceneID="C5c-OF-1Fw">
             <objects>
                 <customObject id="1aQ-yW-Eem" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <viewController id="zDz-tq-fVd" customClass="MetalController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="K7e-9E-d3g" customClass="MTKView">
+                <viewController id="zDz-tq-fVd" customClass="MetalTriangleController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="K7e-9E-d3g">
                         <rect key="frame" x="0.0" y="0.0" width="756" height="536"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
@@ -784,6 +784,17 @@
                                             <action selector="didClickPlay:" target="XfG-lQ-9wD" id="Gcq-fJ-yTi"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jb0-qU-6cH">
+                                        <rect key="frame" x="346" y="468" width="121" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Particle Lab" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f8f-2A-3AH">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="qsf-K6-9q1" kind="show" id="AfX-0j-guX"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="uSA-cz-zKe" firstAttribute="leading" secondItem="AE9-na-rG3" secondAttribute="trailing" constant="10" id="2kk-Hd-xCD"/>
@@ -791,6 +802,7 @@
                                     <constraint firstItem="AE9-na-rG3" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="4Df-6w-1lz"/>
                                     <constraint firstItem="Hog-b2-Plf" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" constant="10" id="hDZ-Hm-6x0"/>
                                     <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="Hog-b2-Plf" secondAttribute="trailing" constant="10" id="vma-nY-PhV"/>
+                                    <constraint firstItem="jb0-qU-6cH" firstAttribute="leading" secondItem="fNF-Md-xqm" secondAttribute="trailing" constant="10" id="zB9-m2-jdE"/>
                                 </constraints>
                                 <animations/>
                             </customView>
@@ -805,6 +817,20 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-688" y="98"/>
+        </scene>
+        <!--Particle Controller-->
+        <scene sceneID="aRa-nw-POz">
+            <objects>
+                <viewController id="qsf-K6-9q1" customClass="ParticleController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="cMK-s2-Zx6">
+                        <rect key="frame" x="0.0" y="0.0" width="556" height="516"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="IRd-eP-fgk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="129" y="89"/>
         </scene>
     </scenes>
 </document>
