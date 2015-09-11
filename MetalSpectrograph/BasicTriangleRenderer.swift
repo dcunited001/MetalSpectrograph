@@ -11,7 +11,7 @@ import MetalKit
 
 class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
     var pipelineState: MTLRenderPipelineState?
-    var triangle: BasicTriangle?
+    var object: BasicTriangle<ColorVertex>?
     var size: CGSize = CGSize()
     
     //TODO: var transformBuffer: MTLBuffer?
@@ -25,7 +25,7 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
             return
         }
         
-        guard prepareTriangle() else {
+        guard prepareObject() else {
             print("Failed to create BasicTriangle")
             return
         }
@@ -58,26 +58,21 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
         return true
     }
     
-    func prepareTriangle() -> Bool {
-        guard let newTriangle = BasicTriangle(device: device!) else {
-            print("Failed to create BasicTriangle")
-            return false
-        }
-        
-        triangle = newTriangle
+    func prepareObject() -> Bool {
+        object = BasicTriangle<ColorVertex>(device: device!)
         return true
     }
     
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.pushDebugGroup("encode basic triangle")
         renderEncoder.setRenderPipelineState(pipelineState!)
-        triangle!.encode(renderEncoder)
-        renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
+        object!.encode(renderEncoder)
+        renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()
     }
     
-    @objc func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
+    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
         
         let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         self.encode(renderEncoder)
@@ -93,7 +88,7 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.commit()
     }
     
-    @objc func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
+    func updateLogic(timeSinseLastUpdate: CFTimeInterval) {
         
         
     }
