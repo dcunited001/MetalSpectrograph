@@ -9,10 +9,7 @@
 import simd
 import MetalKit
 
-struct BasicTriangleVertex {
-    var vertex: float4;
-    var color: float4;
-}
+// TODO: refactor with Node<ColorVertex>
 
 class BasicTriangle {
     
@@ -21,17 +18,15 @@ class BasicTriangle {
     struct Vertices {
         static let cnt = 3
         static let sz = cnt * (sizeof(float4) + sizeof(float4))
-        static let verts: [BasicTriangleVertex] = [
-            BasicTriangleVertex(vertex: float4( 0.0,  1.0, 0.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
-            BasicTriangleVertex(vertex: float4(-1.0, -1.0, 0.0, 1.0), color: float4(1.0, 1.0, 0.0, 0.0)),
-            BasicTriangleVertex(vertex: float4( 1.0, -1.0, 0.0, 1.0), color: float4(0.0, 0.0, 1.0, 0.0))]
+        static let verts: [ColorVertex] = [
+            ColorVertex(vertex: float4( 0.0,  1.0, 0.0, 1.0), color: float4(1.0, 0.0, 0.0, 0.0)),
+            ColorVertex(vertex: float4(-1.0, -1.0, 0.0, 1.0), color: float4(1.0, 1.0, 0.0, 0.0)),
+            ColorVertex(vertex: float4( 1.0, -1.0, 0.0, 1.0), color: float4(0.0, 0.0, 1.0, 0.0))]
     }
     
     init?(device: MTLDevice) {
-        
         vertexBuffer = device.newBufferWithBytes(Vertices.verts, length: Vertices.sz, options: MTLResourceOptions.OptionCPUCacheModeDefault)
         vertexBuffer.label = "triangle vertices"
-        
     }
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
