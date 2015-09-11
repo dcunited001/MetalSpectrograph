@@ -25,8 +25,8 @@ class MetalTriangleView: MetalView {
         vertexBuffer = self.device!.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.CPUCacheModeDefaultCache)
         
         //setup render programs
-        let fragmentProgram = defaultLibrary!.newFunctionWithName("basic_fragment")
-        let vertexProgram = defaultLibrary!.newFunctionWithName("basic_vertex")
+        let fragmentProgram = defaultLibrary!.newFunctionWithName("basic_triangle_fragment")
+        let vertexProgram = defaultLibrary!.newFunctionWithName("basic_triangle_vertex")
         
         //setup render pipeline descriptor
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()

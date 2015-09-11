@@ -32,13 +32,13 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
-        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("basic_fragment") else {
-            print("Couldn't load basic_fragment")
+        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("basic_triangle_fragment") else {
+            print("Couldn't load basic_triangle_fragment")
             return false
         }
         
-        guard let vertexProgram = shaderLibrary?.newFunctionWithName("basic_vertex") else {
-            print("Couldn't load basic_vertex")
+        guard let vertexProgram = shaderLibrary?.newFunctionWithName("basic_triangle_vertex") else {
+            print("Couldn't load basic_triangle_vertex")
             return false
         }
         
