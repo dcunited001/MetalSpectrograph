@@ -14,25 +14,19 @@ struct ColorVertex {
     var color: float4;
 }
 
-//protocol Node<T> {
-//    var name: String { get }
-//    var vCount: Int { get set }
-//    var vBytes: Int { get set }
-//    var vBuffer: MTLBuffer { get set }
-//    var device: MTLDevice { get set }
-//    
-//    init(name: String, vertices: Array<T>, device: MTLDevice)
-//    func setVertexBuffer(vertices: Array<T>)
-//}
-
-class Node<T> {
-    let name: String
-    var vCount: Int
-    var vBytes: Int
-    var vBuffer: MTLBuffer
-    var device: MTLDevice
+protocol Node<T> {
+    var name: String { get }
+    var vCount: Int { get set }
+    var vBytes: Int { get set }
+    var vBuffer: MTLBuffer { get set }
+    var device: MTLDevice { get set }
     
-    init(name: String, vertices: Array<T>, device: MTLDevice) {
+    init(name: String, vertices: Array<T>, device: MTLDevice)
+    func setVertexBuffer(vertices: Array<T>)
+}
+
+extension Node {
+    init(name: String, vertices: Array, device: MTLDevice) {
         self.name = name
         self.device = device
         
