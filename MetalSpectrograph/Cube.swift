@@ -54,5 +54,9 @@ class Cube<T: Vertexable>: Node<T> {
         let triangleVertices = Cube<T>.verticesToTriangles(baseVertices)
         super.init(name: "Cube", vertices: triangleVertices, device: device)
     }
+    
+    func encode(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
+    }
 }
 
