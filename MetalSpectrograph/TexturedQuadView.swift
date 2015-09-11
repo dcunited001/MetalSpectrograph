@@ -20,12 +20,16 @@ class TexturedQuadViewController: NSViewController {
     var metalView: TexturedQuadView!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         let rect = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-        metalView = TexturedQuadView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer = TexturedQuadImgRenderer()
+        metalView = TexturedQuadView(frame: rect, device: MTLCreateSystemDefaultDevice())
+        renderer.configure(metalView)
+
         metalView.metalViewDelegate = renderer
 
-        renderer.configure(metalView)
+
         self.view.addSubview(metalView)
     }
     
