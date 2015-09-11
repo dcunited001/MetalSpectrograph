@@ -10,11 +10,12 @@
 using namespace metal;
 
 vertex float4 basic_vertex(
-    const device packed_float3* vertex_array [[ buffer(0) ]],
+    const device float4* vertex_array [[ buffer(0) ]],
     unsigned int vid [[ vertex_id ]]) {
-    return float4(vertex_array[vid], 1.0);
+    return vertex_array[vid];
 }
 
 fragment half4 basic_fragment() {
+    // TODO: update to return other colors
     return half4(1.0);
 }

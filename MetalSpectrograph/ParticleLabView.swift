@@ -112,7 +112,7 @@ class ParticleLabView: MetalView, MetalViewDelegate {
             try computePipelineState = device!.newComputePipelineStateWithFunction(kernelFunction!)
         } catch(let err) {
             //fatalError() ?
-            print("Failed to create pipeline state, error \(err)")
+            Swift.print("Failed to create pipeline state, error \(err)")
         }
         
         let threadExecutionWidth = computePipelineState.threadExecutionWidth
