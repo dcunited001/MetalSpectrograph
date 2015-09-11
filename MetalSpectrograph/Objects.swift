@@ -60,12 +60,15 @@ class Node<T: Vertexable> {
     var vCount:Int
     var vBytes:Int
     var vertexBuffer:MTLBuffer
+    var uniformBuffer:MTLBuffer
     var device:MTLDevice
     
+    var modelScale: Float = 0.8
     var modelPosition = float3(0.0, 0.0, 0.0)
-    var modelRotation = float3(0.0, 0.0, 0.0)
-    var modelAngle = Float(0.0)
-    var scale: Float = 1
+    
+    // TODO: figure out why 90 deg is magic #
+    var modelAngle = Float(90)
+    var modelRotation = float3(1.0, 1.0, 1.0)
     
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
@@ -76,6 +79,12 @@ class Node<T: Vertexable> {
         self.vCount = vertices.count
         self.vBytes = Node<T>.calculateBytes(vCount)
         self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
+        
+        self.uniformBuffer = self.device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
+        
+        var model = modelMatrix()
+        let modelPointer = uniformBuffer.contents()
+        memcpy(modelPointer, &model, sizeof(float4x4))
     }
     
     func setVertexBuffer(vertices: [Vertexable]) {
@@ -95,6 +104,6 @@ class Node<T: Vertexable> {
         return model *
             Metal3DTransforms.translate(modelPosition) *
             Metal3DTransforms.rotate(modelAngle, r: modelRotation) *
-            Metal3DTransforms.scale(scale, y: scale, z: scale)
+            Metal3DTransforms.scale(modelScale, y: modelScale, z: modelScale)
     }
 }
