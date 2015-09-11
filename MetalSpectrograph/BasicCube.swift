@@ -11,7 +11,7 @@ import Metal
 
 // TODO: how to dynamically swap out vertex colors?
 // TODO: how to make truly generic?
-class Cube: Node<ColorVertex> {
+class Cube: Node<T> {
     
     class func cubeVertices() -> [ColorVertex] {
         return [
