@@ -13,6 +13,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     var pipelineState: MTLRenderPipelineState?
     var object: Cube<ColorVertex>?
     var size = CGSize()
+    var startTime = CFAbsoluteTimeGetCurrent()
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -85,7 +86,21 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
+        let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
         
+        let rotation = object!.rotateForTime(timeSinceLastUpdate) { obj in
+            return 1.0
+        }
+        let translation = object!.translateForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)/2) * float3(0.0, 0.0, -1.0)
+        }
+        let scale = object!.scaleForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)*2) * float3(1.0, 1.0, 0.0)
+        }
+        object!.updateModelMatrix(translation, rotation: rotation, scale: scale)
+        object!.updateUniformBuffer()
     }
+    
+    
     
 }
