@@ -63,7 +63,7 @@ class Node<T: Vertexable> {
     var uniformBuffer:MTLBuffer
     var device:MTLDevice
     
-    var modelScale: Float = 0.8
+    var modelScale: Float = 1
     var modelPosition = float3(0.0, 0.0, 0.0)
     
     // TODO: figure out why 90 deg is magic #

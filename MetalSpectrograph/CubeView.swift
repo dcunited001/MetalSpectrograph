@@ -31,6 +31,10 @@ class CubeViewController: NSViewController {
         renderer.configure(metalView)
         metalView.metalViewDelegate = renderer
         self.view.addSubview(metalView)
-
+    }
+    
+    func positionObject() {
+        renderer.object?.modelScale = 0.8
+        
     }
 }
