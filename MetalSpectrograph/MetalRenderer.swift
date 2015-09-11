@@ -55,21 +55,19 @@ class MetalRenderer {
     }
     
     func configure(view: MetalView) {
-        //set device
-        //configure view for renderer
-        
         view.depthPixelFormat = .Depth32Float
         view.colorPixelFormat = MTLPixelFormat.BGRA8Unorm // ?? correct
         view.stencilPixelFormat = MTLPixelFormat.Invalid
         view.sampleCount = 1
         
-        guard let device = view.device else {
+        guard let viewDevice = view.device else {
             print("Failed retrieving device from view")
             return
         }
-
-        commandQueue = device.newCommandQueue()
-        shaderLibrary = device.newDefaultLibrary()
+        
+        device = viewDevice
+        commandQueue = device!.newCommandQueue()
+        shaderLibrary = device!.newDefaultLibrary()
     }
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
