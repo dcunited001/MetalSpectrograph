@@ -15,6 +15,7 @@ class SpectrographController: NSViewController, EZAudioPlayerDelegate, EZAudioFF
     var fft: EZAudioFFTRolling!
     var player: EZAudioPlayer!
     var audioFile: EZAudioFile!
+    let renderFFT = false
     
     @IBOutlet weak var btnPlay: NSButton!
     @IBOutlet weak var audioPlot: EZAudioPlot!
@@ -61,15 +62,23 @@ class SpectrographController: NSViewController, EZAudioPlayerDelegate, EZAudioFF
     }
     
     func audioPlayer(audioPlayer: EZAudioPlayer!, playedAudio buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32, inAudioFile audioFile: EZAudioFile!) {
-        fft?.computeFFTWithBuffer(buffer[0], withBufferSize: bufferSize)
+        if (renderFFT) {
+            fft?.computeFFTWithBuffer(buffer[0], withBufferSize: bufferSize)
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.audioPlot.updateBuffer(buffer[0], withBufferSize: UInt32(bufferSize))
+            })
+        }
     }
     
     func fft(fft: EZAudioFFT!, updatedWithFFTData fftData: UnsafeMutablePointer<Float>, bufferSize: vDSP_Length) {
-        dispatch_async(dispatch_get_main_queue(), {
-            // [2048 x 1] array of floats
-            //
-            self.audioPlot.updateBuffer(fftData, withBufferSize: UInt32(bufferSize))
-        })
+        if (renderFFT) {
+            dispatch_async(dispatch_get_main_queue(), {
+                // [2048 x 1] array of floats
+                //
+                self.audioPlot.updateBuffer(fftData, withBufferSize: UInt32(bufferSize))
+            })
+        }
     }
     
     func setupFFT(sampleRate: Float64) {
