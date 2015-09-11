@@ -11,7 +11,7 @@ import Cocoa
 import EZAudio
 import MetalKit
 
-class MetalLooperController: BaseMetalController, EZAudioPlayerDelegate, EZAudioFFTDelegate, MetalViewControllerDelegate {
+class MetalLooperController: NSViewController, EZAudioPlayerDelegate, EZAudioFFTDelegate {
     var player: EZAudioPlayer!
     var audioFile: EZAudioFile!
     
@@ -25,13 +25,13 @@ class MetalLooperController: BaseMetalController, EZAudioPlayerDelegate, EZAudio
         super.viewDidLoad()
         
         self.player = EZAudioPlayer(delegate: self)
-        self.player.shouldLoop = true
+        self.player.shouldLoop = false
         self.audioFile = EZAudioFile(URL: fileUrl)
         self.player.audioFile = self.audioFile
         
         setupPlayerNotifications()
         
-        self.metalViewControllerDelegate = self
+//        self.metalViewControllerDelegate = self
     }
     
     override var representedObject: AnyObject? {
@@ -59,18 +59,6 @@ class MetalLooperController: BaseMetalController, EZAudioPlayerDelegate, EZAudio
     }
     
     func audioPlayer(audioPlayer: EZAudioPlayer!, playedAudio buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32, inAudioFile audioFile: EZAudioFile!) {
-        
-    }
-    
-    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-        
-    }
-    
-    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
-        
-    }
-    
-    override func setupRenderPipeline() {
         
     }
     
