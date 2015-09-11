@@ -6,4 +6,14 @@
 //  Copyright © 2015 Voxxel. All rights reserved.
 //
 
-import Foundation
+import Cocoa
+import MetalKit
+import simd
+
+class CubeViewController: NSViewController {
+    
+}
+
+class CubeView: NSViewController {
+    
+}
