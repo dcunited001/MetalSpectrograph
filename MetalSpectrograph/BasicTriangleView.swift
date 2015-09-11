@@ -10,27 +10,6 @@ import Cocoa
 import MetalKit
 
 class BasicTriangleView: MetalView {
-    override func render() {
-        // setup CFAbsoluteTimeGetCurrent()
-        
-        renderPassDescriptor = currentRenderPassDescriptor
-        
-        // test renderpassdescriptor
-        let commandBuffer = commandQueue.commandBuffer()
-        
-        guard let drawable = currentDrawable else
-        {
-            print("currentDrawable returned nil")
-            
-            return
-        }
-        
-        setupRenderPassDescriptor(drawable)
-        self.metalViewDelegate?.renderObjects(drawable, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
-        
-        self.metalViewDelegate?.afterRender?()
-    }
-    
     override func setupRenderPassDescriptor(drawable: CAMetalDrawable) {
         renderPassDescriptor!.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor!.colorAttachments[0].loadAction = .Clear

@@ -109,10 +109,6 @@ class MetalView: MTKView {
         setupRenderPassDescriptor(drawable)
         self.metalViewDelegate?.renderObjects(drawable, renderPassDescriptor: renderPassDescriptor!, commandBuffer: commandBuffer)
         
-        // hmm drawable! will still blow up here if nil. guard?
-        commandBuffer.presentDrawable(drawable)
-        commandBuffer.commit()
-        
         self.metalViewDelegate?.afterRender?()
     }
     
