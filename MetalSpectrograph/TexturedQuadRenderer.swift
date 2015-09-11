@@ -23,23 +23,23 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
     override func configure(view: MetalView) {
         super.configure(view)
         
-        guard !preparePipelineState(view) else {
+        guard preparePipelineState(view) else {
             print("Failed creating a compiled pipeline state object!")
             return
         }
         
         //TODO: add asset?
-        guard !prepareTexturedQuad("Default", extStr: "jpg") else {
+        guard prepareTexturedQuad("Default", extStr: "jpg") else {
             print("Failed creating a textured quad!")
             return
         }
         
-        guard !prepareDepthStencilState() else {
+        guard prepareDepthStencilState() else {
             print("Failed creating a depth stencil state!")
             return
         }
         
-        guard !prepareTransformBuffer() else {
+        guard prepareTransformBuffer() else {
             print("Failed creating a transform buffer!")
             return
         }
@@ -48,6 +48,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
+
         guard let fragmentProgram = shaderLibrary?.newFunctionWithName("texturedQuadFragment") else {
             print("Couldn't load texturedQuadFragment")
             return false
@@ -60,14 +61,14 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         
         let quadPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         quadPipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
-        quadPipelineStateDescriptor.stencilAttachmentPixelFormat = view.depthPixelFormat!
+        quadPipelineStateDescriptor.stencilAttachmentPixelFormat = view.stencilPixelFormat!
         quadPipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
         quadPipelineStateDescriptor.sampleCount = view.sampleCount
         quadPipelineStateDescriptor.vertexFunction = vertexProgram
         quadPipelineStateDescriptor.fragmentFunction = fragmentProgram
         
         do {
-            try pipelineState = (device?.newRenderPipelineStateWithDescriptor(quadPipelineStateDescriptor))!
+            try pipelineState = (device!.newRenderPipelineStateWithDescriptor(quadPipelineStateDescriptor))
         } catch(let err) {
             print("Failed to create pipeline state, error: \(err)")
             return false
@@ -86,36 +87,38 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     func prepareTexturedQuad(texStr: NSString, extStr: NSString) -> Bool {
-        guard let inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String) else {
+        guard let newTexture = ImageTexture.init(name: texStr as String, ext: extStr as String) else {
             print("Failed to create ImageTexture")
             return false
         }
-        inTexture.texture!.label = texStr as String
+        inTexture = newTexture
+        inTexture!.texture?.label = texStr as String
         
-        guard (!inTexture.finalize(device!)) else {
+        guard inTexture!.finalize(device!) else {
             print("Failed to finalize ImageTexture")
             return false
         }
         
-        size.width = CGFloat(inTexture.width)
-        size.height = CGFloat(inTexture.height)
+        size.width = CGFloat(inTexture!.width)
+        size.height = CGFloat(inTexture!.height)
         
-        guard let quad = TexturedQuad(device: device!) else {
+        guard let newQuad = TexturedQuad(device: device!) else {
             print("Failed to create TexturedQuad")
             return false
         }
-        quad.size = size
+        quad = newQuad
+        quad!.size = size
         
         return true
     }
     
     func prepareTransformBuffer() -> Bool {
-        guard let transformBuffer = device?.newBufferWithLength(kSzBufferLimitsPerFrame, options: .CPUCacheModeDefaultCache) else {
+        guard let newTransformBuffer = device?.newBufferWithLength(kSzBufferLimitsPerFrame, options: .CPUCacheModeDefaultCache) else {
             print("Failed to create transform buffer")
             return false
         }
-        
-        transformBuffer.label = "TransformBuffer"
+        transformBuffer = newTransformBuffer
+        transformBuffer!.label = "TransformBuffer"
         return true
     }
     
@@ -124,9 +127,9 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         // - eye point, a reference point indicating center of the scene
         // - and an up vector
         
-        var eye:float3 = [0.0, 0.0, 0.0]
-        var center:float3 = [0.0, 0.0, 1.0]
-        var up:float3 = [0.0, 1.0, 0.0]
+        let eye:float3 = [0.0, 0.0, 0.0]
+        let center:float3 = [0.0, 0.0, 1.0]
+        let up:float3 = [0.0, 1.0, 0.0]
         
         lookAtMatrix = Metal3DTransforms.lookAt(eye, center: center, up: up)
         translateMatrix = Metal3DTransforms.translate(0.0, y: -0.25, z: 2.0)
