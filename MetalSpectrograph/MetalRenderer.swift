@@ -88,13 +88,6 @@ protocol Renderable {
     // updateLogic here?
 }
 
-protocol Rotatable {
-    // rotation center
-    // rotate object
-}
-
-protocol Translatable { }
-
 class CollectionRenderer<T>: MetalRenderer, Renderable {
     var pipelineState: MTLRenderPipelineState?
     override func configure(view: MetalView){

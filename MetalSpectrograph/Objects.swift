@@ -55,6 +55,23 @@ struct ColorVertex: Vertexable, Colorable {
     }
 }
 
+//protocol Uniformable?
+
+protocol Rotatable {
+    var rotationRate: Float { get set }
+    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) -> Float
+}
+
+protocol Translatable {
+    var translationRate: Float { get set }
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?) -> float3
+}
+
+protocol Scalable {
+    var scaleRate: Float { get set }
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?) -> float3
+}
+
 class Node<T: Vertexable> {
     let name:String
     var vCount:Int
@@ -63,12 +80,16 @@ class Node<T: Vertexable> {
     var uniformBuffer:MTLBuffer
     var device:MTLDevice
     
-    var modelScale: Float = 1
+    var modelScale = float3(1.0, 1.0, 1.0)
     var modelPosition = float3(0.0, 0.0, 0.0)
     
     // TODO: figure out why 90 deg is magic #
     var modelAngle = Float(90)
     var modelRotation = float3(1.0, 1.0, 1.0)
+    
+    //swift has to have a default value
+    var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+    var modelPointer: UnsafeMutablePointer<Void>?
     
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
@@ -82,9 +103,9 @@ class Node<T: Vertexable> {
         
         self.uniformBuffer = self.device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
         
-        var model = modelMatrix()
-        let modelPointer = uniformBuffer.contents()
-        memcpy(modelPointer, &model, sizeof(float4x4))
+        self.modelMatrix = initModelMatrix()
+        self.modelPointer = uniformBuffer.contents()
+        updateUniformBuffer()
     }
     
     func setVertexBuffer(vertices: [Vertexable]) {
@@ -98,12 +119,28 @@ class Node<T: Vertexable> {
         return vertexCount * sizeof(T)
     }
     
-    func modelMatrix() -> float4x4 {
+    func initModelMatrix() -> float4x4 {
         //init 4x4 identity matrix
         let model = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
         return model *
             Metal3DTransforms.translate(modelPosition) *
             Metal3DTransforms.rotate(modelAngle, r: modelRotation) *
-            Metal3DTransforms.scale(modelScale, y: modelScale, z: modelScale)
+            Metal3DTransforms.scale(modelScale)
+    }
+    
+    func updateModelMatrix(translation: float3, rotation: Float, scale: float3) {
+        self.modelMatrix = float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
+            Metal3DTransforms.translate(modelPosition) *
+            Metal3DTransforms.rotate(modelAngle, r: self.modelRotation) *
+            Metal3DTransforms.scale(modelScale)
+        
+//        self.modelMatrix *=
+//            Metal3DTransforms.translate(translation) *
+//            Metal3DTransforms.rotate(rotation, r: self.modelRotation) *
+//            Metal3DTransforms.scale(self.modelScale + scale)
+    }
+    
+    func updateUniformBuffer() {
+        memcpy(modelPointer!, &self.modelMatrix, sizeof(float4x4))
     }
 }
