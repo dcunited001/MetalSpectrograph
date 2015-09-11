@@ -29,6 +29,7 @@ class MetalView: MTKView {
     var displayLink: CVDisplayLink?
     var defaultLibrary:MTLLibrary!
     
+    var startTime: CFAbsoluteTime!
     var lastFrameStart: CFAbsoluteTime!
     var thisFrameStart: CFAbsoluteTime!
 
@@ -53,6 +54,7 @@ class MetalView: MTKView {
         //override to setup objects
         setupRenderPipeline()
         
+        startTime = CFAbsoluteTimeGetCurrent()
         lastFrameStart = CFAbsoluteTimeGetCurrent()
         thisFrameStart = CFAbsoluteTimeGetCurrent()
     }
