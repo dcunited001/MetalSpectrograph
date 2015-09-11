@@ -10,7 +10,7 @@ import simd
 import Metal
 
 // TODO: how to dynamically swap out vertex colors?
-class Cube<T: Vertexable>: Node<T> {
+class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
     
     // TODO: how to make truly generic?
     //  i.e. make cube that works with Vertex & ColorVertex
@@ -58,6 +58,35 @@ class Cube<T: Vertexable>: Node<T> {
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 1)
+    }
+    
+    // Rotatable
+    
+    var rotationRate: Float = 10.0
+    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) -> Float {
+        // TODO: clean this up.  add applyRotation? as default extension to protocol?
+        // - or set up 3D transforms as a protocol?
+        let rotation = (rotationRate * Float(t)) * (block?(self) ?? 1)
+        self.modelAngle += rotation
+        return rotation
+    }
+    
+    // Translatable
+    
+    var translationRate: Float = 0.1
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?) -> float3 {
+        let translation = (translationRate * Float(t)) * (block?(self) ?? float3(0,0,0))
+        self.modelPosition += translation
+        return translation
+    }
+    
+    // Scalable
+    
+    var scaleRate: Float = 0.1
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?) -> float3 {
+        let scaleAmount = (scaleRate * Float(t)) * (block?(self) ?? float3(0.0,0.0,0.0))
+        self.modelScale += scaleAmount
+        return scaleAmount
     }
 }
 
