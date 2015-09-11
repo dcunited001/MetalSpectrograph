@@ -18,6 +18,9 @@ import Metal
 // ... 
 // ... oh yeh... C & pointers!!!  Direct memory access, the O.G. Generic
 
+// TODO: genericize views?   MetalView<BasicTriangle>   ... hmmmmm, maybe
+// TODO: genericize renderers?   MetalRenderer<BasicTriangle>
+
 protocol Vertexable {
     var vertex: float4 { get set }
     static func chunkSize() -> Int
@@ -56,8 +59,13 @@ class Node<T: Vertexable> {
     let name:String
     var vCount:Int
     var vBytes:Int
-    var vBuffer:MTLBuffer
+    var vertexBuffer:MTLBuffer
     var device:MTLDevice
+    
+    var modelPosition = float3(0.0, 0.0, 0.0)
+    var modelRotation = float3(0.0, 0.0, 0.0)
+    var modelAngle = Float(0.0)
+    var scale: Float = 1
     
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
@@ -67,16 +75,26 @@ class Node<T: Vertexable> {
         // setVertexBuffer(vertices)
         self.vCount = vertices.count
         self.vBytes = Node<T>.calculateBytes(vCount)
-        self.vBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
+        self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
     }
     
     func setVertexBuffer(vertices: [Vertexable]) {
         let vertexCount = vertices.count
         let vertexBytes = Node<T>.calculateBytes(vCount)
-        self.vBuffer = self.device.newBufferWithBytes(vertices, length: vertexBytes, options: .CPUCacheModeDefaultCache)
+        self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vertexBytes, options: .CPUCacheModeDefaultCache)
+        self.vertexBuffer.label = "\(T.self) vertices"
     }
     
     static func calculateBytes(vertexCount: Int) -> Int {
         return vertexCount * sizeof(T)
+    }
+    
+    func modelMatrix() -> float4x4 {
+        //init 4x4 identity matrix
+        let model = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+        return model *
+            Metal3DTransforms.translate(modelPosition) *
+            Metal3DTransforms.rotate(modelAngle, r: modelRotation) *
+            Metal3DTransforms.scale(scale, y: scale, z: scale)
     }
 }
