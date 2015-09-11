@@ -18,20 +18,24 @@ class Metal3DTransforms {
         return float4x4(diagonal: v)
     }
     
+    class func scale(s: float3) -> float4x4 {
+        let v: float4 = [s.x, s.y, s.z, 1.0]
+        return float4x4(diagonal: v)
+    }
+    
     class func scale(s: float4) -> float4x4 {
         let v: float4 = [s.x, s.y, s.z, 1.0]
         return float4x4(diagonal: v)
     }
     
     class func translate(x: Float, y: Float, z: Float) -> float4x4 {
-        return translate([x, y, z])
+        return translate(float3(x, y, z))
     }
     
     class func translate(t: float3) -> float4x4 {
         var M = matrix_identity_float4x4
-        
         M.columns.3 = [t.x, t.y, t.z, Float(1.0)]
-        return float4x4(M)
+        return float4x4(M).transpose
     }
     
     static let k1Div180_f: Float = 1.0 / 180.0;
