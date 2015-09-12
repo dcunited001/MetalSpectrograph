@@ -705,14 +705,14 @@
             <objects>
                 <viewController id="x9Z-0p-LHC" customClass="CubeViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="aau-ng-rhG">
-                        <rect key="frame" x="0.0" y="0.0" width="702" height="524"/>
+                        <rect key="frame" x="0.0" y="0.0" width="913" height="524"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
                     </view>
                 </viewController>
                 <customObject id="jxT-pQ-K8X" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1058" y="1448"/>
+            <point key="canvasLocation" x="-952.5" y="1448"/>
         </scene>
         <!--Textured Quad View Controller-->
         <scene sceneID="dzI-0C-IFJ">

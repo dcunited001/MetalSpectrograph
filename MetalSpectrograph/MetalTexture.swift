@@ -81,7 +81,6 @@ class ImageTexture: MetalTexture {
             CGContextTranslateCTM(pContext, CGFloat(width), CGFloat(height))
             CGContextScaleCTM(pContext, -1.0, -1.0)
         }
-        
 
         CGContextDrawImage(pContext, bounds, pImage)
         

@@ -14,7 +14,7 @@ class CubeView: MetalView {
     override func setupRenderPassDescriptor(drawable: CAMetalDrawable) {
         renderPassDescriptor!.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor!.colorAttachments[0].loadAction = .Clear
-        renderPassDescriptor!.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        renderPassDescriptor!.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0.5)
     }
 }
 

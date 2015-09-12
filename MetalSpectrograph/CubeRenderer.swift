@@ -14,6 +14,10 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     var object: Cube<ColorVertex>?
     var size = CGSize()
     var startTime = CFAbsoluteTimeGetCurrent()
+//    let vertexShaderName = "uniform_color_morph_triangle_vertex"
+    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
+//    let vertexShaderName = "basic_triangle_vertex"
+    let fragmentShaderName = "basic_triangle_fragment"
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -29,12 +33,12 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
-        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("basic_triangle_fragment") else {
+        guard let fragmentProgram = shaderLibrary?.newFunctionWithName(fragmentShaderName) else {
             print("Couldn't load basic_triangle_fragment")
             return false
         }
         
-        guard let vertexProgram = shaderLibrary?.newFunctionWithName("basic_triangle_vertex") else {
+        guard let vertexProgram = shaderLibrary?.newFunctionWithName(vertexShaderName) else {
             print("Couldn't load basic_triangle_vertex")
             return false
         }
@@ -88,16 +92,19 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
         
-        let rotation = object!.rotateForTime(timeSinceLastUpdate) { obj in
+        object!.rotateForTime(timeSinceLastUpdate) { obj in
             return 1.0
         }
-        let translation = object!.translateForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)/2) * float3(0.0, 0.0, -1.0)
+        object!.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)/2) * float3(0.5, 0.5, 1.0)
         }
-        let scale = object!.scaleForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)*2) * float3(1.0, 1.0, 0.0)
+        object!.translateForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)/2) * float3(0.1, 0.1, -1.0)
         }
-        object!.updateModelMatrix(translation, rotation: rotation, scale: scale)
+        object!.scaleForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)*2) * float3(1.0, 0.6, 0.3)
+        }
+        object!.updateModelMatrix()
         object!.updateUniformBuffer()
     }
     

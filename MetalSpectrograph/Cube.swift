@@ -17,14 +17,14 @@ class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
     //  where a single cubeVertices method produces either Vertex/ColorVertex
     class func cubeVertices() -> [T] {
         return [
-            T(chunks: [float4(-1.0,  1.0,  1.0, 1.0), float4(1.0, 1.0, 1.0, 0.0)]),
-            T(chunks: [float4(-1.0, -1.0,  1.0, 1.0), float4(0.0, 1.0, 1.0, 0.0)]),
-            T(chunks: [float4( 1.0, -1.0,  1.0, 1.0), float4(1.0, 0.0, 1.0, 0.0)]),
-            T(chunks: [float4( 1.0,  1.0,  1.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
-            T(chunks: [float4(-1.0,  1.0, -1.0, 1.0), float4(0.0, 0.0, 1.0, 0.0)]),
-            T(chunks: [float4( 1.0,  1.0, -1.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)]),
-            T(chunks: [float4(-1.0, -1.0, -1.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
-            T(chunks: [float4( 1.0, -1.0, -1.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)])
+            T(chunks: [float4(-1.0,  1.0,  1.0, 1.0), float4(1.0, 1.0, 1.0, 0.5)]),
+            T(chunks: [float4(-1.0, -1.0,  1.0, 1.0), float4(0.0, 1.0, 1.0, 0.5)]),
+            T(chunks: [float4( 1.0, -1.0,  1.0, 1.0), float4(1.0, 0.0, 1.0, 0.5)]),
+            T(chunks: [float4( 1.0,  1.0,  1.0, 1.0), float4(1.0, 0.0, 0.0, 0.5)]),
+            T(chunks: [float4(-1.0,  1.0, -1.0, 1.0), float4(0.0, 0.0, 1.0, 0.5)]),
+            T(chunks: [float4( 1.0,  1.0, -1.0, 1.0), float4(1.0, 1.0, 0.0, 0.5)]),
+            T(chunks: [float4(-1.0, -1.0, -1.0, 1.0), float4(0.0, 1.0, 0.0, 0.5)]),
+            T(chunks: [float4( 1.0, -1.0, -1.0, 1.0), float4(0.0, 0.0, 0.0, 0.5)])
         ]
     }
     
@@ -62,31 +62,35 @@ class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
     
     // Rotatable
     
-    var rotationRate: Float = 10.0
-    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) -> Float {
+    var rotationRate: Float = 20.0
+    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) {
         // TODO: clean this up.  add applyRotation? as default extension to protocol?
         // - or set up 3D transforms as a protocol?
         let rotation = (rotationRate * Float(t)) * (block?(self) ?? 1)
         self.modelAngle += rotation
-        return rotation
+    }
+    
+    var updateRotationalVectorRate: Float = 0.5
+    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float3)?) {
+        let rVector = (rotationRate * Float(t)) * (block?(self) ?? float3(1.0, 1.0, 1.0))
+        self.modelRotation += rVector
     }
     
     // Translatable
     
-    var translationRate: Float = 0.1
-    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?) -> float3 {
+    var translationRate: Float = 0.5
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?) {
         let translation = (translationRate * Float(t)) * (block?(self) ?? float3(0,0,0))
         self.modelPosition += translation
-        return translation
     }
     
     // Scalable
     
-    var scaleRate: Float = 0.1
-    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?) -> float3 {
+    var scaleRate: Float = 0.25
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?) {
         let scaleAmount = (scaleRate * Float(t)) * (block?(self) ?? float3(0.0,0.0,0.0))
         self.modelScale += scaleAmount
-        return scaleAmount
     }
+    
 }
 

@@ -59,17 +59,28 @@ struct ColorVertex: Vertexable, Colorable {
 
 protocol Rotatable {
     var rotationRate: Float { get set }
-    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) -> Float
+    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?)
+    
+    var updateRotationalVectorRate: Float { get set }
+    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float3)?)
 }
 
 protocol Translatable {
     var translationRate: Float { get set }
-    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?) -> float3
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?)
 }
 
 protocol Scalable {
     var scaleRate: Float { get set }
-    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?) -> float3
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?)
+}
+
+// nullify alphas and treat colors as though they are coordinate system.
+//   mod to correct?  or div by max.
+//   for now, just using the uniform
+protocol VertexColorModulatable {
+    var changeRate: Float { get set }
+    func translateForTime(t: CFTimeInterval, block: (Scalable -> float3)?)
 }
 
 class Node<T: Vertexable> {
@@ -128,16 +139,11 @@ class Node<T: Vertexable> {
             Metal3DTransforms.scale(modelScale)
     }
     
-    func updateModelMatrix(translation: float3, rotation: Float, scale: float3) {
+    func updateModelMatrix() {
         self.modelMatrix = float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
             Metal3DTransforms.translate(modelPosition) *
             Metal3DTransforms.rotate(modelAngle, r: self.modelRotation) *
             Metal3DTransforms.scale(modelScale)
-        
-//        self.modelMatrix *=
-//            Metal3DTransforms.translate(translation) *
-//            Metal3DTransforms.rotate(rotation, r: self.modelRotation) *
-//            Metal3DTransforms.scale(self.modelScale + scale)
     }
     
     func updateUniformBuffer() {
