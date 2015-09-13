@@ -84,12 +84,37 @@ protocol VertexColorModulatable {
 }
 
 //TODO: refactor uniformable
-protocol Uniformable {
+protocol Uniformable: class {
     var modelScale:float4 { get set }
     var modelPosition:float4 { get set }
     var modelRotation:float4 { get set }
     var modelMatrix:float4x4 { get set }
-    var uniformBuffer:MTLBuffer { get set }
+    var uniformBuffer:MTLBuffer? { get set }
+    var modelPointer: UnsafeMutablePointer<Void>? { get set }
+}
+
+//must deinit resources
+extension Uniformable {
+    func calcModelMatrix() -> float4x4 {
+        return float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
+            Metal3DTransforms.translate(modelPosition) *
+            Metal3DTransforms.rotate(modelRotation) *
+            Metal3DTransforms.scale(modelScale)
+    }
+    
+    func initModelMatrix() {
+        self.modelMatrix = calcModelMatrix()
+        self.modelPointer = uniformBuffer!.contents()
+    }
+    
+    func prepareUniformBuffer(device: MTLDevice) {
+        self.uniformBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
+    }
+    
+    func updateUniformBuffer() {
+        memcpy(modelPointer!, &self.modelMatrix, sizeof(float4x4))
+    }
+
 }
 
 protocol Projectable: class {
@@ -104,9 +129,11 @@ protocol Projectable: class {
     func updateProjectionBuffer()
 }
 
+// must deinit resources
 extension Projectable {
     func initProjectionMatrix() {
-        projectionMatrix = Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
+        print(Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp))
+        self.projectionMatrix = Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
     func prepareProjectionBuffer(device: MTLDevice) {
         self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
@@ -122,22 +149,18 @@ extension Projectable {
 // - determine indexing functions for textures
 // TODO: multi-persective renderer
 
-class Node<T: Vertexable> {
+class Node<T: Vertexable>: Uniformable {
     let name:String
     var vCount:Int
     var vBytes:Int
     var vertexBuffer:MTLBuffer
-    var uniformBuffer:MTLBuffer
     var device:MTLDevice
     
+    // Uniformable
+    var uniformBuffer:MTLBuffer?
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
     var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
-    
-    // TODO: figure out why 90 deg is magic #
-    // rx, ry, rz, angle
-    var modelRotation = float4(1.0, 1.0, 1.0, 180)
-    
-    //swift has to have a default value
+    var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var modelPointer: UnsafeMutablePointer<Void>?
     
@@ -152,8 +175,8 @@ class Node<T: Vertexable> {
         
         self.uniformBuffer = self.device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
         
-        self.modelMatrix = initModelMatrix()
-        self.modelPointer = uniformBuffer.contents()
+        self.modelMatrix = calcModelMatrix()
+        self.modelPointer = uniformBuffer!.contents()
         updateUniformBuffer()
     }
     
@@ -166,24 +189,5 @@ class Node<T: Vertexable> {
     
     static func calculateBytes(vertexCount: Int) -> Int {
         return vertexCount * sizeof(T)
-    }
-    
-    func initModelMatrix() -> float4x4 {
-        return float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
-            Metal3DTransforms.translate(modelPosition) *
-            Metal3DTransforms.rotate(modelRotation) *
-            Metal3DTransforms.scale(modelScale)
-
-    }
-    
-    func updateModelMatrix() {
-        self.modelMatrix = float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
-            Metal3DTransforms.translate(modelPosition) *
-            Metal3DTransforms.rotate(modelRotation) *
-            Metal3DTransforms.scale(modelScale)
-    }
-    
-    func updateUniformBuffer() {
-        memcpy(modelPointer!, &self.modelMatrix, sizeof(float4x4))
     }
 }

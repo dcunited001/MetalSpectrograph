@@ -9,7 +9,7 @@
 import simd
 import MetalKit
 
-class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
+class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
 {
     var pipelineState: MTLRenderPipelineState?
     var object: Cube<ColorVertex>?
@@ -20,13 +20,34 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
 //    let vertexShaderName = "basic_triangle_vertex"
     let fragmentShaderName = "basic_triangle_fragment"
     
+    //Projectable
     var projectionEye:float3 = [0.0, 0.0, 0.0]
-    var projectionCenter:float3 = [0.0, 0.0, 1.0]
-    var projectionUp:float3 = [0.0, 1.0, 0.0]
+    var projectionCenter:float3 = [0.0, 0.0, 2.0]
+    var projectionUp:float3 = [0.0, 1.0, 1.0]
     var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
     var projectionBuffer:MTLBuffer?
     var projectionPointer: UnsafeMutablePointer<Void>?
     
+    // Uniformable
+    var uniformBuffer:MTLBuffer?
+    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 0.0, 2.0)
+    var modelRotation = float4(1.0, 1.0, 1.0, 90)
+    var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+    var modelPointer: UnsafeMutablePointer<Void>?
+    
+    override init() {
+        super.init()
+        setProperties()
+    }
+    
+    deinit {
+        //TODO: release uniform and projection
+    }
+    
+    func setProperties() {
+        self.modelScale = float4(1.0, 1.0, 1.0, 1.0)
+    }
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -43,6 +64,9 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
         initProjectionMatrix()
         prepareProjectionBuffer(device!)
         updateProjectionBuffer()
+        
+        prepareUniformBuffer(device!)
+        initModelMatrix()
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
@@ -81,8 +105,11 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
         renderEncoder.pushDebugGroup("encode basic cube")
         renderEncoder.setRenderPipelineState(pipelineState!)
         updateProjectionBuffer()
+        updateUniformBuffer()
         object!.encode(renderEncoder)
+        print(projectionMatrix)
         renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 2)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 3)
         renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()
@@ -119,7 +146,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
         object!.scaleForTime(timeSinceLastUpdate) { obj in
             return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
         }
-        object!.updateModelMatrix()
+        object!.modelMatrix = object!.calcModelMatrix()
         object!.updateUniformBuffer()
     }
 }
