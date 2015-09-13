@@ -35,7 +35,7 @@ class CubeViewController: NSViewController {
     }
     
     func positionObject() {
-        renderer.object?.modelPosition = float3(0.0,0.0,2.0)
-        renderer.object?.modelScale = float3(0.6)
+        renderer.object?.modelPosition = float4(0.0, 0.0, 2.0, 1.0)
+        renderer.object?.modelScale = float4(0.7, 0.7, 0.7, 1.0)
     }
 }

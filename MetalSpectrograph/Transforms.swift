@@ -9,10 +9,6 @@
 import simd
 
 class Metal3DTransforms {
-//    class func radians(degrees: Float) -> float4x4 {
-//
-//    }
-    
     class func scale(x: Float, y: Float, z: Float) -> float4x4 {
         let v: float4 = [x, y, z, 1.0]
         return float4x4(diagonal: v)
@@ -24,8 +20,9 @@ class Metal3DTransforms {
     }
     
     class func scale(s: float4) -> float4x4 {
-        let v: float4 = [s.x, s.y, s.z, 1.0]
-        return float4x4(diagonal: v)
+//        print(s)
+//        print(float4x4(diagonal: s))
+        return float4x4(diagonal: s)
     }
     
     class func translate(x: Float, y: Float, z: Float) -> float4x4 {
@@ -38,25 +35,28 @@ class Metal3DTransforms {
         return float4x4(M).transpose
     }
     
+    //alternate implementation
+    class func translate(t: float4) -> float4x4 {
+        var M = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+        M[3] = t
+//        print(M)
+//        print(M[3])
+        return M.transpose
+    }
+    
     static let k1Div180_f: Float = 1.0 / 180.0;
     class func radiansOverPi(degrees: Float) -> Float {
         return (degrees * k1Div180_f)
     }
     
-    class func rotate(angle: Float, x: Float, y: Float, z: Float) -> float4x4 {
-        let r: float3 = [x, y, z]
-        return rotate(angle, r: r)
-    }
-    
-    class func rotate(angle: Float, r: float3) -> float4x4 {
-        let a = radiansOverPi(angle)
+    class func rotate(r: float4) -> float4x4{
+        var a = radiansOverPi(r.w)
         var c:Float = 0.0
         var s:Float = 0.0
-        
         __sincospif(a, &c, &s)
         
+        var u = normalize(float3(r.x, r.y, r.z))
         let k = 1.0 - c
-        let u = normalize(r) // unit vector
         let v = s * u
         let w = k * u
         
@@ -74,12 +74,12 @@ class Metal3DTransforms {
             w.x * u.z + v.y,
             w.y * u.z - v.x,
             w.z * u.z + c, 0.0]
-
+        
         var S:float4 = [0.0, 0.0, 0.0, 1.0]
         
         return float4x4(rows: [P, Q, R, S])
     }
-    
+        
 //    simd::float4x4 frustum(const float& fovH,
 //    const float& fovV,
 //    const float& near,

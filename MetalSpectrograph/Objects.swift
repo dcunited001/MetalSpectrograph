@@ -62,17 +62,17 @@ protocol Rotatable {
     func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?)
     
     var updateRotationalVectorRate: Float { get set }
-    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float3)?)
+    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float4)?)
 }
 
 protocol Translatable {
     var translationRate: Float { get set }
-    func translateForTime(t: CFTimeInterval, block: (Translatable -> float3)?)
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float4)?)
 }
 
 protocol Scalable {
     var scaleRate: Float { get set }
-    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float3)?)
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float4)?)
 }
 
 // nullify alphas and treat colors as though they are coordinate system.
@@ -80,8 +80,25 @@ protocol Scalable {
 //   for now, just using the uniform
 protocol VertexColorModulatable {
     var changeRate: Float { get set }
-    func translateForTime(t: CFTimeInterval, block: (Scalable -> float3)?)
+    func translateForTime(t: CFTimeInterval, block: (Scalable -> float4)?)
 }
+
+//TODO: refactor uniformable
+protocol Uniformable {
+    var modelScale:float4 { get set }
+    var modelPosition:float4 { get set }
+    var modelRotation:float4 { get set }
+    var modelMatrix:float4x4 { get set }
+    var uniformBuffer:float4 { get set }
+}
+
+protocol Protejectable {
+    var protectionMatrix:float4x4 { get set }
+    var projectionBuffer:float4 { get set }
+}
+
+// TODO: for cube (and other polygons),
+// - determine indexing functions for textures
 
 class Node<T: Vertexable> {
     let name:String
@@ -91,12 +108,12 @@ class Node<T: Vertexable> {
     var uniformBuffer:MTLBuffer
     var device:MTLDevice
     
-    var modelScale = float3(1.0, 1.0, 1.0)
-    var modelPosition = float3(0.0, 0.0, 0.0)
+    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
     
     // TODO: figure out why 90 deg is magic #
-    var modelAngle = Float(90)
-    var modelRotation = float3(1.0, 1.0, 1.0)
+    // rx, ry, rz, angle
+    var modelRotation = float4(1.0, 1.0, 1.0, 180)
     
     //swift has to have a default value
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
@@ -131,18 +148,17 @@ class Node<T: Vertexable> {
     }
     
     func initModelMatrix() -> float4x4 {
-        //init 4x4 identity matrix
-        let model = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
-        return model *
+        return float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
             Metal3DTransforms.translate(modelPosition) *
-            Metal3DTransforms.rotate(modelAngle, r: modelRotation) *
+            Metal3DTransforms.rotate(modelRotation) *
             Metal3DTransforms.scale(modelScale)
+
     }
     
     func updateModelMatrix() {
         self.modelMatrix = float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
             Metal3DTransforms.translate(modelPosition) *
-            Metal3DTransforms.rotate(modelAngle, r: self.modelRotation) *
+            Metal3DTransforms.rotate(modelRotation) *
             Metal3DTransforms.scale(modelScale)
     }
     
