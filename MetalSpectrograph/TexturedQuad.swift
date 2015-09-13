@@ -9,32 +9,21 @@
 import simd
 import MetalKit
 
-class TexturedQuad {
-    struct TexCoords {
-        static let cnt = 6
-        static let sz = cnt * sizeof(float2)
-        static let coords: [float2] = [
-            float2(0.0, 0.0),
-            float2(1.0, 0.0),
-            float2(0.0, 1.0),
-            
-            float2(1.0, 0.0),
-            float2(0.0, 1.0),
-            float2(1.0, 1.0)
-        ]
-    }
-    
-    struct Vertices {
-        static let cnt = TexCoords.cnt
-        static let sz = cnt * sizeof(float4)
-        static let verts: [float4] = [
-            float4(-1.0, -1.0, 0.0, 1.0),
-            float4( 1.0, -1.0, 0.0, 1.0),
-            float4(-1.0,  1.0, 0.0, 1.0),
-            
-            float4( 1.0, -1.0, 0.0, 1.0),
-            float4(-1.0,  1.0, 0.0, 1.0),
-            float4( 1.0,  1.0, 0.0, 1.0),
+//TODO: divide textured quad into multiple sub-triangles,
+//  then, alter texture coords
+//TODO: divide textured quad into dual sierpinski's gasket
+//  and alter texture coords as above
+//TODO: dynamically change mid-point of sierpinski's gasket
+
+class TexturedQuad<T: Vertexable>: Node<T> {
+    class func texturedQuadVertices() -> [T] {
+        return [
+            T(chunks: [float4(-1.0, -1.0, 0.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)]),
+            T(chunks: [float4( 1.0, -1.0, 0.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
+            T(chunks: [float4(-1.0,  1.0, 0.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
+            T(chunks: [float4( 1.0, -1.0, 0.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
+            T(chunks: [float4(-1.0,  1.0, 0.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
+            T(chunks: [float4( 1.0,  1.0, 0.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)])
         ]
     }
     
@@ -42,35 +31,29 @@ class TexturedQuad {
     var texCoordIndex: Int = 1
     var samplerIndex: Int = 0
     
-    var size: CGSize
-    var aspect: Float
-    var mScale: float2
+    var size: CGSize = CGSize(width: 0.0, height: 0.0)
+    var aspect: Float = 1.0
+    var quadScale: float2 = float2(1.0)
     
-    var mVertexBuffer: MTLBuffer
-    var mTexCoordBuffer: MTLBuffer
-    
-    init?(device: MTLDevice) {
+    init(device: MTLDevice) {
+        let quadVertices = TexturedQuad<T>.texturedQuadVertices()
+        super.init(name: "TexturedQuad", vertices: quadVertices, device: device)
+        
         //TODO: guard against nil device? guard in swift init?
         
         //create vertex buffer
         //  TODO: guard against fail/nil?
-        mVertexBuffer = device.newBufferWithBytes(Vertices.verts, length: Vertices.sz, options: MTLResourceOptions.OptionCPUCacheModeDefault)
-        mVertexBuffer.label = "quad vertices"
+        vertexBuffer = device.newBufferWithBytes(quadVertices, length: vBytes, options: MTLResourceOptions.OptionCPUCacheModeDefault)
+        vertexBuffer.label = "quad vertices"
         
-        //create tex coord buffer
-        //  TODO: guard against fail/nil?
-        mTexCoordBuffer = device.newBufferWithBytes(TexCoords.coords, length: TexCoords.sz, options: MTLResourceOptions.OptionCPUCacheModeDefault)
-        mTexCoordBuffer.label = "quad texcoords"
-        
-        size = CGSize(width: 0.0, height: 0.0)
         bounds = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
         
         aspect = 1.0
-        mScale = float2(1.0)
+        quadScale = float2(1.0)
     }
     
     //    func setBounds(bounds: CGRect) -- cant override setBounds
-    var bounds: CGRect {
+    var bounds: CGRect = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0) {
         didSet {
             aspect = Float(abs(bounds.size.width / bounds.size.height))
             
@@ -80,37 +63,37 @@ class TexturedQuad {
             scale.x = newAspect * Float(size.width / bounds.size.width)
             scale.y = Float(size.height / bounds.size.height)
             
-            let bNewScale = (scale.x != mScale.x) || (scale.y != mScale.y)
+            let bNewScale = (scale.x != quadScale.x) || (scale.y != quadScale.y)
             if (bNewScale) {
                 //update the scaling factor
-                mScale = scale
+                quadScale = scale
                 
                 //update the vertex buffer with the quad bounds
                 //(simd::float4 *)[m_VertexBuffer contents]
                 // - pointer to array .. do i need to typecast?
-                var pVertices = mVertexBuffer.contents() as! [float4]
+                var pVertices = vertexBuffer.contents() as! [float4]
                 
                 // how to check for failure in memory pointer retrieval?
                 // - if casting fails, method blows up
                 // - apple example uses if (pVertices != nil)
                 
-                pVertices[0].x = -mScale.x
-                pVertices[0].y = -mScale.y
+                pVertices[0].x = -quadScale.x
+                pVertices[0].y = -quadScale.y
                 
-                pVertices[1].x = mScale.x
-                pVertices[1].y = -mScale.y
+                pVertices[1].x = quadScale.x
+                pVertices[1].y = -quadScale.y
                 
-                pVertices[2].x = -mScale.x
-                pVertices[2].y = mScale.y
+                pVertices[2].x = -quadScale.x
+                pVertices[2].y = quadScale.y
                 
-                pVertices[3].x = mScale.x
-                pVertices[3].y = -mScale.y
+                pVertices[3].x = quadScale.x
+                pVertices[3].y = -quadScale.y
                 
-                pVertices[4].x = -mScale.x
-                pVertices[4].y = mScale.y
+                pVertices[4].x = -quadScale.x
+                pVertices[4].y = quadScale.y
                 
-                pVertices[5].x = mScale.x
-                pVertices[5].y = mScale.y
+                pVertices[5].x = quadScale.x
+                pVertices[5].y = quadScale.y
                 
                 //possible to simplify the above
                 // - with vector/matrix multiplication?
@@ -119,7 +102,6 @@ class TexturedQuad {
     }
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setVertexBuffer(mVertexBuffer, offset: 0, atIndex: vertexIndex)
-        renderEncoder.setVertexBuffer(mTexCoordBuffer, offset: 0, atIndex: texCoordIndex)
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: vertexIndex)
     }
 }
