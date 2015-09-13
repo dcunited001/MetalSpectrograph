@@ -30,6 +30,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     
     // Uniformable
     var uniformBuffer:MTLBuffer?
+    var uniformBufferId:Int = 1
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
     var modelPosition = float4(0.0, 0.0, 0.0, 2.0)
     var modelRotation = float4(1.0, 1.0, 1.0, 90)

@@ -13,6 +13,7 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
     var pipelineState: MTLRenderPipelineState?
     var object: BasicTriangle<ColorVertex>?
     var size: CGSize = CGSize()
+    let uniformBufferId:Int = 1
     
     //TODO: var transformBuffer: MTLBuffer?
     //TODO: lookAtMatrix: float4x4?

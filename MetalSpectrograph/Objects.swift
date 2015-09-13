@@ -89,6 +89,7 @@ protocol Uniformable: class {
     var modelPosition:float4 { get set }
     var modelRotation:float4 { get set }
     var modelMatrix:float4x4 { get set }
+    var uniformBufferId:Int { get set }
     var uniformBuffer:MTLBuffer? { get set }
     var modelPointer: UnsafeMutablePointer<Void>? { get set }
 }
@@ -152,16 +153,19 @@ class Node<T: Vertexable>: Uniformable {
     let name:String
     var vCount:Int
     var vBytes:Int
+    let vertexBufferId:Int = 0
     var vertexBuffer:MTLBuffer
     var device:MTLDevice
     
     // Uniformable
     var uniformBuffer:MTLBuffer?
+    var uniformBufferId:Int = 0
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
     var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
     var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var modelPointer: UnsafeMutablePointer<Void>?
+    
     
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
