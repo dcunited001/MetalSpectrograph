@@ -111,18 +111,15 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
             return 1.0
         }
         object!.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)/2) * float3(0.5, 0.5, 1.0)
+            return -sin(Float(timeSinceStart)/4) * float4(0.5, 0.5, 1.0, 0.0)
         }
         object!.translateForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)/2) * float3(0.1, 0.1, -1.0)
+            return -sin(Float(timeSinceStart)/2) * float4(0.1, 0.1, -1.0, 0.0)
         }
         object!.scaleForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)*2) * float3(1.0, 0.6, 0.3)
+            return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
         }
         object!.updateModelMatrix()
         object!.updateUniformBuffer()
     }
-    
-    
-    
 }
