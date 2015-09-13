@@ -10,14 +10,32 @@ import simd
 import MetalKit
 
 // TODO: abstract textured quad behavior from image-loaded texture behavior
-class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
+class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     
     var pipelineState: MTLRenderPipelineState?
     var inTexture: ImageTexture?
     var size: CGSize = CGSize()
-    var quad: TexturedQuad?
-    var transformBuffer: MTLBuffer?
-    var lookAtMatrix: float4x4?
+    var object: TexturedQuad<TexturedVertex>?
+    
+    let vertexShaderName = "texturedQuadVertex"
+    let fragmentShaderName = "texturedQuadFragment"
+    
+    //Projectable
+    var projectionEye:float3 = [0.0, 0.0, 0.0]
+    var projectionCenter:float3 = [0.0, 0.0, 2.0]
+    var projectionUp:float3 = [0.0, 1.0, 1.0]
+    var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
+    var projectionBuffer:MTLBuffer?
+    var projectionPointer: UnsafeMutablePointer<Void>?
+    
+    // Uniformable
+    var uniformBuffer:MTLBuffer?
+    var uniformBufferId:Int = 1
+    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 0.0, 2.0)
+    var modelRotation = float4(1.0, 1.0, 1.0, 90)
+    var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+    var modelPointer: UnsafeMutablePointer<Void>?
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -38,12 +56,12 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
             return
         }
         
-        guard prepareTransformBuffer() else {
-            print("Failed creating a transform buffer!")
-            return
-        }
+        self.projectionMatrix = calcProjectionMatrix()
+        prepareProjectionBuffer(device!)
+        updateProjectionBuffer()
         
-        prepareTransforms()
+        prepareUniformBuffer(device!)
+        initModelMatrix()
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
@@ -59,7 +77,9 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         }
         
         let quadPipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        quadPipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
+//        quadPipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
+        quadPipelineStateDescriptor.depthAttachmentPixelFormat = .Invalid
+
         quadPipelineStateDescriptor.stencilAttachmentPixelFormat = view.stencilPixelFormat!
         quadPipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
         quadPipelineStateDescriptor.sampleCount = view.sampleCount
@@ -100,38 +120,11 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         
         size.width = CGFloat(inTexture!.width)
         size.height = CGFloat(inTexture!.height)
-        
-        guard let newQuad = TexturedQuad(device: device!) else {
-            print("Failed to create TexturedQuad")
-            return false
-        }
-        quad = newQuad
-        quad!.size = size
+
+        object = TexturedQuad<TexturedVertex>(device: device!)
+        object!.size = size
         
         return true
-    }
-    
-    func prepareTransformBuffer() -> Bool {
-        guard let newTransformBuffer = device?.newBufferWithLength(kSzBufferLimitsPerFrame, options: .CPUCacheModeDefaultCache) else {
-            print("Failed to create transform buffer")
-            return false
-        }
-        transformBuffer = newTransformBuffer
-        transformBuffer!.label = "TransformBuffer"
-        return true
-    }
-    
-    func prepareTransforms() {
-        // create a viewing matrix derived from
-        // - eye point, a reference point indicating center of the scene
-        // - and an up vector
-        
-        let eye:float3 = [0.0, 0.0, 0.0]
-        let center:float3 = [0.0, 0.0, 1.0]
-        let up:float3 = [0.0, 1.0, 0.0]
-        
-        lookAtMatrix = Metal3DTransforms.lookAt(eye, center: center, up: up)
-//        translateMatrix = Metal3DTransforms.translate(0.0, y: -0.25, z: 2.0)
     }
     
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
@@ -139,10 +132,10 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         renderEncoder.setFrontFacingWinding(.CounterClockwise)
         renderEncoder.setDepthStencilState(depthState)
         renderEncoder.setRenderPipelineState(pipelineState!)
-        renderEncoder.setVertexBuffer(transformBuffer, offset: 0, atIndex: 2)
+        renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 1)
         renderEncoder.setFragmentTexture(inTexture!.texture, atIndex: 0)
         
-        quad!.encode(renderEncoder)
+        object!.encode(renderEncoder)
         renderEncoder.drawPrimitives(.Triangle,
             vertexStart: 0,
             vertexCount: 6, //TODO: replace with constant?
@@ -169,8 +162,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.commit()
     }
     
-    @objc func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
-        
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         
     }
 }
