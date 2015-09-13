@@ -15,9 +15,9 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     var object: Cube<ColorVertex>?
     var size = CGSize()
     var startTime = CFAbsoluteTimeGetCurrent()
-    let vertexShaderName = "uniform_color_morph_triangle_vertex"
+//    let vertexShaderName = "uniform_color_morph_triangle_vertex"
 //    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
-//    let vertexShaderName = "basic_triangle_vertex"
+    let vertexShaderName = "basic_triangle_vertex"
     let fragmentShaderName = "basic_triangle_fragment"
     
     //Projectable
@@ -61,7 +61,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
             return
         }
         
-        initProjectionMatrix()
+        self.projectionMatrix = calcProjectionMatrix()
         prepareProjectionBuffer(device!)
         updateProjectionBuffer()
         
@@ -102,12 +102,10 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     }
     
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
+        super.encode(renderEncoder)
         renderEncoder.pushDebugGroup("encode basic cube")
         renderEncoder.setRenderPipelineState(pipelineState!)
-        updateProjectionBuffer()
-        updateUniformBuffer()
         object!.encode(renderEncoder)
-        print(projectionMatrix)
         renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 2)
         renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 3)
         renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
@@ -117,13 +115,20 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
         
+        self.projectionMatrix = calcProjectionMatrix()
+        self.modelMatrix = calcModelMatrix()
+        
+
+        updateProjectionBuffer()
+        updateUniformBuffer()
+        
         let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         self.encode(renderEncoder)
         
         commandBuffer.presentDrawable(drawable)
         
         // __block??
-        let dispatchSemaphore: dispatch_semaphore_t = inflightSemaphore
+        let dispatchSemaphore: dispatch_semaphore_t = avaliableResourcesSemaphore
         
         commandBuffer.addCompletedHandler { (cmdBuffer) in
             dispatch_semaphore_signal(dispatchSemaphore)
@@ -135,7 +140,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
         let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
         
         object!.rotateForTime(timeSinceLastUpdate) { obj in
-            return 1.0
+            return 3.0
         }
         object!.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
             return -sin(Float(timeSinceStart)/4) * float4(0.5, 0.5, 1.0, 0.0)
