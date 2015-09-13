@@ -53,7 +53,6 @@ class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
         let baseVertices = Cube<T>.cubeVertices()
         let triangleVertices = Cube<T>.verticesToTriangles(baseVertices)
         super.init(name: "Cube", vertices: triangleVertices, device: device)
-//        modelPosition = float4(0.5, 0.5, -0.5, 1.0)
     }
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {

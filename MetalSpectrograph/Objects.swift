@@ -33,8 +33,8 @@ protocol Colorable {
 }
 
 struct ColorVertex: Vertexable, Colorable {
-    var vertex: float4;
-    var color: float4;
+    var vertex: float4
+    var color: float4
     
     init(chunks: [float4]) {
         self.vertex = chunks[0]
@@ -53,6 +53,34 @@ struct ColorVertex: Vertexable, Colorable {
     static func chunkSize() -> Int {
         return sizeof(ColorVertex)
     }
+}
+
+protocol Texturable {
+    var textureCoords: float4 { get set }
+}
+
+struct TexturedVertex: Vertexable, Texturable {
+    var vertex: float4
+    var textureCoords: float4
+        
+    init(chunks: [float4]) {
+        self.vertex = chunks[0]
+        self.textureCoords = chunks[1]
+    }
+    
+    init(vertex: float4, color: float4) {
+        self.vertex = vertex
+        self.textureCoords = color
+    }
+    
+    func toChunks() -> [float4] {
+        return [vertex, textureCoords]
+    }
+    
+    static func chunkSize() -> Int {
+        return sizeof(TexturedVertex)
+    }
+    
 }
 
 //protocol Uniformable?
