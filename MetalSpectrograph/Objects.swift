@@ -124,16 +124,15 @@ protocol Projectable: class {
     var projectionMatrix:float4x4 { get set }
     var projectionBuffer:MTLBuffer? { get set }
     var projectionPointer: UnsafeMutablePointer<Void>? { get set }
-    func initProjectionMatrix()
+    func calcProjectionMatrix() -> float4x4
     func prepareProjectionBuffer(device: MTLDevice)
     func updateProjectionBuffer()
 }
 
 // must deinit resources
 extension Projectable {
-    func initProjectionMatrix() {
-        print(Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp))
-        self.projectionMatrix = Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
+    func calcProjectionMatrix() -> float4x4 {
+        return Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
     func prepareProjectionBuffer(device: MTLDevice) {
         self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
