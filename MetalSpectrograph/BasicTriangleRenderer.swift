@@ -80,7 +80,7 @@ class BasicTriangleRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.presentDrawable(drawable)
         
         // __block??
-        let dispatchSemaphore: dispatch_semaphore_t = inflightSemaphore
+        let dispatchSemaphore: dispatch_semaphore_t = avaliableResourcesSemaphore
         
         commandBuffer.addCompletedHandler { (cmdBuffer) in
             dispatch_semaphore_signal(dispatchSemaphore)

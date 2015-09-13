@@ -37,21 +37,27 @@ class MetalRenderer {
     
     let kSzSIMDFloat4x4 = sizeof(float4x4)
     let kSzBufferLimitsPerFrame = sizeof(float4x4)
-    let kInFlightCommandBuffers = 3
     
     var device: MTLDevice?
     var commandQueue: MTLCommandQueue?
     var shaderLibrary: MTLLibrary?
     var depthState: MTLDepthStencilState?
+        let kInFlightCommandBuffers = 3
     
-    var inflightSemaphore: dispatch_semaphore_t
+    var avaliableResourcesSemaphore: dispatch_semaphore_t
     var mConstantDataBufferIndex: Int
     // this value will cycle from 0 to kInFlightCommandBuffers whenever a display completes ensuring renderer clients
     // can synchronize between kInFlightCommandBuffers count buffers, and thus avoiding a constant buffer from being overwritten between draws
     
     init() {
         mConstantDataBufferIndex = 0
-        inflightSemaphore = dispatch_semaphore_create(kInFlightCommandBuffers)
+        avaliableResourcesSemaphore = dispatch_semaphore_create(kInFlightCommandBuffers)
+    }
+    
+    deinit {
+        for i in 0...self.kInFlightCommandBuffers{
+            dispatch_semaphore_signal(avaliableResourcesSemaphore)
+        }
     }
     
     func configure(view: MetalView) {
@@ -71,7 +77,7 @@ class MetalRenderer {
     }
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
-        
+        renderEncoder.setCullMode(.Front)
     }
 }
 
