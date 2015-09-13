@@ -9,15 +9,24 @@
 import simd
 import MetalKit
 
-class CubeRenderer: MetalRenderer, MetalViewDelegate {
+class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable
+{
     var pipelineState: MTLRenderPipelineState?
     var object: Cube<ColorVertex>?
     var size = CGSize()
     var startTime = CFAbsoluteTimeGetCurrent()
-//    let vertexShaderName = "uniform_color_morph_triangle_vertex"
-    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
+    let vertexShaderName = "uniform_color_morph_triangle_vertex"
+//    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
 //    let vertexShaderName = "basic_triangle_vertex"
     let fragmentShaderName = "basic_triangle_fragment"
+    
+    var projectionEye:float3 = [0.0, 0.0, 0.0]
+    var projectionCenter:float3 = [0.0, 0.0, 1.0]
+    var projectionUp:float3 = [0.0, 1.0, 0.0]
+    var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
+    var projectionBuffer:MTLBuffer?
+    var projectionPointer: UnsafeMutablePointer<Void>?
+    
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -30,6 +39,10 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
             print("Failed to create Cube")
             return
         }
+        
+        initProjectionMatrix()
+        prepareProjectionBuffer(device!)
+        updateProjectionBuffer()
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
@@ -67,7 +80,9 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate {
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.pushDebugGroup("encode basic cube")
         renderEncoder.setRenderPipelineState(pipelineState!)
+        updateProjectionBuffer()
         object!.encode(renderEncoder)
+        renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 2)
         renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()

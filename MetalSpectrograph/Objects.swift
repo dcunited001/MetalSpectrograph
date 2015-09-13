@@ -89,16 +89,38 @@ protocol Uniformable {
     var modelPosition:float4 { get set }
     var modelRotation:float4 { get set }
     var modelMatrix:float4x4 { get set }
-    var uniformBuffer:float4 { get set }
+    var uniformBuffer:MTLBuffer { get set }
 }
 
-protocol Protejectable {
-    var protectionMatrix:float4x4 { get set }
-    var projectionBuffer:float4 { get set }
+protocol Projectable: class {
+    var projectionEye:float3 { get set }
+    var projectionCenter:float3 { get set }
+    var projectionUp:float3 { get set }
+    var projectionMatrix:float4x4 { get set }
+    var projectionBuffer:MTLBuffer? { get set }
+    var projectionPointer: UnsafeMutablePointer<Void>? { get set }
+    func initProjectionMatrix()
+    func prepareProjectionBuffer(device: MTLDevice)
+    func updateProjectionBuffer()
+}
+
+extension Projectable {
+    func initProjectionMatrix() {
+        projectionMatrix = Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
+    }
+    func prepareProjectionBuffer(device: MTLDevice) {
+        self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
+        self.projectionBuffer?.label = "projection buffer"
+        self.projectionPointer = projectionBuffer?.contents()
+    }
+    func updateProjectionBuffer() {
+        memcpy(self.projectionPointer!, &self.projectionMatrix, sizeof(float4x4))
+    }
 }
 
 // TODO: for cube (and other polygons),
 // - determine indexing functions for textures
+// TODO: multi-persective renderer
 
 class Node<T: Vertexable> {
     let name:String
@@ -123,7 +145,6 @@ class Node<T: Vertexable> {
         self.name = name
         self.device = device
         
-        // wish i could refactor this to the following method, but i guess i'm not allowed to bc swift
         // setVertexBuffer(vertices)
         self.vCount = vertices.count
         self.vBytes = Node<T>.calculateBytes(vCount)
