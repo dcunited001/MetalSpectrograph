@@ -20,8 +20,6 @@ class Metal3DTransforms {
     }
     
     class func scale(s: float4) -> float4x4 {
-//        print(s)
-//        print(float4x4(diagonal: s))
         return float4x4(diagonal: s)
     }
     
@@ -39,8 +37,6 @@ class Metal3DTransforms {
     class func translate(t: float4) -> float4x4 {
         var M = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
         M[3] = t
-//        print(M)
-//        print(M[3])
         return M.transpose
     }
     
