@@ -18,7 +18,6 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
     var quad: TexturedQuad?
     var transformBuffer: MTLBuffer?
     var lookAtMatrix: float4x4?
-    var translateMatrix: float4x4?
     
     override func configure(view: MetalView) {
         super.configure(view)
@@ -132,7 +131,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         let up:float3 = [0.0, 1.0, 0.0]
         
         lookAtMatrix = Metal3DTransforms.lookAt(eye, center: center, up: up)
-        translateMatrix = Metal3DTransforms.translate(0.0, y: -0.25, z: 2.0)
+//        translateMatrix = Metal3DTransforms.translate(0.0, y: -0.25, z: 2.0)
     }
     
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
@@ -154,7 +153,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
     }
     
     @objc func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-        dispatch_semaphore_wait(inflightSemaphore, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(avaliableResourcesSemaphore, DISPATCH_TIME_FOREVER)
         
         let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         
@@ -162,7 +161,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate {
         commandBuffer.presentDrawable(drawable)
         
         // __block??
-        let dispatchSemaphore: dispatch_semaphore_t = inflightSemaphore
+        let dispatchSemaphore: dispatch_semaphore_t = avaliableResourcesSemaphore
         
         commandBuffer.addCompletedHandler { (cmdBuffer) in
             dispatch_semaphore_signal(dispatchSemaphore)
