@@ -21,9 +21,14 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     let fragmentShaderName = "basic_triangle_fragment"
     
     //Projectable
+    var perspectiveAngle:Float = 35.0 // 35.0 for landscape
+    var perspectiveAspect:Float = 1
+    var perspectiveNear:Float = 0.1
+    var perspectiveFar:Float = 10.0
+    
     var projectionEye:float3 = [0.0, 0.0, 0.0]
-    var projectionCenter:float3 = [0.0, 0.0, 2.0]
-    var projectionUp:float3 = [0.0, 1.0, 1.0]
+    var projectionCenter:float3 = [0.0, 0.0, 1.0]
+    var projectionUp:float3 = [0.0, 1.0, 0.0]
     var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
     var projectionBuffer:MTLBuffer?
     var projectionPointer: UnsafeMutablePointer<Void>?
@@ -32,7 +37,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     var uniformBuffer:MTLBuffer?
     var uniformBufferId:Int = 1
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
-    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 7.0, 1.0)
     var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var modelPointer: UnsafeMutablePointer<Void>?

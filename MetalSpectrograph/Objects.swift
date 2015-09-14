@@ -125,10 +125,11 @@ protocol Uniformable: class {
 //must deinit resources
 extension Uniformable {
     func calcModelMatrix() -> float4x4 {
-        return float4x4(diagonal: float4(1.0,1.0,1.0,1.0)) *
-            Metal3DTransforms.translate(modelPosition) *
+        // scale, then rotate, then translate!!
+        // - but it looks cooler identity * translate, rotate, scale
+        return Metal3DTransforms.translate(modelPosition) *
             Metal3DTransforms.rotate(modelRotation) *
-            Metal3DTransforms.scale(modelScale)
+            Metal3DTransforms.scale(modelScale) // <== N.B. this scales first!!
     }
     
     func initModelMatrix() {
@@ -147,12 +148,19 @@ extension Uniformable {
 }
 
 protocol Projectable: class {
+    var perspectiveAngle:Float { get set } // view orientation to user in degrees =) 3d
+    var perspectiveAspect:Float { get set } // update when view bounds change
+    var perspectiveNear:Float { get set }
+    var perspectiveFar:Float { get set }
+    
+    // TODO: the eye is actually the worldModelMatrix, i think
     var projectionEye:float3 { get set }
     var projectionCenter:float3 { get set }
     var projectionUp:float3 { get set }
     var projectionMatrix:float4x4 { get set }
     var projectionBuffer:MTLBuffer? { get set }
     var projectionPointer: UnsafeMutablePointer<Void>? { get set }
+    
     func calcProjectionMatrix() -> float4x4
     func prepareProjectionBuffer(device: MTLDevice)
     func updateProjectionBuffer()
@@ -161,7 +169,24 @@ protocol Projectable: class {
 // must deinit resources
 extension Projectable {
     func calcProjectionMatrix() -> float4x4 {
-        return Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
+        let rAngle = Metal3DTransforms.toRadians(perspectiveAngle)
+        let length = perspectiveNear * tan(rAngle)
+        
+        let right = length / perspectiveAspect
+        let left = -right
+        let top = length
+        let bottom = -top
+        
+        // frustum * lookat * world * model
+        // float4x4([[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 1.33255, 1.33122], [0.0, 0.0, -0.1001, 0.0]])
+        
+        // perspective * (lookAt * worldMatrix * modelMatrix)
+        // but should be commutative, so (perspective * lookAt) * worldMatrix * modelMatrix should be OK
+        
+//        print(left, right, bottom, top, perspectiveNear, perspectiveFar)
+//        print(Metal3DTransforms.frustum(left, right: right, bottom: bottom, top: top, near: 0.1, far: 100.0))
+        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
+            * Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
     func prepareProjectionBuffer(device: MTLDevice) {
         self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)

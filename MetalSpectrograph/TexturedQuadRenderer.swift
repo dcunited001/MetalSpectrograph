@@ -21,6 +21,11 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     let fragmentShaderName = "texturedQuadFragment"
     
     //Projectable
+    var perspectiveAngle:Float = 0.0
+    var perspectiveAspect:Float = 1
+    var perspectiveNear:Float = 0.01
+    var perspectiveFar:Float = 100.0
+    
     var projectionEye:float3 = [0.0, 0.0, 0.0]
     var projectionCenter:float3 = [0.0, 0.0, 2.0]
     var projectionUp:float3 = [0.0, 1.0, 1.0]
