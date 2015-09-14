@@ -177,6 +177,9 @@ extension Projectable {
         let top = length
         let bottom = -top
         
+        //TODO: refactor to protocol
+        let perspectiveFov = 65.0
+        
         // frustum * lookat * world * model
         // float4x4([[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 1.33255, 1.33122], [0.0, 0.0, -0.1001, 0.0]])
         
@@ -185,7 +188,10 @@ extension Projectable {
         
 //        print(left, right, bottom, top, perspectiveNear, perspectiveFar)
 //        print(Metal3DTransforms.frustum(left, right: right, bottom: bottom, top: top, near: 0.1, far: 100.0))
-        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
+        
+//        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
+            
+            return Metal3DTransforms.perspectiveFov(perspectiveAngle, aspect: perspectiveAspect, near: perspectiveNear, far: perspectiveFar)
             * Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
     func prepareProjectionBuffer(device: MTLDevice) {

@@ -182,20 +182,50 @@ class Metal3DTransforms {
         
         return float4x4([P,Q,R,S])
     }
+    
+    class func perspective(width:Float, height:Float, near:Float, far:Float) -> float4x4 {
+        let zNear = 2.0 * near
+        let zFar = far / (far - near)
+        
+        var P = float4(0.0, 0.0, 0.0, 0.0)
+        var Q = float4(0.0, 0.0, 0.0, 0.0)
+        var R = float4(0.0, 0.0, 0.0, 0.0)
+        var S = float4(0.0, 0.0, 0.0, 0.0)
+        
+        P.x = zNear / width
+        Q.y = zNear / height
+        R.z = zFar
+        R.w = 1.0
+        S.z = -near * zFar
+        
+        return float4x4([P,Q,R,S])
+    }
+    
+    class func perspectiveFov(fovy:Float, aspect:Float, near:Float, far:Float) -> float4x4 {
+        let angle:Float = toRadians(0.5 * fovy)
+        let yScale:Float = 1.0 / tan(angle)
+        let xScale:Float = yScale / aspect
+        let zScale = far / (far - near)
+        
+        var P = float4(0.0, 0.0, 0.0, 0.0)
+        var Q = float4(0.0, 0.0, 0.0, 0.0)
+        var R = float4(0.0, 0.0, 0.0, 0.0)
+        var S = float4(0.0, 0.0, 0.0, 0.0)
+        
+        P.x = xScale
+        Q.y = yScale
+        R.z = zScale
+        R.w = 1.0
+        S.z = -near * zScale
+        
+        return float4x4([P, Q, R, S])
+    }
+    
+    class func perspectiveFov(fovy:Float, width:Float, height:Float, near:Float, far:Float) -> float4x4 {
+        let aspect:Float = width / height
+        return perspectiveFov(fovy, aspect: aspect, near: near, far: far)
+    }
 
-    
-//    class func perspective(width:Float, height:Float, near:Float, far:Float) -> float4x4 {
-//        
-//    }
-//    
-//    class func perspectiveFov(fovy:Float, aspect:Float, near:Float, far:Float) -> float4x4 {
-//        
-//    }
-//    
-//    class func perspectiveFov(fovy:Float, width:Float, height:Float, near:Float, far:Float) -> float4x4 {
-//        
-//    }
-    
 //    simd::float4x4 perspective(const float& width,
 //    const float& height,
 //    const float& near,

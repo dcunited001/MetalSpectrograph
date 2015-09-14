@@ -16,15 +16,15 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     var size = CGSize()
     var startTime = CFAbsoluteTimeGetCurrent()
 //    let vertexShaderName = "uniform_color_morph_triangle_vertex"
-//    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
-    let vertexShaderName = "basic_triangle_vertex"
+    let vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
+//    let vertexShaderName = "basic_triangle_vertex"
     let fragmentShaderName = "basic_triangle_fragment"
     
     //Projectable
     var perspectiveAngle:Float = 35.0 // 35.0 for landscape
     var perspectiveAspect:Float = 1
-    var perspectiveNear:Float = 0.1
-    var perspectiveFar:Float = 10.0
+    var perspectiveNear:Float = 0.01
+    var perspectiveFar:Float = 100.0
     
     var projectionEye:float3 = [0.0, 0.0, 0.0]
     var projectionCenter:float3 = [0.0, 0.0, 1.0]
@@ -37,7 +37,7 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     var uniformBuffer:MTLBuffer?
     var uniformBufferId:Int = 1
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
-    var modelPosition = float4(0.0, 0.0, 7.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
     var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var modelPointer: UnsafeMutablePointer<Void>?
@@ -149,13 +149,17 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
             return 3.0
         }
         object!.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)/4) * float4(0.5, 0.5, 1.0, 0.0)
+            return -sin(Float(timeSinceStart)/4) *
+                float4(0.5, 0.5, 1.0, 0.0)
         }
-        object!.translateForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)/2) * float4(0.1, 0.1, -1.0, 0.0)
-        }
+//        object!.translateForTime(timeSinceLastUpdate) { obj in
+//            return -sin(Float(timeSinceStart)/2) * float4(-0.5, 0.5, 0.0, 0.0)
+//////            return -sin(Float(timeSinceStart)/2) * float4(0.1, 0.1, -1.0, 0.0)
+//        }
         object!.scaleForTime(timeSinceLastUpdate) { obj in
-            return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
+//            return float4(1.0, 1.0, 1.0, 0.0)
+            return -sin(Float(timeSinceStart)*2) * float4(0.5, 0.5, 0.5, 0.0)
+//            return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
         }
         object!.modelMatrix = object!.calcModelMatrix()
         object!.updateUniformBuffer()

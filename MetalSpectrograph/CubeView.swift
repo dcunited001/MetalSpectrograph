@@ -49,7 +49,7 @@ class CubeViewController: NSViewController {
         metalView = CubeView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
         renderer.perspectiveAspect = Float(rect.width / rect.height)
-        renderer.modelScale = float4(1.0, Float(rect.width / rect.height), 1.0, 1.0)
+//        renderer.modelScale = float4(1.0, Float(rect.width / rect.height), 1.0, 1.0)
         positionObject()
 //        initSliders()
         metalView.metalViewDelegate = renderer
@@ -93,7 +93,7 @@ class CubeViewController: NSViewController {
     }
     
     func positionObject() {
-        renderer.object?.modelPosition = float4(0.0, 0.0, 1.0, 1.0)
+        renderer.object?.modelPosition = float4(0.0, 0.0, 10.0, 1.0)
         renderer.object?.modelScale = float4(1.0, 1.0, 1.0, 1.0)
     }
     
