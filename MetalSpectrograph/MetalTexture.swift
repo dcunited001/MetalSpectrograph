@@ -34,16 +34,79 @@ class MetalTexture {
     }
 }
 
+class BufferTexture: MetalTexture {
+    var pixelSize:Int = sizeof(float4)
+    
+    var pixels:[float4] = [
+        float4(1.0, 1.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        
+        float4(1.0, 1.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        
+        float4(1.0, 1.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        
+        float4(1.0, 1.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        
+        float4(1.0, 1.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(0.0, 0.0, 1.0, 1.0),
+        float4(1.0, 1.0, 1.0, 1.0)
+    ]
+    convenience override init() {
+        self.init(size: CGSize(width: 10,height: 10))
+    }
+    
+    init(size: CGSize) {
+        super.init()
+        format = MTLPixelFormat.RGBA16Float
+        width = Int(size.width)
+        height = Int(size.height)
+    }
+    
+    func calcBytesPerRow() -> Int {
+        return width * pixelSize
+//        return width * height * 4
+    }
+    
+    override func finalize(device: MTLDevice) -> Bool {
+        let pTexDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
+        
+        target = pTexDesc.textureType
+        texture = device.newTextureWithDescriptor(pTexDesc)
+        
+        let region = MTLRegionMake2D(0, 0, width, height)
+        texture?.replaceRegion(region, mipmapLevel: 0, withBytes: pixels + pixels + pixels + pixels, bytesPerRow: calcBytesPerRow())
+        
+        return true
+    }
+    
+}
+
 class ImageTexture: MetalTexture {
     var path: NSString
     
     convenience override init() {
-        self.init(name: "Default", ext:"jpg")!
+        self.init(name: "Default", ext:"jpg")
     }
     
-    init?(name: String, ext: String) {
+    init(name: String, ext: String) {
         path = NSBundle.mainBundle().pathForResource(name, ofType: ext)!
-        
         super.init()
     }
 
