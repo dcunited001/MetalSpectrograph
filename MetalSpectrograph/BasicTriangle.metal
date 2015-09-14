@@ -61,7 +61,7 @@ vertex BasicTriangleVertexOut uniform_color_morph_triangle_vertex
  unsigned int vid [[ vertex_id ]])
 {
     int quanta = 8;
-    float fQuanta = 8.0;
+    float fQuanta = float(quanta);
     
     BasicTriangleVertexIn vIn = vertex_array[vid];
     BasicTriangleVertexOut vOut;
@@ -71,7 +71,6 @@ vertex BasicTriangleVertexOut uniform_color_morph_triangle_vertex
                         int(colorOut.y * quanta)/fQuanta,
                         int(colorOut.z * quanta)/fQuanta,
                         vIn.color.w);
-    //    vOut.color = vIn.color;
     
     return vOut;
 }
@@ -92,7 +91,6 @@ vertex BasicTriangleVertexOut continuous_uniform_color_morph_triangle_vertex
                         colorOut.y,
                         colorOut.z,
                         vIn.color.w);
-    //    vOut.color = vIn.color;
     
     return vOut;
 }
