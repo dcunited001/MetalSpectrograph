@@ -705,14 +705,144 @@
             <objects>
                 <viewController id="x9Z-0p-LHC" customClass="CubeViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="aau-ng-rhG">
-                        <rect key="frame" x="0.0" y="0.0" width="469" height="828"/>
+                        <rect key="frame" x="0.0" y="0.0" width="636" height="828"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uOM-YB-c8u">
+                                <rect key="frame" x="0.0" y="668" width="636" height="160"/>
+                                <subviews>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YLF-uq-BJV">
+                                        <rect key="frame" x="18" y="96" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="t3k-09-LL1"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ORd-U2-wjd">
+                                        <rect key="frame" x="18" y="71" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="tQ8-u9-rzc"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xgc-WH-jUM">
+                                        <rect key="frame" x="18" y="48" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="NME-5I-RFr"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0vw-mZ-D5c">
+                                        <rect key="frame" x="118" y="94" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="gBT-mK-DAM"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LWi-TF-aAC">
+                                        <rect key="frame" x="118" y="71" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="X1W-tP-K1p"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4kN-w0-IIe">
+                                        <rect key="frame" x="118" y="47" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="rwL-Q2-JXa"/>
+                                    </slider>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eDR-ME-OYE">
+                                        <rect key="frame" x="18" y="123" width="96" height="17"/>
+                                        <animations/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Scale" id="cL3-pQ-Qto">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CQC-Be-I8s">
+                                        <rect key="frame" x="118" y="123" width="96" height="17"/>
+                                        <animations/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Transform" id="1tU-en-Gfj">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x5G-7N-ZI0">
+                                        <rect key="frame" x="211" y="123" width="96" height="17"/>
+                                        <animations/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Rotate" id="vY1-cm-ONm">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o1L-U7-HYg">
+                                        <rect key="frame" x="223" y="96" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="KXl-Zy-Pqd"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dNZ-gZ-An9">
+                                        <rect key="frame" x="223" y="71" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Rnr-Cv-4k8"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iay-pW-Abh">
+                                        <rect key="frame" x="223" y="47" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="r7K-55-gmi"/>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eUY-8S-j1c">
+                                        <rect key="frame" x="223" y="23" width="96" height="20"/>
+                                        <animations/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="pYx-oq-n1l"/>
+                                    </slider>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="x5G-7N-ZI0" firstAttribute="top" secondItem="uOM-YB-c8u" secondAttribute="top" constant="20" id="4ui-ia-IUW"/>
+                                    <constraint firstItem="4kN-w0-IIe" firstAttribute="top" secondItem="LWi-TF-aAC" secondAttribute="bottom" constant="8" id="66U-rk-2pM"/>
+                                    <constraint firstItem="eUY-8S-j1c" firstAttribute="top" secondItem="iay-pW-Abh" secondAttribute="bottom" constant="8" id="6dW-eK-O5C"/>
+                                    <constraint firstItem="CQC-Be-I8s" firstAttribute="top" secondItem="uOM-YB-c8u" secondAttribute="top" constant="20" id="7g3-YQ-1k2"/>
+                                    <constraint firstItem="Xgc-WH-jUM" firstAttribute="top" secondItem="ORd-U2-wjd" secondAttribute="bottom" constant="8" id="7im-ew-mlY"/>
+                                    <constraint firstItem="0vw-mZ-D5c" firstAttribute="width" secondItem="LWi-TF-aAC" secondAttribute="width" id="Q6p-28-a4H"/>
+                                    <constraint firstItem="x5G-7N-ZI0" firstAttribute="width" secondItem="CQC-Be-I8s" secondAttribute="width" id="QzK-0B-KU1"/>
+                                    <constraint firstItem="ORd-U2-wjd" firstAttribute="top" secondItem="YLF-uq-BJV" secondAttribute="bottom" constant="9" id="Rfv-Xl-fI5"/>
+                                    <constraint firstItem="eDR-ME-OYE" firstAttribute="top" secondItem="uOM-YB-c8u" secondAttribute="top" constant="20" id="UHu-18-NfZ"/>
+                                    <constraint firstItem="0vw-mZ-D5c" firstAttribute="top" secondItem="CQC-Be-I8s" secondAttribute="bottom" constant="13" id="V5P-PZ-gUH"/>
+                                    <constraint firstItem="LWi-TF-aAC" firstAttribute="top" secondItem="0vw-mZ-D5c" secondAttribute="bottom" constant="9" id="WdF-cf-GrC"/>
+                                    <constraint firstItem="o1L-U7-HYg" firstAttribute="top" secondItem="x5G-7N-ZI0" secondAttribute="bottom" constant="11" id="Xk8-px-PpD"/>
+                                    <constraint firstItem="dNZ-gZ-An9" firstAttribute="width" secondItem="iay-pW-Abh" secondAttribute="width" id="bc5-la-Olv"/>
+                                    <constraint firstItem="dNZ-gZ-An9" firstAttribute="top" secondItem="o1L-U7-HYg" secondAttribute="bottom" constant="9" id="clQ-pB-v0Z"/>
+                                    <constraint firstItem="YLF-uq-BJV" firstAttribute="top" secondItem="eDR-ME-OYE" secondAttribute="bottom" constant="11" id="fMl-8Z-cHa"/>
+                                    <constraint firstItem="YLF-uq-BJV" firstAttribute="width" secondItem="ORd-U2-wjd" secondAttribute="width" id="fuU-g3-tYr"/>
+                                    <constraint firstItem="eDR-ME-OYE" firstAttribute="width" secondItem="YLF-uq-BJV" secondAttribute="width" id="jaV-ky-Ivm"/>
+                                    <constraint firstItem="CQC-Be-I8s" firstAttribute="leading" secondItem="eDR-ME-OYE" secondAttribute="trailing" constant="8" id="kle-He-Hei"/>
+                                    <constraint firstItem="CQC-Be-I8s" firstAttribute="width" secondItem="eDR-ME-OYE" secondAttribute="width" id="pyE-am-H9r"/>
+                                    <constraint firstItem="x5G-7N-ZI0" firstAttribute="leading" secondItem="CQC-Be-I8s" secondAttribute="trailing" constant="1" id="rZo-GQ-Xgp"/>
+                                    <constraint firstItem="eDR-ME-OYE" firstAttribute="leading" secondItem="uOM-YB-c8u" secondAttribute="leading" constant="20" id="sZQ-GL-k5H"/>
+                                    <constraint firstItem="iay-pW-Abh" firstAttribute="top" secondItem="dNZ-gZ-An9" secondAttribute="bottom" constant="8" id="txx-Dh-dNB"/>
+                                    <constraint firstItem="ORd-U2-wjd" firstAttribute="width" secondItem="Xgc-WH-jUM" secondAttribute="width" id="u9p-1S-JZh"/>
+                                    <constraint firstItem="LWi-TF-aAC" firstAttribute="width" secondItem="4kN-w0-IIe" secondAttribute="width" id="usZ-vh-Wkq"/>
+                                    <constraint firstItem="o1L-U7-HYg" firstAttribute="width" secondItem="dNZ-gZ-An9" secondAttribute="width" id="v1E-sg-StO"/>
+                                    <constraint firstItem="eUY-8S-j1c" firstAttribute="width" secondItem="iay-pW-Abh" secondAttribute="width" id="xz9-6c-uGH"/>
+                                </constraints>
+                                <animations/>
+                            </customView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="uOM-YB-c8u" firstAttribute="top" secondItem="aau-ng-rhG" secondAttribute="top" id="a4W-x5-pJ4"/>
+                            <constraint firstItem="uOM-YB-c8u" firstAttribute="centerX" secondItem="aau-ng-rhG" secondAttribute="centerX" id="exe-vg-klU"/>
+                            <constraint firstItem="uOM-YB-c8u" firstAttribute="width" secondItem="aau-ng-rhG" secondAttribute="width" id="oaw-eO-xNf"/>
+                        </constraints>
                         <animations/>
                     </view>
+                    <connections>
+                        <outlet property="slideRotateTheta" destination="eUY-8S-j1c" id="ubm-TQ-GmK"/>
+                        <outlet property="slideRotateX" destination="o1L-U7-HYg" id="jtr-DY-Mcf"/>
+                        <outlet property="slideRotateY" destination="dNZ-gZ-An9" id="v68-YZ-tyE"/>
+                        <outlet property="slideRotateZ" destination="iay-pW-Abh" id="PHJ-qX-aqt"/>
+                        <outlet property="slideScaleX" destination="YLF-uq-BJV" id="dOH-PW-mdM"/>
+                        <outlet property="slideScaleY" destination="ORd-U2-wjd" id="oiT-SS-2ZZ"/>
+                        <outlet property="slideScaleZ" destination="Xgc-WH-jUM" id="hkO-ig-wdZ"/>
+                        <outlet property="slideTransformX" destination="0vw-mZ-D5c" id="AEb-lM-UxG"/>
+                        <outlet property="slideTransformY" destination="LWi-TF-aAC" id="Pvz-Dk-gDR"/>
+                        <outlet property="slideTransformZ" destination="4kN-w0-IIe" id="axP-OH-oR3"/>
+                    </connections>
                 </viewController>
                 <customObject id="jxT-pQ-K8X" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-204.5" y="550"/>
+            <point key="canvasLocation" x="-118" y="576"/>
         </scene>
         <!--Textured Quad View Controller-->
         <scene sceneID="dzI-0C-IFJ">
@@ -806,7 +936,7 @@
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <segue destination="x9Z-0p-LHC" kind="show" id="q6M-ez-5Cs"/>
+                                            <segue destination="x9Z-0p-LHC" kind="show" id="kZZ-nd-l0x"/>
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jb0-qU-6cH">
