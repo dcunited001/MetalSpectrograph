@@ -89,12 +89,13 @@ class MetalView: MTKView {
     }
     
     func reshape(view: MTKView, drawableSizeWillChange size: CGSize) {
-        
+        //TODO: implement reshape
     }
     
     func render() {
         // setup CFAbsoluteTimeGetCurrent()
         
+        //TODO: calls to currentRenderPassDescriptor and .commit() should be as close together as possible
         renderPassDescriptor = currentRenderPassDescriptor
         
         // test renderpassdescriptor
@@ -132,6 +133,11 @@ class MetalView: MTKView {
         autoreleasepool { () -> () in
             self.render()
         }
+    }
+    
+    // layoutSubviews() on iOS
+    override func setFrameSize(newSize: NSSize) {
+        reshape(self, drawableSizeWillChange: newSize as CGSize)
     }
     
 }

@@ -32,11 +32,11 @@ vertex VertexInOut texturedQuadVertex(constant VertexInOut* vertex_array [[ buff
     return outVertices;
 }
 
-fragment half4 texturedQuadFragment(VertexInOut     inFrag    [[ stage_in ]],
-                                    texture2d<half>  tex2D     [[ texture(0) ]])
+fragment float4 texturedQuadFragment(VertexInOut     inFrag    [[ stage_in ]],
+                                    texture2d<float>  tex2D     [[ texture(0) ]])
 {
     constexpr sampler quad_sampler;
-    half4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
+    float4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
     
     return color;
 }
