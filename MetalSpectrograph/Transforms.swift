@@ -9,6 +9,11 @@
 import simd
 
 class Metal3DTransforms {
+    // sx  0   0   0
+    // 0   sy  0   0
+    // 0   0   sz  0
+    // 0   0   0   1
+    
     class func scale(x: Float, y: Float, z: Float) -> float4x4 {
         let v: float4 = [x, y, z, 1.0]
         return float4x4(diagonal: v)
@@ -23,26 +28,35 @@ class Metal3DTransforms {
         return float4x4(diagonal: s)
     }
     
+    // 1   0   0   tx
+    // 0   1   0   ty
+    // 0   0   1   tz
+    // 0   0   0   1
+    
     class func translate(x: Float, y: Float, z: Float) -> float4x4 {
         return translate(float3(x, y, z))
     }
     
     class func translate(t: float3) -> float4x4 {
-        var M = matrix_identity_float4x4
-        M.columns.3 = [t.x, t.y, t.z, Float(1.0)]
-        return float4x4(M).transpose
+        var M = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+        M[3] = [t.x, t.y, t.z, 1.0]
+        return M
     }
     
     //alternate implementation
     class func translate(t: float4) -> float4x4 {
         var M = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
         M[3] = t
-        return M.transpose
+        return M
     }
     
     static let k1Div180_f: Float = 1.0 / 180.0;
     class func radiansOverPi(degrees: Float) -> Float {
         return (degrees * k1Div180_f)
+    }
+    
+    class func toRadians(val:Float) -> Float {
+        return val * Float(M_PI) / 180.0;
     }
     
     class func rotate(r: float4) -> float4x4{
@@ -75,25 +89,6 @@ class Metal3DTransforms {
         
         return float4x4(rows: [P, Q, R, S])
     }
-        
-//    simd::float4x4 frustum(const float& fovH,
-//    const float& fovV,
-//    const float& near,
-//    const float& far);
-//    
-//    simd::float4x4 frustum(const float& left,
-//    const float& right,
-//    const float& bottom,
-//    const float& top,
-//    const float& near,
-//    const float& far);
-//    
-//    simd::float4x4 frustum_oc(const float& left,
-//    const float& right,
-//    const float& bottom,
-//    const float& top,
-//    const float& near,
-//    const float& far);
     
     class func lookAt(pEye: float4, pCenter: float4, pUp: float4) -> float4x4 {
         let eye:float3 = [pEye[0], pEye[1], pEye[2]]
@@ -116,6 +111,90 @@ class Metal3DTransforms {
         
         return float4x4(rows: [P, Q, R, S])
     }
+    
+    // w - width
+    // h - height
+    // d - depth
+    // n - near
+    
+    // w   0   0   0
+    // 0   h   0   0
+    // 0   0   d   1
+    // 0   0   d*n 0
+    
+    class func frustum(fovH:Float, fovV:Float, near:Float, far:Float) -> float4x4 {
+        let width:Float = 1.0 / tan(toRadians(0.5 * fovH))
+        let height:Float = 1.0 / tan(toRadians(0.5 * fovV))
+        let sDepth:Float = far / (far-near)
+        
+        var P = float4(0.0)
+        var Q = float4(0.0)
+        var R = float4(0.0)
+        var S = float4(0.0)
+        
+        P.x = width
+        Q.y = height
+        R.z = sDepth
+        R.w = 1.0
+        S.z = -sDepth * near
+        
+        return float4x4([P,Q,R,S])
+    }
+    
+    class func frustum(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float) -> float4x4 {
+        let width = right - left
+        let height = top - bottom
+        let depth = far - near
+        let sDepth = far / depth
+        
+        var P = float4(0.0)
+        var Q = float4(0.0)
+        var R = float4(0.0)
+        var S = float4(0.0)
+        
+        P.x = width
+        Q.y = height
+        R.z = sDepth
+        R.w = 1.0
+        S.z = -sDepth * near
+        
+        return float4x4([P,Q,R,S])
+    }
+    
+    class func frustum_oc(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float) -> float4x4 {
+        let sWidth  = 1.0 / (right - left)
+        let sHeight = 1.0 / (top - bottom)
+        let sDepth  = far / (far - near)
+        let dNear   = 2.0 * near
+        
+        var P = float4(0.0)
+        var Q = float4(0.0)
+        var R = float4(0.0)
+        var S = float4(0.0)
+        
+        P.x =  dNear * sWidth
+        Q.y =  dNear * sHeight
+        R.x = -sWidth  * (right + left)
+        R.y = -sHeight * (top + bottom)
+        R.z =  sDepth
+        R.w =  1.0
+        S.z = -sDepth * near
+        
+        return float4x4([P,Q,R,S])
+    }
+
+    
+//    class func perspective(width:Float, height:Float, near:Float, far:Float) -> float4x4 {
+//        
+//    }
+//    
+//    class func perspectiveFov(fovy:Float, aspect:Float, near:Float, far:Float) -> float4x4 {
+//        
+//    }
+//    
+//    class func perspectiveFov(fovy:Float, width:Float, height:Float, near:Float, far:Float) -> float4x4 {
+//        
+//    }
     
 //    simd::float4x4 perspective(const float& width,
 //    const float& height,
