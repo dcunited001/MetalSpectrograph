@@ -38,7 +38,10 @@ vertex BasicTriangleVertexOut basic_triangle_vertex
 {
     BasicTriangleVertexIn vIn = vertex_array[vid];
     BasicTriangleVertexOut vOut;
-    vOut.position = worldUniforms.modelMatrix * projection.projectionMatrix * uniforms.modelMatrix * vIn.position;
+    vOut.position = projection.projectionMatrix *
+        worldUniforms.modelMatrix *
+        uniforms.modelMatrix *
+        vIn.position;
     vOut.color = vIn.color;
     
     return vOut;
@@ -65,7 +68,7 @@ vertex BasicTriangleVertexOut uniform_color_morph_triangle_vertex
     
     BasicTriangleVertexIn vIn = vertex_array[vid];
     BasicTriangleVertexOut vOut;
-    vOut.position = worldUniforms.modelMatrix * projection.projectionMatrix * uniforms.modelMatrix * vIn.position;
+    vOut.position = projection.projectionMatrix * worldUniforms.modelMatrix * uniforms.modelMatrix * vIn.position;
     float4 colorOut = uniforms.modelMatrix * float4(vIn.color.x, vIn.color.y, vIn.color.z, 1.0);
     vOut.color = float4(int(colorOut.x * quanta)/fQuanta,
                         int(colorOut.y * quanta)/fQuanta,
@@ -85,7 +88,7 @@ vertex BasicTriangleVertexOut continuous_uniform_color_morph_triangle_vertex
 {
     BasicTriangleVertexIn vIn = vertex_array[vid];
     BasicTriangleVertexOut vOut;
-    vOut.position = worldUniforms.modelMatrix * projection.projectionMatrix * uniforms.modelMatrix * vIn.position;
+    vOut.position = projection.projectionMatrix * worldUniforms.modelMatrix * uniforms.modelMatrix * vIn.position;
     float4 colorOut = uniforms.modelMatrix * float4(vIn.color.x, vIn.color.y, vIn.color.z, 1.0);
     vOut.color = float4(colorOut.x,
                         colorOut.y,
