@@ -38,26 +38,25 @@ class CubeRenderer: BaseRenderer {
     
     override func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
+        let cube = object as! Cube<ColorVertex>
         
-//        object!.rotateForTime(timeSinceLastUpdate) { obj in
-//            return 3.0
-//        }
-//        object!.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
-//            return -sin(Float(timeSinceStart)/4) *
-//                float4(0.5, 0.5, 1.0, 0.0)
-//        }
+        cube.rotateForTime(timeSinceLastUpdate) { obj in
+            return 3.0
+        }
+        cube.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
+            return -sin(Float(timeSinceStart)/4) *
+                float4(0.5, 0.5, 1.0, 0.0)
+        }
 //        object!.translateForTime(timeSinceLastUpdate) { obj in
 //            return -sin(Float(timeSinceStart)/2) * float4(-0.5, 0.5, 0.0, 0.0)
 //////            return -sin(Float(timeSinceStart)/2) * float4(0.1, 0.1, -1.0, 0.0)
 //        }
         
-        var cube = object as! Cube<ColorVertex>
-        
-        cube.scaleForTime(timeSinceLastUpdate) { obj in
-//            return float4(1.0, 1.0, 1.0, 0.0)
-            return -sin(Float(timeSinceStart)*2) * float4(0.5, 0.5, 0.5, 0.0)
-//            return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
-        }
-        cube.updateModelMatrix() // if params are dirty
+//        cube.scaleForTime(timeSinceLastUpdate) { obj in
+////            return float4(1.0, 1.0, 1.0, 0.0)
+//            return -sin(Float(timeSinceStart)*2) * float4(0.5, 0.5, 0.5, 0.0)
+////            return -sin(Float(timeSinceStart)*2) * float4(1.0, 0.6, 0.3, 0.0)
+//        }
+        object!.updateModelMatrix() // if params are dirty
     }
 }

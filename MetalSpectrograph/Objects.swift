@@ -173,7 +173,7 @@ protocol Uniformable: class {
 //must deinit resources
 extension Uniformable {
     func setUniformableDefaults() {
-        uniformScale = float4(0.01, 0.01, 0.01, 1.0) // provides more range to place objects in world
+        uniformScale = float4(1.0, 1.0, 1.0, 1.0) // provides more range to place objects in world
         uniformPosition = float4(0.0, 0.0, 0.0, 1.0)
         uniformRotation = float4(1.0, 1.0, 1.0, 90)
     }
@@ -286,9 +286,9 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
     var device:MTLDevice
     
     // Modelable
-    var modelScale: float4
-    var modelPosition: float4
-    var modelRotation: float4
+    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
+    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
+    var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     
     init(name: String, vertices: [T], device: MTLDevice) {
@@ -300,7 +300,6 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
         self.vBytes = Node<T>.calculateBytes(vCount)
         self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
         
-        setModelableDefaults()
         updateModelMatrix()
     }
     

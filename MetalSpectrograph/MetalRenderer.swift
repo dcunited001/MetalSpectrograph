@@ -105,14 +105,14 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     var fragmentShaderName = "basic_triangle_fragment"
     
     //Projectable
-    var projectionEye: float3
-    var projectionCenter: float3
-    var projectionUp: float3
+    var projectionEye: float3 = [0.0, 0.0, 0.0]
+    var projectionCenter: float3 = [0.0, 0.0, 1.0]
+    var projectionUp: float3 = [0.0, 1.0, 0.0]
     
     // Uniformable
-    var uniformScale: float4
-    var uniformPosition: float4
-    var uniformRotation: float4
+    var uniformScale: float4 = float4(1.0, 1.0, 1.0, 1.0)
+    var uniformPosition: float4 = float4(0.0, 0.0, 0.0, 1.0)
+    var uniformRotation: float4 = float4(1.0, 1.0, 1.0, 90)
     
     var mvpMatrix:float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var mvpBuffer:MTLBuffer?
@@ -127,13 +127,13 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     
     override init() {
         super.init()
-        
-        setProjectableDefaults()
-        setUniformableDefaults()
     }
     
     override func configure(view: MetalView) {
         super.configure(view)
+        setProjectableDefaults()
+        setUniformableDefaults()
+        
         uniformScale *= float4(1.0, Float(view.frame.width / view.frame.height), 1.0, 1.0)
         
         prepareMvpBuffer(device!)
