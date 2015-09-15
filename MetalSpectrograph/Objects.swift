@@ -121,11 +121,18 @@ protocol Modelable: class {
     var modelRotation:float4 { get set }
     var modelMatrix:float4x4 { get set }
     
+    func setModelableDefaults()
     func calcModelMatrix() -> float4x4
     func updateModelMatrix()
 }
 
 extension Modelable {
+    func setModelableDefaults() {
+        modelPosition = float4(1.0, 1.0, 1.0, 1.0)
+        modelScale = float4(1.0, 1.0, 1.0, 1.0)
+        modelRotation = float4(1.0, 1.0, 1.0, 90.0)
+    }
+    
     func calcModelMatrix() -> float4x4 {
         // scale, then rotate, then translate!!
         // - but it looks cooler identity * translate, rotate, scale
@@ -154,6 +161,7 @@ protocol Uniformable: class {
     var mvpBuffer:MTLBuffer? { get set }
     var mvpPointer: UnsafeMutablePointer<Void>? { get set }
     
+    func setUniformableDefaults()
     func calcUniformMatrix() -> float4x4
     func calcMvpMatrix(modelMatrix: float4x4) -> float4x4
     func updateMvpMatrix(modelMatrix: float4x4)
@@ -164,6 +172,12 @@ protocol Uniformable: class {
 
 //must deinit resources
 extension Uniformable {
+    func setUniformableDefaults() {
+        uniformScale = float4(0.01, 0.01, 0.01, 1.0) // provides more range to place objects in world
+        uniformPosition = float4(0.0, 0.0, 0.0, 1.0)
+        uniformRotation = float4(1.0, 1.0, 1.0, 90)
+    }
+    
     func calcUniformMatrix() -> float4x4 {
         // scale, then rotate, then translate!!
         // - but it looks cooler identity * translate, rotate, scale
@@ -195,22 +209,21 @@ protocol Projectable: class {
     var projectionCenter:float3 { get set }
     var projectionUp:float3 { get set }
     
+    func setProjectableDefaults()
     func calcProjectionMatrix() -> float4x4
 }
 
 // must deinit resources
 extension Projectable {
+    func setProjectableDefaults() {
+        projectionEye = [0.0, 0.0, 0.0]
+        projectionCenter = [0.0, 0.0, 1.0]
+        projectionUp = [0.0, 1.0, 0.0]
+    }
+    
     func calcProjectionMatrix() -> float4x4 {
         return Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
-//    func prepareProjectionBuffer(device: MTLDevice) {
-//        self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
-//        self.projectionBuffer?.label = "projection buffer"
-//        self.projectionPointer = projectionBuffer?.contents()
-//    }
-//    func updateProjectionBuffer() {
-//        memcpy(self.projectionPointer!, &self.projectionMatrix, sizeof(float4x4))
-//    }
 }
 
 // apparently, MetalKit already handles perspective ?!
@@ -273,9 +286,9 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
     var device:MTLDevice
     
     // Modelable
-    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
-    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
-    var modelRotation = float4(1.0, 1.0, 1.0, 90)
+    var modelScale: float4
+    var modelPosition: float4
+    var modelRotation: float4
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     
     init(name: String, vertices: [T], device: MTLDevice) {
@@ -287,6 +300,7 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
         self.vBytes = Node<T>.calculateBytes(vCount)
         self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
         
+        setModelableDefaults()
         updateModelMatrix()
     }
     

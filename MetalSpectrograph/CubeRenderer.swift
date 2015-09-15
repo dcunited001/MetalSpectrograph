@@ -12,14 +12,12 @@ import MetalKit
 //TODO: refactor buffers - premultiply projection & world model
 //TODO: refactor to avoid var cube = object as! Cube<ColorVertex>
 
-class CubeRenderer: BaseRenderer
-{
-    //var vertexShaderName = "uniform_color_morph_triangle_vertex"
-//    override var vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
-//    override var fragmentShaderName = "basic_triangle_fragment"
+class CubeRenderer: BaseRenderer {
     
     override init() {
         super.init()
+        
+        //vertexShaderName = "uniform_color_morph_triangle_vertex"
         vertexShaderName = "continuous_uniform_color_morph_triangle_vertex"
         fragmentShaderName = "basic_triangle_fragment"
     }

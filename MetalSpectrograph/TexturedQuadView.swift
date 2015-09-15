@@ -46,7 +46,6 @@ class TexturedQuadViewController: NSViewController {
     var lastPanLocation: CGPoint!
     
     func setupGestures(){
-        //        var pan = NSPanGestureRecognizer(target: self, action: Selector("updateObjectToSliderValues:"))
         var pan = NSPanGestureRecognizer(target: self, action: Selector("pan:"))
         metalView.addGestureRecognizer(pan)
     }
