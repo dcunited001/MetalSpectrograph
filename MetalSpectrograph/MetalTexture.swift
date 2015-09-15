@@ -34,39 +34,64 @@ class MetalTexture {
     }
 }
 
-class BufferTexture: MetalTexture {
-    var pixelSize:Int = sizeof(float4)
 
-    var pixels:[Float] = [
-        1.0, 1.0, 1.0, 1.0,
-        0.0, 1.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        1.0, 0.0, 0.0, 0.0,
+// TODO: refactor pixelable protocol
+//   and abstract `var color: float4` to `var color: T //T: Pixelable>`
+struct TexPixel2D: Colorable {
+    var color: float4
+    
+    init(chunks: [float4]) {
+        self.color = chunks[0]
+    }
+    
+    init(color: float4) {
+        self.color = color
+    }
+    
+    func toChunks() -> [float4] {
+        return [color]
+    }
+    
+    static func chunkSize() -> Int {
+        return sizeof(TexPixel2D)
+    }
+}
+
+class BufferTexture<T: Colorable>: MetalTexture {
+    var texBuffer: MTLBuffer?
+    
+    var pixelSize:Int = sizeof(float4)
+    var pixelsPointer: UnsafeMutablePointer<Void>?
+    var pixelsDefault:[T] = [
+        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 0.0, 0.0)]),
         
-        1.0, 1.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
+        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
         
-        1.0, 1.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
+        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
         
-        1.0, 1.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
+        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
         
-        1.0, 1.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 0.0, 1.0
+        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 0.0, 0.0, 1.0)])
     ]
     
     convenience override init() {
@@ -78,21 +103,26 @@ class BufferTexture: MetalTexture {
         format = MTLPixelFormat.RGBA32Float
         width = Int(size.width)
         height = Int(size.height)
+        pixelsPointer = valloc(width * height * 4)
     }
     
     func calcBytesPerRow() -> Int {
         return width * pixelSize
-//        return width * height * 4
     }
     
     override func finalize(device: MTLDevice) -> Bool {
-        let pTexDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
+//        let pTexDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
+//        
+//        target = pTexDesc.textureType
+//        texture = device.newTextureWithDescriptor(pTexDesc)
+//        texBuffer = device.newBufferWithBytes
         
-        target = pTexDesc.textureType
-        texture = device.newTextureWithDescriptor(pTexDesc)
+//        texBuffer = device.newBufferWithBytesNoCopy
+        
+        //TODO: use valloc to set memory
         
         let region = MTLRegionMake2D(0, 0, width, height)
-        texture?.replaceRegion(region, mipmapLevel: 0, withBytes: pixels + pixels + pixels + pixels, bytesPerRow: calcBytesPerRow())
+//        texture?.replaceRegion(region, mipmapLevel: 0, withBytes: pixels, bytesPerRow: calcBytesPerRow())
         
         return true
     }
