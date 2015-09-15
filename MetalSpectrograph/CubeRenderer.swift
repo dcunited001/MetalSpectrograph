@@ -43,17 +43,8 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     var modelPointer: UnsafeMutablePointer<Void>?
     
-    override init() {
-        super.init()
-        setProperties()
-    }
-    
     deinit {
         //TODO: release uniform and projection
-    }
-    
-    func setProperties() {
-        self.modelScale = float4(1.0, 1.0, 1.0, 1.0)
     }
     
     override func configure(view: MetalView) {
