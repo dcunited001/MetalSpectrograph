@@ -14,25 +14,39 @@
 
 using namespace metal;
 
-struct VertexInOut
+struct TexturedQuadVertexInOut
 {
     float4 m_Position [[position]];
     float4 m_TexCoord [[user(texturecoord)]];
 };
 
-vertex VertexInOut texturedQuadVertex(constant VertexInOut* vertex_array [[ buffer(0) ]],
-                                      constant float4x4       *pMVP        [[ buffer(1) ]],
+// TODO: add uniforms/projection and other data types to shared metal file
+struct Uniforms {
+    float4x4 modelMatrix;
+};
+
+struct Projection {
+    float4x4 projectionMatrix;
+};
+
+vertex TexturedQuadVertexInOut texturedQuadVertex(constant TexturedQuadVertexInOut* vertex_array [[ buffer(0) ]],
+                                      const device Uniforms& uniforms [[ buffer(1) ]],
+                                      const device Projection& projection [[ buffer(2) ]],
+                                      const device Uniforms& worldUniforms [[ buffer(3) ]],
                                       uint                     vid         [[ vertex_id ]])
 {
-    VertexInOut outVertices;
+    TexturedQuadVertexInOut outVertices;
     
-    outVertices.m_Position = *pMVP * vertex_array[vid].m_Position;
+    outVertices.m_Position = projection.projectionMatrix *
+        worldUniforms.modelMatrix *
+        uniforms.modelMatrix *
+        vertex_array[vid].m_Position;
     outVertices.m_TexCoord = vertex_array[vid].m_TexCoord;
     
     return outVertices;
 }
 
-fragment float4 texturedQuadFragment(VertexInOut     inFrag    [[ stage_in ]],
+fragment float4 texturedQuadFragment(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
                                     texture2d<float>  tex2D     [[ texture(0) ]])
 {
     constexpr sampler quad_sampler;
