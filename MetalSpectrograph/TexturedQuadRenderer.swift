@@ -28,7 +28,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     var perspectiveFar:Float = 100000000.0
     
     var projectionEye:float3 = [0.0, 0.0, 0.0]
-    var projectionCenter:float3 = [0.0, 0.0, 2.0]
+    var projectionCenter:float3 = [0.0, 0.0, 1.0]
     var projectionUp:float3 = [0.0, 1.0, 0.0]
     var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
     var projectionBuffer:MTLBuffer?
@@ -112,11 +112,8 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     }
     
     func prepareTexturedQuad(texStr: NSString, extStr: NSString) -> Bool {
-        guard let newTexture = ImageTexture.init(name: texStr as String, ext: extStr as String) else {
-            print("Failed to create ImageTexture")
-            return false
-        }
-        inTexture = newTexture
+        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
+//        inTexture = BufferTexture.init()
         inTexture!.texture?.label = texStr as String
         
         guard inTexture!.finalize(device!) else {
@@ -138,10 +135,11 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
         renderEncoder.setFrontFacingWinding(.CounterClockwise)
         renderEncoder.setDepthStencilState(depthState)
         renderEncoder.setRenderPipelineState(pipelineState!)
-        renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 1)
+        object!.encode(renderEncoder)
+        renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 2)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 3)
         renderEncoder.setFragmentTexture(inTexture!.texture, atIndex: 0)
         
-        object!.encode(renderEncoder)
         renderEncoder.drawPrimitives(.Triangle,
             vertexStart: 0,
             vertexCount: 6, //TODO: replace with constant?
@@ -156,7 +154,6 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
         
         self.projectionMatrix = calcProjectionMatrix()
         self.modelMatrix = calcModelMatrix()
-        
         
         updateProjectionBuffer()
         updateUniformBuffer()
@@ -176,6 +173,7 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     }
     
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
-        
+        object!.modelMatrix = object!.calcModelMatrix()
+        object!.updateUniformBuffer()
     }
 }
