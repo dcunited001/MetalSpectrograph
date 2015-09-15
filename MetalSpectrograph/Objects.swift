@@ -234,11 +234,12 @@ protocol Perspectable: class {
     var perspectiveNear:Float { get set }
     var perspectiveFar:Float { get set }
     
+    func setPerspectiveDefaults()
     func calcPerspectiveMatrix() -> float4x4
 }
 
 extension Perspectable {
-    func perspectiveDefaults() {
+    func setPerspectiveDefaults() {
         perspectiveFov = 65.0
         perspectiveAngle = 35.0 // 35.0 for landscape
         perspectiveAspect = 1

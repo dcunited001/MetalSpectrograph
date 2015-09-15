@@ -94,7 +94,7 @@ class MetalRenderer {
 //    // updateLogic here?
 //}
 
-class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
+class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable, Perspectable {
     var pipelineState: MTLRenderPipelineState?
     var size = CGSize() // TODO: more descriptive name
     var startTime = CFAbsoluteTimeGetCurrent()
@@ -103,6 +103,13 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     
     var vertexShaderName = "basic_triangle_vertex"
     var fragmentShaderName = "basic_triangle_fragment"
+    
+    //Perspectable
+    var perspectiveFov:Float = 65.0
+    var perspectiveAngle:Float = 35.0
+    var perspectiveAspect:Float = 1
+    var perspectiveNear:Float = 0.01
+    var perspectiveFar:Float = 100
     
     //Projectable
     var projectionEye: float3 = [0.0, 0.0, 0.0]
@@ -131,6 +138,7 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     
     override func configure(view: MetalView) {
         super.configure(view)
+        setPerspectiveDefaults()
         setProjectableDefaults()
         setUniformableDefaults()
         
@@ -146,7 +154,7 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     }
     
     func calcMvpMatrix(modelMatrix: float4x4) -> float4x4 {
-        return calcProjectionMatrix() * calcUniformMatrix() * modelMatrix
+        return calcPerspectiveMatrix() * calcProjectionMatrix() * calcUniformMatrix() * modelMatrix
     }
     
     func preparePipelineState(view: MetalView) -> Bool {
