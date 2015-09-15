@@ -36,7 +36,7 @@
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB9151B9EA4480022BD57 /* BasicTriangle.metal in Sources */ = {isa = PBXBuildFile; fileRef = 439BB9141B9EA4480022BD57 /* BasicTriangle.metal */; settings = {ASSET_TAGS = (); }; };
 		43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */; settings = {ASSET_TAGS = (); }; };
-		43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18121BA0F341004174C1 /* texturedQuad.metal */; settings = {ASSET_TAGS = (); }; };
+		43AD18131BA0F341004174C1 /* TexturedQuad.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18121BA0F341004174C1 /* TexturedQuad.metal */; settings = {ASSET_TAGS = (); }; };
 		43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18171BA104A5004174C1 /* MetalRenderer.swift */; settings = {ASSET_TAGS = (); }; };
 		43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DC06201B9F9ABD0087357D /* MetalLooperController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -94,7 +94,7 @@
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
 		439BB9141B9EA4480022BD57 /* BasicTriangle.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BasicTriangle.metal; sourceTree = "<group>"; };
 		43AD180F1BA0F302004174C1 /* TexturedQuadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedQuadView.swift; sourceTree = "<group>"; };
-		43AD18121BA0F341004174C1 /* texturedQuad.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = texturedQuad.metal; sourceTree = "<group>"; };
+		43AD18121BA0F341004174C1 /* TexturedQuad.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = TexturedQuad.metal; sourceTree = "<group>"; };
 		43AD18171BA104A5004174C1 /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		43DC06201B9F9ABD0087357D /* MetalLooperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalLooperController.swift; sourceTree = "<group>"; };
 		8F61A2C54C542F45C30821AC /* Pods-MetalSpectrograph.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalSpectrograph.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetalSpectrograph/Pods-MetalSpectrograph.release.xcconfig"; sourceTree = "<group>"; };
@@ -227,7 +227,7 @@
 		436D3F381BA288A500F50C71 /* TexturedQuad */ = {
 			isa = PBXGroup;
 			children = (
-				43AD18121BA0F341004174C1 /* texturedQuad.metal */,
+				43AD18121BA0F341004174C1 /* TexturedQuad.metal */,
 				436D3F3A1BA288D200F50C71 /* TexturedQuad.swift */,
 				436D3F3E1BA2897F00F50C71 /* TexturedQuadRenderer.swift */,
 			);
@@ -488,7 +488,7 @@
 				435841571BA3148A005609FD /* Objects.swift in Sources */,
 				43AD18101BA0F302004174C1 /* TexturedQuadView.swift in Sources */,
 				4358415B1BA341A7005609FD /* CubeRenderer.swift in Sources */,
-				43AD18131BA0F341004174C1 /* texturedQuad.metal in Sources */,
+				43AD18131BA0F341004174C1 /* TexturedQuad.metal in Sources */,
 				436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */,
 				436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */,
 				434F333E1BA03289000B87A2 /* ParticleController.swift in Sources */,
