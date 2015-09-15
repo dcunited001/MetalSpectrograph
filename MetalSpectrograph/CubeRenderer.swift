@@ -9,6 +9,8 @@
 import simd
 import MetalKit
 
+//TODO: refactor buffers - premultiply projection & world model
+
 class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
 {
     var pipelineState: MTLRenderPipelineState?

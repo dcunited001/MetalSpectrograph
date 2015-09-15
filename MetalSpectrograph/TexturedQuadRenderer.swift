@@ -13,7 +13,8 @@ import MetalKit
 class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
     
     var pipelineState: MTLRenderPipelineState?
-    var inTexture: ImageTexture?
+    var inTexture: BufferTexture?
+//    var inTexture: ImageTexture?
     var size: CGSize = CGSize()
     var object: TexturedQuad<TexturedVertex>?
     
@@ -72,12 +73,12 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     
     func preparePipelineState(view: MetalView) -> Bool {
 
-        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("texturedQuadFragment") else {
+        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("texQuadFragment") else {
             print("Couldn't load texturedQuadFragment")
             return false
         }
         
-        guard let vertexProgram = shaderLibrary?.newFunctionWithName("texturedQuadVertex") else {
+        guard let vertexProgram = shaderLibrary?.newFunctionWithName("texQuadVertex") else {
             print("Couldn't load texturedQuadVertex")
             return false
         }
@@ -112,8 +113,8 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     }
     
     func prepareTexturedQuad(texStr: NSString, extStr: NSString) -> Bool {
-        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
-//        inTexture = BufferTexture.init()
+//        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
+        inTexture = BufferTexture.init()
         inTexture!.texture?.label = texStr as String
         
         guard inTexture!.finalize(device!) else {
