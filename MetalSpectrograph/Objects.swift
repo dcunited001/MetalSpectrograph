@@ -148,6 +148,7 @@ extension Uniformable {
 }
 
 protocol Projectable: class {
+    var perspectiveFov:Float { get set }
     var perspectiveAngle:Float { get set } // view orientation to user in degrees =) 3d
     var perspectiveAspect:Float { get set } // update when view bounds change
     var perspectiveNear:Float { get set }
@@ -177,21 +178,9 @@ extension Projectable {
         let top = length
         let bottom = -top
         
-        //TODO: refactor to protocol
-        let perspectiveFov = 65.0
-        
-        // frustum * lookat * world * model
-        // float4x4([[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 1.33255, 1.33122], [0.0, 0.0, -0.1001, 0.0]])
-        
-        // perspective * (lookAt * worldMatrix * modelMatrix)
-        // but should be commutative, so (perspective * lookAt) * worldMatrix * modelMatrix should be OK
-        
-//        print(left, right, bottom, top, perspectiveNear, perspectiveFar)
-//        print(Metal3DTransforms.frustum(left, right: right, bottom: bottom, top: top, near: 0.1, far: 100.0))
-        
 //        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
-            
-            return Metal3DTransforms.perspectiveFov(perspectiveAngle, aspect: perspectiveAspect, near: perspectiveNear, far: perspectiveFar)
+        
+        return Metal3DTransforms.perspectiveFov(perspectiveAngle, aspect: perspectiveAspect, near: perspectiveNear, far: perspectiveFar)
             * Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
     }
     func prepareProjectionBuffer(device: MTLDevice) {

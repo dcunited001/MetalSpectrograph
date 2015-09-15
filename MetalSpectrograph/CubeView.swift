@@ -120,14 +120,23 @@ class CubeViewController: NSViewController {
             var xDelta = Float((lastPanLocation.x - pointInView.x)/self.view.bounds.width) * panSensivity
             var yDelta = Float((lastPanLocation.y - pointInView.y)/self.view.bounds.height) * panSensivity
             
+//            renderer.perspectiveAngle += xDelta
+//            renderer.perspectiveNear += yDelta/10
+//            renderer.perspectiveFar += xDelta
+//            renderer.projectionEye += [0.0, 0.0, yDelta]
+//            renderer.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
+//            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
+            //            renderer.object?.modelPosition += [0.0, 0.0, 0.0, yDelta]
+            //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
+            //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
+                        renderer.object?.modelRotation += [0.0, 0.0, 0.0, 60*xDelta]
+//            renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
+            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
+//                        renderer.object?.modelScale += [xDelta, yDelta, 0.0, 0.0]
             
-//            renderer.projectionEye += [yDelta, xDelta, 0.0]
-            renderer.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
-//            renderer.object?.modelPosition += [yDelta, xDelta, 0.0, 0.0]
-//            renderer.object?.modelRotation += [yDelta, xDelta, 0.0, 0.0]
             lastPanLocation = pointInView
         } else if panGesture.state == NSGestureRecognizerState.Began{
             lastPanLocation = panGesture.locationInView(self.view)
-        } 
+        }
     }
 }

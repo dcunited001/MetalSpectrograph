@@ -21,10 +21,11 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
     let fragmentShaderName = "basic_triangle_fragment"
     
     //Projectable
+    var perspectiveFov:Float = 65.0
     var perspectiveAngle:Float = 35.0 // 35.0 for landscape
     var perspectiveAspect:Float = 1
     var perspectiveNear:Float = 0.01
-    var perspectiveFar:Float = 100.0
+    var perspectiveFar:Float = 100000000.0
     
     var projectionEye:float3 = [0.0, 0.0, 0.0]
     var projectionCenter:float3 = [0.0, 0.0, 1.0]
@@ -123,7 +124,6 @@ class CubeRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable
         
         self.projectionMatrix = calcProjectionMatrix()
         self.modelMatrix = calcModelMatrix()
-        
 
         updateProjectionBuffer()
         updateUniformBuffer()
