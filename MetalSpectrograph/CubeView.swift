@@ -48,8 +48,6 @@ class CubeViewController: NSViewController {
         renderer = CubeRenderer()
         metalView = CubeView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
-        renderer.perspectiveAspect = Float(rect.width / rect.height)
-//        renderer.modelScale = float4(1.0, Float(rect.width / rect.height), 1.0, 1.0)
         positionObject()
 //        initSliders()
         metalView.metalViewDelegate = renderer
@@ -94,7 +92,7 @@ class CubeViewController: NSViewController {
     
     func positionObject() {
         renderer.object?.modelPosition = float4(0.0, 0.0, 10.0, 1.0)
-        renderer.object?.modelScale = float4(1.0, 1.0, 1.0, 1.0)
+        renderer.object?.modelScale = float4(10.0, 10.0, 10.0, 1.0)
     }
     
     let panSensivity:Float = 5.0
@@ -131,7 +129,7 @@ class CubeViewController: NSViewController {
             //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
                         renderer.object?.modelRotation += [0.0, 0.0, 0.0, 60*xDelta]
 //            renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
-            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
+            renderer.uniformPosition += [0.0, 0.0, yDelta, 0.0]
 //                        renderer.object?.modelScale += [xDelta, yDelta, 0.0, 0.0]
             
             lastPanLocation = pointInView

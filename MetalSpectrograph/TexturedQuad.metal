@@ -21,7 +21,7 @@ struct TexturedQuadVertexInOut
 };
 
 // TODO: add uniforms/projection and other data types to shared metal file
-struct Uniforms {
+struct UniformsMVP {
     float4x4 modelMatrix;
 };
 
@@ -30,17 +30,12 @@ struct Projection {
 };
 
 vertex TexturedQuadVertexInOut texQuadVertex(constant TexturedQuadVertexInOut* vertex_array [[ buffer(0) ]],
-                                      const device Uniforms& uniforms [[ buffer(1) ]],
-                                      const device Projection& projection [[ buffer(2) ]],
-                                      const device Uniforms& worldUniforms [[ buffer(3) ]],
+                                      const device UniformsMVP& mvp [[ buffer(1) ]],
                                       uint                     vid         [[ vertex_id ]])
 {
     TexturedQuadVertexInOut outVertices;
     
-    outVertices.m_Position = projection.projectionMatrix *
-        worldUniforms.modelMatrix *
-        uniforms.modelMatrix *
-        vertex_array[vid].m_Position;
+    outVertices.m_Position = mvp.modelMatrix * vertex_array[vid].m_Position;
     outVertices.m_TexCoord = vertex_array[vid].m_TexCoord;
     
     return outVertices;

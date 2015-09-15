@@ -10,7 +10,7 @@ import simd
 import Metal
 
 // TODO: how to dynamically swap out vertex colors?
-class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
+class Cube<T: protocol<Vertexable, Chunkable>>: Node<T>, Rotatable, Translatable, Scalable, RenderEncodable {
     
     // TODO: how to make truly generic?
     //  i.e. make cube that works with Vertex & ColorVertex
@@ -57,7 +57,6 @@ class Cube<T: Vertexable>: Node<T>, Rotatable, Translatable, Scalable {
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 1)
     }
     
     // Rotatable

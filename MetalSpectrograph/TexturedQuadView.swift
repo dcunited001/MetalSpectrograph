@@ -30,7 +30,6 @@ class TexturedQuadViewController: NSViewController {
         renderer = TexturedQuadImgRenderer()
         metalView = TexturedQuadView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
-        renderer.perspectiveAspect = Float(rect.width / rect.height)
         positionTexture()
         metalView.metalViewDelegate = renderer
 
@@ -40,7 +39,7 @@ class TexturedQuadViewController: NSViewController {
     
     func positionTexture() {
         renderer.object!.modelRotation = float4(1.0, 0.0, 0.0, 90.0)
-        renderer.object!.modelPosition = float4(0.0, 0.0, 10.0, 1.0)
+        renderer.object!.modelPosition = float4(0.0, 0.0, 1.0, 1.0)
     }
     
     let panSensivity:Float = 5.0
@@ -67,10 +66,10 @@ class TexturedQuadViewController: NSViewController {
             //            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
             //            renderer.object?.modelPosition += [0.0, 0.0, 0.0, yDelta]
             //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
-                        renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
-//            renderer.object?.modelRotation += [0.0, 0.0, 0.0, 60*xDelta]
+//                        renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
+            renderer.object?.modelRotation += [0.0, 0.0, 0.0, 60*xDelta]
 //              renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
-//            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
+            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
             //                        renderer.object?.modelScale += [xDelta, yDelta, 0.0, 0.0]
             
             lastPanLocation = pointInView

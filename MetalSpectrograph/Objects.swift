@@ -21,18 +21,21 @@ import Metal
 // TODO: genericize views?   MetalView<BasicTriangle>   ... hmmmmm, maybe
 // TODO: genericize renderers?   MetalRenderer<BasicTriangle>
 
-protocol Vertexable {
-    var vertex: float4 { get set }
+protocol Chunkable {
     static func chunkSize() -> Int
     func toChunks() -> [float4]
     init(chunks: [float4]) // just chunking with float4 for now
 }
 
-protocol Colorable {
+protocol Vertexable {
+    var vertex: float4 { get set }
+}
+
+protocol Colorable: Chunkable {
     var color: float4 { get set }
 }
 
-struct ColorVertex: Vertexable, Colorable {
+struct ColorVertex: Vertexable, Colorable, Chunkable {
     var vertex: float4
     var color: float4
     
@@ -59,7 +62,7 @@ protocol Texturable {
     var textureCoords: float4 { get set }
 }
 
-struct TexturedVertex: Vertexable, Texturable {
+struct TexturedVertex: Vertexable, Texturable, Chunkable {
     var vertex: float4
     var textureCoords: float4
         
@@ -84,6 +87,7 @@ struct TexturedVertex: Vertexable, Texturable {
 }
 
 //protocol Uniformable?
+// TODO: defaults for rotatable/translatable/scalable -- need to be able to access modelRotation from defaults
 
 protocol Rotatable {
     var rotationRate: Float { get set }
@@ -111,19 +115,17 @@ protocol VertexColorModulatable {
     func translateForTime(t: CFTimeInterval, block: (Scalable -> float4)?)
 }
 
-//TODO: refactor uniformable
-protocol Uniformable: class {
+protocol Modelable: class {
     var modelScale:float4 { get set }
     var modelPosition:float4 { get set }
     var modelRotation:float4 { get set }
     var modelMatrix:float4x4 { get set }
-    var uniformBufferId:Int { get set }
-    var uniformBuffer:MTLBuffer? { get set }
-    var modelPointer: UnsafeMutablePointer<Void>? { get set }
+    
+    func calcModelMatrix() -> float4x4
+    func updateModelMatrix()
 }
 
-//must deinit resources
-extension Uniformable {
+extension Modelable {
     func calcModelMatrix() -> float4x4 {
         // scale, then rotate, then translate!!
         // - but it looks cooler identity * translate, rotate, scale
@@ -132,44 +134,106 @@ extension Uniformable {
             Metal3DTransforms.scale(modelScale) // <== N.B. this scales first!!
     }
     
-    func initModelMatrix() {
-        self.modelMatrix = calcModelMatrix()
-        self.modelPointer = uniformBuffer!.contents()
+    func updateModelMatrix() {
+        modelMatrix = calcModelMatrix()
     }
-    
-    func prepareUniformBuffer(device: MTLDevice) {
-        self.uniformBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
-    }
-    
-    func updateUniformBuffer() {
-        memcpy(modelPointer!, &self.modelMatrix, sizeof(float4x4))
-    }
+}
 
+// TODO: variant for renderer, where you can dynamically set an mvp matrix altered for each model
+
+// contains info about the world matrix
+protocol Uniformable: class {
+    //TODO: memoize uniformable matrix?
+    var uniformScale:float4 { get set }
+    var uniformPosition:float4 { get set }
+    var uniformRotation:float4 { get set }
+    
+    //TODO: further split out MVP into separate protocol?
+    var mvpMatrix:float4x4 { get set }
+    var mvpBufferId:Int { get set }
+    var mvpBuffer:MTLBuffer? { get set }
+    var mvpPointer: UnsafeMutablePointer<Void>? { get set }
+    
+    func calcUniformMatrix() -> float4x4
+    func calcMvpMatrix(modelMatrix: float4x4) -> float4x4
+    func updateMvpMatrix(modelMatrix: float4x4)
+    func prepareMvpBuffer(device: MTLDevice)
+    func prepareMvpPointer()
+    func updateMvpBuffer()
+}
+
+//must deinit resources
+extension Uniformable {
+    func calcUniformMatrix() -> float4x4 {
+        // scale, then rotate, then translate!!
+        // - but it looks cooler identity * translate, rotate, scale
+        return Metal3DTransforms.translate(uniformPosition) *
+            Metal3DTransforms.rotate(uniformRotation) *
+            Metal3DTransforms.scale(uniformScale) // <== N.B. this scales first!!
+    }
+    
+    func updateMvpMatrix(modelMatrix: float4x4) {
+        self.mvpMatrix = calcMvpMatrix(modelMatrix)
+    }
+    
+    func prepareMvpPointer() {
+        self.mvpPointer = mvpBuffer!.contents()
+    }
+    func prepareMvpBuffer(device: MTLDevice) {
+        self.mvpBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
+        self.mvpBuffer?.label = "MVP Buffer"
+    }
+    
+    func updateMvpBuffer() {
+        memcpy(mvpPointer!, &self.mvpMatrix, sizeof(float4x4))
+    }
 }
 
 protocol Projectable: class {
+    //TODO: memoize projectable matrix?
+    var projectionEye:float3 { get set }
+    var projectionCenter:float3 { get set }
+    var projectionUp:float3 { get set }
+    
+    func calcProjectionMatrix() -> float4x4
+}
+
+// must deinit resources
+extension Projectable {
+    func calcProjectionMatrix() -> float4x4 {
+        return Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
+    }
+//    func prepareProjectionBuffer(device: MTLDevice) {
+//        self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
+//        self.projectionBuffer?.label = "projection buffer"
+//        self.projectionPointer = projectionBuffer?.contents()
+//    }
+//    func updateProjectionBuffer() {
+//        memcpy(self.projectionPointer!, &self.projectionMatrix, sizeof(float4x4))
+//    }
+}
+
+// apparently, MetalKit already handles perspective ?!
+protocol Perspectable: class {
     var perspectiveFov:Float { get set }
     var perspectiveAngle:Float { get set } // view orientation to user in degrees =) 3d
     var perspectiveAspect:Float { get set } // update when view bounds change
     var perspectiveNear:Float { get set }
     var perspectiveFar:Float { get set }
     
-    // TODO: the eye is actually the worldModelMatrix, i think
-    var projectionEye:float3 { get set }
-    var projectionCenter:float3 { get set }
-    var projectionUp:float3 { get set }
-    var projectionMatrix:float4x4 { get set }
-    var projectionBuffer:MTLBuffer? { get set }
-    var projectionPointer: UnsafeMutablePointer<Void>? { get set }
-    
-    func calcProjectionMatrix() -> float4x4
-    func prepareProjectionBuffer(device: MTLDevice)
-    func updateProjectionBuffer()
+    func calcPerspectiveMatrix() -> float4x4
 }
 
-// must deinit resources
-extension Projectable {
-    func calcProjectionMatrix() -> float4x4 {
+extension Perspectable {
+    func perspectiveDefaults() {
+        perspectiveFov = 65.0
+        perspectiveAngle = 35.0 // 35.0 for landscape
+        perspectiveAspect = 1
+        perspectiveNear = 0.01
+        perspectiveFar = 100000000.0
+    }
+    
+    func calcPerspectiveMatrix() -> float4x4 {
         let rAngle = Metal3DTransforms.toRadians(perspectiveAngle)
         let length = perspectiveNear * tan(rAngle)
         
@@ -178,18 +242,10 @@ extension Projectable {
         let top = length
         let bottom = -top
         
-//        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
-        
         return Metal3DTransforms.perspectiveFov(perspectiveAngle, aspect: perspectiveAspect, near: perspectiveNear, far: perspectiveFar)
-            * Metal3DTransforms.lookAt(projectionEye, center: projectionCenter, up: projectionUp)
-    }
-    func prepareProjectionBuffer(device: MTLDevice) {
-        self.projectionBuffer = device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
-        self.projectionBuffer?.label = "projection buffer"
-        self.projectionPointer = projectionBuffer?.contents()
-    }
-    func updateProjectionBuffer() {
-        memcpy(self.projectionPointer!, &self.projectionMatrix, sizeof(float4x4))
+        
+        // alternate perspective using frustum_oc
+        //        return Metal3DTransforms.frustum_oc(left, right: right, bottom: bottom, top: top, near: perspectiveNear, far: perspectiveFar)
     }
 }
 
@@ -197,23 +253,30 @@ extension Projectable {
 // - determine indexing functions for textures
 // TODO: multi-persective renderer
 
-class Node<T: Vertexable>: Uniformable {
+protocol VertexBufferable {
+    var vCount:Int { get set }
+    var vBytes:Int { get set }
+    var vertexBufferId:Int { get set }
+    var vertexBuffer:MTLBuffer { get set }
+    var device:MTLDevice { get set }
+    
+    func setVertexBuffer(vertices: [Vertexable])
+    static func calculateBytes(vertexCount: Int) -> Int
+}
+
+class Node<T: Vertexable>: VertexBufferable, Modelable {
     let name:String
     var vCount:Int
     var vBytes:Int
-    let vertexBufferId:Int = 0
+    var vertexBufferId:Int = 0
     var vertexBuffer:MTLBuffer
     var device:MTLDevice
     
-    // Uniformable
-    var uniformBuffer:MTLBuffer?
-    var uniformBufferId:Int = 0
+    // Modelable
     var modelScale = float4(1.0, 1.0, 1.0, 1.0)
     var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
     var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
-    var modelPointer: UnsafeMutablePointer<Void>?
-    
     
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
@@ -224,21 +287,22 @@ class Node<T: Vertexable>: Uniformable {
         self.vBytes = Node<T>.calculateBytes(vCount)
         self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
         
-        self.uniformBuffer = self.device.newBufferWithLength(sizeof(float4x4), options: .CPUCacheModeDefaultCache)
-        
-        self.modelMatrix = calcModelMatrix()
-        self.modelPointer = uniformBuffer!.contents()
-        updateUniformBuffer()
+        updateModelMatrix()
     }
     
     func setVertexBuffer(vertices: [Vertexable]) {
         let vertexCount = vertices.count
         let vertexBytes = Node<T>.calculateBytes(vCount)
-        self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vertexBytes, options: .CPUCacheModeDefaultCache)
-        self.vertexBuffer.label = "\(T.self) vertices"
+        vertexBuffer = device.newBufferWithBytes(vertices, length: vertexBytes, options: .CPUCacheModeDefaultCache)
+        vertexBuffer.label = "\(T.self) vertices"
     }
     
     static func calculateBytes(vertexCount: Int) -> Int {
         return vertexCount * sizeof(T)
     }
+}
+
+// TODO: rename to RenderEncodable?
+protocol RenderEncodable {
+    func encode(renderEncoder: MTLRenderCommandEncoder)
 }

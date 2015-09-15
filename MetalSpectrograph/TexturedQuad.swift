@@ -15,7 +15,7 @@ import MetalKit
 //  and alter texture coords as above
 //TODO: dynamically change mid-point of sierpinski's gasket
 
-class TexturedQuad<T: Vertexable>: Node<T> {
+class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable {
     class func texturedQuadVertices() -> [T] {
         return [
             T(chunks: [float4(-1.0, -1.0, 0.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)]),
@@ -103,6 +103,5 @@ class TexturedQuad<T: Vertexable>: Node<T> {
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: vertexIndex)
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 1)
     }
 }

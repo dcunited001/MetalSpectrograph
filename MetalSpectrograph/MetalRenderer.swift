@@ -81,20 +81,134 @@ class MetalRenderer {
     }
 }
 
-protocol Renderable {
-    var pipelineState: MTLRenderPipelineState? { get set }
-    func configure(view: MetalView)
-    func preparePipelineState(view: MetalView) -> Bool
-    func prepareObject() -> Bool
-    func prepareDepthStencilState() -> Bool
-    func prepareTransformBuffer() -> Bool
-    func prepareTransforms() -> Bool
-    func encode(renderEncoder: MTLRenderCommandEncoder)
-    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
-    // updateLogic here?
+//protocol Renderable {
+//    var pipelineState: MTLRenderPipelineState? { get set }
+//    func configure(view: MetalView)
+//    func preparePipelineState(view: MetalView) -> Bool
+//    func prepareObject() -> Bool
+//    func prepareDepthStencilState() -> Bool
+//    func prepareTransformBuffer() -> Bool
+//    func prepareTransforms() -> Bool
+//    func encode(renderEncoder: MTLRenderCommandEncoder)
+//    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
+//    // updateLogic here?
+//}
+
+class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
+    var pipelineState: MTLRenderPipelineState?
+    var size = CGSize() // TODO: more descriptive name
+    var startTime = CFAbsoluteTimeGetCurrent()
+    
+    var object: protocol<RenderEncodable,Modelable,VertexBufferable>?
+    
+    var vertexShaderName = "basic_triangle_vertex"
+    var fragmentShaderName = "basic_triangle_fragment"
+    
+    //Projectable
+    
+    var projectionEye:float3 = [0.0, 0.0, 0.0]
+    var projectionCenter:float3 = [0.0, 0.0, 1.0]
+    var projectionUp:float3 = [0.0, 1.0, 0.0]
+    
+    // Uniformable
+    var uniformScale = float4(0.01, 0.01, 0.01, 1.0) // provides more range to place objects in world
+    var uniformPosition = float4(0.0, 0.0, 0.0, 1.0)
+    var uniformRotation = float4(1.0, 1.0, 1.0, 90)
+    
+    var mvpMatrix:float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
+    var mvpBuffer:MTLBuffer?
+    var mvpBufferId:Int = 1
+    var mvpPointer: UnsafeMutablePointer<Void>?
+    
+    var rendererDebugGroupName = "Encode BaseRenderer"
+    
+    deinit {
+        //TODO: release mvp
+    }
+    
+    override init() {
+        super.init()
+    }
+    
+    override func configure(view: MetalView) {
+        super.configure(view)
+        uniformScale *= float4(1.0, Float(view.frame.width / view.frame.height), 1.0, 1.0)
+        
+        prepareMvpBuffer(device!)
+        prepareMvpPointer()
+        
+        guard preparePipelineState(view) else {
+            print("Failed creating a compiled pipeline state object!")
+            return
+        }
+    }
+    
+    func calcMvpMatrix(modelMatrix: float4x4) -> float4x4 {
+        return calcProjectionMatrix() * calcUniformMatrix() * modelMatrix
+    }
+    
+    func preparePipelineState(view: MetalView) -> Bool {
+        guard let vertexProgram = shaderLibrary?.newFunctionWithName(vertexShaderName) else {
+            print("Couldn't load \(vertexShaderName)")
+            return false
+        }
+        
+        guard let fragmentProgram = shaderLibrary?.newFunctionWithName(fragmentShaderName) else {
+            print("Couldn't load \(fragmentShaderName)")
+            return false
+        }
+        
+        //setup render pipeline descriptor
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.vertexFunction = vertexProgram
+        pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
+        
+        //setup render pipeline state
+        do {
+            try pipelineState = device!.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
+        } catch(let err) {
+            print("Failed to create pipeline state, error \(err)")
+        }
+        
+        return true
+    }
+    
+    override func encode(renderEncoder: MTLRenderCommandEncoder) {
+        super.encode(renderEncoder)
+        renderEncoder.pushDebugGroup(rendererDebugGroupName)
+        renderEncoder.setRenderPipelineState(pipelineState!)
+        object!.encode(renderEncoder)
+        renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
+        renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
+        renderEncoder.endEncoding()
+        renderEncoder.popDebugGroup()
+    }
+    
+    func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
+        updateMvpMatrix(object!.modelMatrix)
+        updateMvpBuffer()
+        let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
+        self.encode(renderEncoder)
+        
+        commandBuffer.presentDrawable(drawable)
+        
+        // __block??
+        let dispatchSemaphore: dispatch_semaphore_t = avaliableResourcesSemaphore
+        
+        commandBuffer.addCompletedHandler { (cmdBuffer) in
+            dispatch_semaphore_signal(dispatchSemaphore)
+        }
+        commandBuffer.commit()
+    }
+    
+    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
+        object!.updateModelMatrix()
+    }
 }
 
-class CollectionRenderer<T>: MetalRenderer, Renderable {
+class CollectionRenderer<T>: MetalRenderer //, Renderable
+{
     var pipelineState: MTLRenderPipelineState?
     override func configure(view: MetalView){
         super.configure(view)

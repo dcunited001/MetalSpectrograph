@@ -10,47 +10,23 @@ import simd
 import MetalKit
 
 // TODO: abstract textured quad behavior from image-loaded texture behavior
-class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable {
-    
-    var pipelineState: MTLRenderPipelineState?
-    var inTexture: BufferTexture?
-//    var inTexture: ImageTexture?
-    var size: CGSize = CGSize()
-    var object: TexturedQuad<TexturedVertex>?
-    
-    let vertexShaderName = "texturedQuadVertex"
-    let fragmentShaderName = "texturedQuadFragment"
-    
-    //Projectable
-    var perspectiveFov:Float = 65.0
-    var perspectiveAngle:Float = 35.0 // 35.0 for landscape
-    var perspectiveAspect:Float = 1
-    var perspectiveNear:Float = 0.01
-    var perspectiveFar:Float = 100000000.0
-    
-    var projectionEye:float3 = [0.0, 0.0, 0.0]
-    var projectionCenter:float3 = [0.0, 0.0, 1.0]
-    var projectionUp:float3 = [0.0, 1.0, 0.0]
-    var projectionMatrix:float4x4 = float4x4(diagonal: float4(1.0, 1.0, 1.0, 1.0))
-    var projectionBuffer:MTLBuffer?
-    var projectionPointer: UnsafeMutablePointer<Void>?
-    
-    // Uniformable
-    var uniformBuffer:MTLBuffer?
-    var uniformBufferId:Int = 1
-    var modelScale = float4(1.0, 1.0, 1.0, 1.0)
-    var modelPosition = float4(0.0, 0.0, 0.0, 1.0)
-    var modelRotation = float4(1.0, 1.0, 1.0, 90)
-    var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
-    var modelPointer: UnsafeMutablePointer<Void>?
+class TexturedQuadImgRenderer: BaseRenderer {
+//    var inTexture: BufferTexture<TexPixel2D>?
+    var inTexture: ImageTexture?
+
+    override init() {
+        super.init()
+        vertexShaderName = "texQuadVertex"
+        fragmentShaderName = "texQuadFragment"
+        rendererDebugGroupName = "Encode TexturedQuadImg"
+        
+        uniformScale = float4(1.0, 1.0, 1.0, 1.0)
+        uniformPosition = float4(0.0, 0.0, 0.0, 1.0)
+        uniformRotation = float4(1.0, 1.0, 1.0, 90)
+    }
     
     override func configure(view: MetalView) {
         super.configure(view)
-        
-        guard preparePipelineState(view) else {
-            print("Failed creating a compiled pipeline state object!")
-            return
-        }
         
         //TODO: add asset?
         guard prepareTexturedQuad("Default", extStr: "jpg") else {
@@ -62,39 +38,33 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
             print("Failed creating a depth stencil state!")
             return
         }
-        
-        self.projectionMatrix = calcProjectionMatrix()
-        prepareProjectionBuffer(device!)
-        updateProjectionBuffer()
-        
-        prepareUniformBuffer(device!)
-        initModelMatrix()
     }
     
-    func preparePipelineState(view: MetalView) -> Bool {
-
-        guard let fragmentProgram = shaderLibrary?.newFunctionWithName("texQuadFragment") else {
-            print("Couldn't load texturedQuadFragment")
+    override func preparePipelineState(view: MetalView) -> Bool {
+        guard let vertexProgram = shaderLibrary?.newFunctionWithName(vertexShaderName) else {
+            print("Couldn't load \(vertexShaderName)")
             return false
         }
         
-        guard let vertexProgram = shaderLibrary?.newFunctionWithName("texQuadVertex") else {
-            print("Couldn't load texturedQuadVertex")
+        guard let fragmentProgram = shaderLibrary?.newFunctionWithName(fragmentShaderName) else {
+            print("Couldn't load \(fragmentShaderName)")
             return false
         }
         
-        let quadPipelineStateDescriptor = MTLRenderPipelineDescriptor()
-//        quadPipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
-        quadPipelineStateDescriptor.depthAttachmentPixelFormat = .Invalid
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.vertexFunction = vertexProgram
+        pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
+        
+//        pipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
+        pipelineStateDescriptor.depthAttachmentPixelFormat = .Invalid
 
-        quadPipelineStateDescriptor.stencilAttachmentPixelFormat = view.stencilPixelFormat!
-        quadPipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
-        quadPipelineStateDescriptor.sampleCount = view.sampleCount
-        quadPipelineStateDescriptor.vertexFunction = vertexProgram
-        quadPipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = view.stencilPixelFormat!
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
+        pipelineStateDescriptor.sampleCount = view.sampleCount
         
         do {
-            try pipelineState = (device!.newRenderPipelineStateWithDescriptor(quadPipelineStateDescriptor))
+            try pipelineState = (device!.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor))
         } catch(let err) {
             print("Failed to create pipeline state, error: \(err)")
             return false
@@ -113,8 +83,8 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     }
     
     func prepareTexturedQuad(texStr: NSString, extStr: NSString) -> Bool {
-//        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
-        inTexture = BufferTexture.init()
+        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
+//        inTexture = BufferTexture<TexPixel2D>.init()
         inTexture!.texture?.label = texStr as String
         
         guard inTexture!.finalize(device!) else {
@@ -126,19 +96,17 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
         size.height = CGFloat(inTexture!.height)
 
         object = TexturedQuad<TexturedVertex>(device: device!)
-        object!.size = size
         
         return true
     }
     
     override func encode(renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.pushDebugGroup("encode quad")
+        renderEncoder.pushDebugGroup(rendererDebugGroupName)
         renderEncoder.setFrontFacingWinding(.CounterClockwise)
         renderEncoder.setDepthStencilState(depthState)
         renderEncoder.setRenderPipelineState(pipelineState!)
         object!.encode(renderEncoder)
-        renderEncoder.setVertexBuffer(projectionBuffer, offset: 0, atIndex: 2)
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, atIndex: 3)
+        renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
         renderEncoder.setFragmentTexture(inTexture!.texture, atIndex: 0)
         
         renderEncoder.drawPrimitives(.Triangle,
@@ -148,33 +116,5 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
         
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()
-    }
-    
-    @objc func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
-        dispatch_semaphore_wait(avaliableResourcesSemaphore, DISPATCH_TIME_FOREVER)
-        
-        self.projectionMatrix = calcProjectionMatrix()
-        self.modelMatrix = calcModelMatrix()
-        
-        updateProjectionBuffer()
-        updateUniformBuffer()
-        
-        let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
-        
-        self.encode(renderEncoder)
-        commandBuffer.presentDrawable(drawable)
-        
-        // __block??
-        let dispatchSemaphore: dispatch_semaphore_t = avaliableResourcesSemaphore
-        
-        commandBuffer.addCompletedHandler { (cmdBuffer) in
-            dispatch_semaphore_signal(dispatchSemaphore)
-        }
-        commandBuffer.commit()
-    }
-    
-    func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
-        object!.modelMatrix = object!.calcModelMatrix()
-        object!.updateUniformBuffer()
     }
 }
