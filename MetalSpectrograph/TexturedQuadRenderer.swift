@@ -22,10 +22,10 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     
     //Projectable
     var perspectiveFov:Float = 65.0
-    var perspectiveAngle:Float = 0.0
+    var perspectiveAngle:Float = 35.0 // 35.0 for landscape
     var perspectiveAspect:Float = 1
     var perspectiveNear:Float = 0.01
-    var perspectiveFar:Float = 100.0
+    var perspectiveFar:Float = 100000000.0
     
     var projectionEye:float3 = [0.0, 0.0, 0.0]
     var projectionCenter:float3 = [0.0, 0.0, 2.0]
@@ -153,6 +153,13 @@ class TexturedQuadImgRenderer: MetalRenderer, MetalViewDelegate, Projectable, Un
     
     @objc func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
         dispatch_semaphore_wait(avaliableResourcesSemaphore, DISPATCH_TIME_FOREVER)
+        
+        self.projectionMatrix = calcProjectionMatrix()
+        self.modelMatrix = calcModelMatrix()
+        
+        
+        updateProjectionBuffer()
+        updateUniformBuffer()
         
         let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         

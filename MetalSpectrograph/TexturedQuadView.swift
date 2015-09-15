@@ -29,8 +29,12 @@ class TexturedQuadViewController: NSViewController {
 
         metalView.metalViewDelegate = renderer
 
-
         self.view.addSubview(metalView)
+    }
+    
+    func positionTexture() {
+        renderer.object!.modelRotation = float4(1.0, 0.0, 0.0, 0.0)
+        renderer.object!.modelPosition = float4(0.0, 0.0, 10.0, 1.0)
     }
     
 }
