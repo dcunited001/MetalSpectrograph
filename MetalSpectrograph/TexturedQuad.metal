@@ -29,7 +29,7 @@ struct Projection {
     float4x4 projectionMatrix;
 };
 
-vertex TexturedQuadVertexInOut texturedQuadVertex(constant TexturedQuadVertexInOut* vertex_array [[ buffer(0) ]],
+vertex TexturedQuadVertexInOut texQuadVertex(constant TexturedQuadVertexInOut* vertex_array [[ buffer(0) ]],
                                       const device Uniforms& uniforms [[ buffer(1) ]],
                                       const device Projection& projection [[ buffer(2) ]],
                                       const device Uniforms& worldUniforms [[ buffer(3) ]],
@@ -46,7 +46,7 @@ vertex TexturedQuadVertexInOut texturedQuadVertex(constant TexturedQuadVertexInO
     return outVertices;
 }
 
-fragment float4 texturedQuadFragment(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
+fragment float4 texQuadFragment(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
                                     texture2d<float>  tex2D     [[ texture(0) ]])
 {
     constexpr sampler quad_sampler;
