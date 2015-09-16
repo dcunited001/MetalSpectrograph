@@ -60,8 +60,14 @@ struct TexPixel2D: Colorable {
 class BufferTexture<T: Colorable>: MetalTexture {
     var texBuffer: MTLBuffer?
     
-    var pixelSize:Int = sizeof(float4)
-    var pixelsPointer: UnsafeMutablePointer<Void>?
+    var pixelSize:Int = sizeof(T)
+    private var pixelsPtr: UnsafeMutablePointer<Void> = nil
+    private var pixelsVoidPtr: COpaquePointer?
+    private var pixelsVertexPtr: UnsafeMutablePointer<T>?
+    
+    let pixelsAlignment:Int = 0x1000
+    
+//    var memPointer: UnsafeMutablePointer<UnsafeMutablePointer<Void>>
     var pixelsDefault:[T] = [
         T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
         T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
@@ -95,7 +101,7 @@ class BufferTexture<T: Colorable>: MetalTexture {
     ]
     
     convenience override init() {
-        self.init(size: CGSize(width: 5,height: 5))
+        self.init(size: CGSize(width: 64,height: 64))
     }
     
     init(size: CGSize) {
@@ -103,28 +109,58 @@ class BufferTexture<T: Colorable>: MetalTexture {
         format = MTLPixelFormat.RGBA32Float
         width = Int(size.width)
         height = Int(size.height)
-        pixelsPointer = valloc(width * height * 4)
+        
+        let totalBytes = calcTotalBytes(width, h: height)
+        posix_memalign(&pixelsPtr, pixelsAlignment, totalBytes)
+        pixelsVoidPtr = COpaquePointer(pixelsPtr)
+        pixelsVertexPtr = UnsafeMutablePointer<T>(pixelsVoidPtr!)
+        
+//        particlesParticleBufferPtr = UnsafeMutableBufferPointer(start: particlesParticlePtr, count: particleCount)
+        
+//        let totalPageBytes = calcTotalPages(totalBytes) * 4096
+//        pixelsPointer = valloc(totalBytes)
+//        pixelsPointer = malloc(totalBytes)
+//        let memPointer: UnsafeMutablePointer<UnsafeMutablePointer<Void>> =
+//        posix_memalign(memPointer, 4096, totalBytes)
+//        pixelsPointer = memset(memPointer, 0, totalBytes)
     }
     
     func calcBytesPerRow() -> Int {
-        return width * pixelSize
+        return width * sizeof(T)
+    }
+    
+    //hmmm do i deal with this using posix_memalign?
+    func calcTotalPages(bytes: Int) -> Int {
+        return (bytes / pixelsAlignment) + 1
+    }
+    
+    func calcTotalBytes() -> Int {
+        return calcTotalBytes(width, h: height)
+    }
+    
+    func calcTotalBytes(w: Int, h: Int) -> Int {
+        return w * h * sizeof(T)
     }
     
     override func finalize(device: MTLDevice) -> Bool {
-//        let pTexDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
-//        
-//        target = pTexDesc.textureType
-//        texture = device.newTextureWithDescriptor(pTexDesc)
-//        texBuffer = device.newBufferWithBytes
+        let texDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
+        target = texDesc.textureType
+        texDesc.resourceOptions = .StorageModeShared
         
-//        texBuffer = device.newBufferWithBytesNoCopy
-        
-        //TODO: use valloc to set memory
-        
-        let region = MTLRegionMake2D(0, 0, width, height)
-//        texture?.replaceRegion(region, mipmapLevel: 0, withBytes: pixels, bytesPerRow: calcBytesPerRow())
+        // after editing the line below in MTLBuffer.h - and removing NS_AVAILABLE_IOS(8_0)
+        //- (id <MTLTexture>)newTextureWithDescriptor:(MTLTextureDescriptor*)descriptor offset:(NSUInteger)offset bytesPerRow:(NSUInteger)bytesPerRow NS_AVAILABLE_IOS(8_0);
+        // => failed assertion `MTLResourceOptions (0x0) contains invalid/unsupported StorageMode.'
+        // womp womp, no .StorageModeShared for OSX =/
+        texBuffer = device.newBufferWithBytesNoCopy(pixelsVertexPtr!, length: calcTotalBytes(), options: .StorageModeShared, deallocator: nil)
+        texture = texBuffer!.newTextureWithDescriptor(texDesc, offset: 0, bytesPerRow: calcBytesPerRow())
+
+        writePixels(pixelsDefault)
         
         return true
+    }
+    
+    func writePixels(pixels: [T]) {
+        memcpy(pixelsVertexPtr!, pixels, calcTotalBytes())
     }
     
 }
