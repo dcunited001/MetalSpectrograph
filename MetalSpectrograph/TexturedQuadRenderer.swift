@@ -10,10 +10,8 @@ import simd
 import MetalKit
 
 // TODO: abstract textured quad behavior from image-loaded texture behavior
-class TexturedQuadImgRenderer: BaseRenderer {
+class TexturedQuadRenderer: BaseRenderer {
     var inTexture: MetalTexture?
-    let defaultFileName = "Default"
-    let defaultFileExt = "jpg"
 
     override init() {
         super.init()
@@ -84,16 +82,14 @@ class TexturedQuadImgRenderer: BaseRenderer {
     }
     
     func prepareTexturedQuad(view: MetalView) -> Bool {
-//        inTexture = ImageTexture.init(name: defaultFileName as String, ext: defaultFileExt as String)
         let bufferedTexture = BufferTexture<TexPixel2D>(size: CGSize(width: view.frame.size.width, height: view.frame.size.height))
-        bufferedTexture.texture?.label = "BufferTexture" as String
         
-//        guard inTexture!.finalize(device!) else {
         guard bufferedTexture.finalize(device!) else {
             print("Failed to finalize ImageTexture")
             return false
         }
         
+        bufferedTexture.texture?.label = "BufferTexture" as String
         bufferedTexture.writePixels(bufferedTexture.randomPixels())
         inTexture = bufferedTexture
 
@@ -118,5 +114,28 @@ class TexturedQuadImgRenderer: BaseRenderer {
         
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()
+    }
+}
+
+class TexturedQuadImgRenderer: TexturedQuadRenderer {
+    let defaultFileName = "Default"
+    let defaultFileExt = "jpg"
+    
+    override func prepareTexturedQuad(view: MetalView) -> Bool {
+        inTexture = ImageTexture.init(name: defaultFileName as String, ext: defaultFileExt as String)
+        inTexture?.texture
+        
+        guard inTexture!.finalize(device!) else {
+            print("Failed to finalize ImageTexture")
+            return false
+        }
+        
+        inTexture!.texture!.label = "ImageTexture" as String
+        size.width = CGFloat(inTexture!.texture!.width)
+        size.width = CGFloat(inTexture!.texture!.width)
+        
+        object = TexturedQuad<TexturedVertex>(device: device!)
+        
+        return true
     }
 }
