@@ -91,7 +91,7 @@ class CubeViewController: NSViewController {
     }
     
     func positionObject() {
-        renderer.object?.modelPosition = float4(0.0, 0.0, 0.0, 1.0)
+        renderer.object?.modelPosition = float4(0.0, 0.0, 1.0, 1.0)
         renderer.object?.modelScale = float4(0.2, 0.2, 0.2, 1.0)
     }
     
@@ -129,7 +129,7 @@ class CubeViewController: NSViewController {
             //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
 //                        renderer.object?.modelRotation += [0.0, 0.0, 0.0, 60*xDelta]
 //            renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
-            renderer.uniformPosition += [xDelta, 0.0, yDelta, 0.0]
+            renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
 //                        renderer.object?.modelScale += [xDelta, yDelta, 0.0, 0.0]
             
             lastPanLocation = pointInView
