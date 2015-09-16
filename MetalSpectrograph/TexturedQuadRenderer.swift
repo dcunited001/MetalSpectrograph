@@ -12,6 +12,8 @@ import MetalKit
 // TODO: abstract textured quad behavior from image-loaded texture behavior
 class TexturedQuadImgRenderer: BaseRenderer {
     var inTexture: MetalTexture?
+    let defaultFileName = "Default"
+    let defaultFileExt = "jpg"
 
     override init() {
         super.init()
@@ -28,7 +30,7 @@ class TexturedQuadImgRenderer: BaseRenderer {
         super.configure(view)
         
         //TODO: add asset?
-        guard prepareTexturedQuad("Default", extStr: "jpg") else {
+        guard prepareTexturedQuad(view) else {
             print("Failed creating a textured quad!")
             return
         }
@@ -81,18 +83,19 @@ class TexturedQuadImgRenderer: BaseRenderer {
         return true
     }
     
-    func prepareTexturedQuad(texStr: NSString, extStr: NSString) -> Bool {
-        inTexture = ImageTexture.init(name: texStr as String, ext: extStr as String)
-//        inTexture = BufferTexture<TexPixel2D>.init()
-        inTexture!.texture?.label = texStr as String
+    func prepareTexturedQuad(view: MetalView) -> Bool {
+//        inTexture = ImageTexture.init(name: defaultFileName as String, ext: defaultFileExt as String)
+        let bufferedTexture = BufferTexture<TexPixel2D>(size: CGSize(width: view.frame.size.width, height: view.frame.size.height))
+        bufferedTexture.texture?.label = "BufferTexture" as String
         
-        guard inTexture!.finalize(device!) else {
+//        guard inTexture!.finalize(device!) else {
+        guard bufferedTexture.finalize(device!) else {
             print("Failed to finalize ImageTexture")
             return false
         }
         
-        size.width = CGFloat(inTexture!.width)
-        size.height = CGFloat(inTexture!.height)
+        bufferedTexture.writePixels(bufferedTexture.randomPixels())
+        inTexture = bufferedTexture
 
         object = TexturedQuad<TexturedVertex>(device: device!)
         

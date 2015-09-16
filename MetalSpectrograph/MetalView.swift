@@ -23,8 +23,6 @@ protocol MetalViewDelegate: class {
 
 class MetalView: MTKView {
     var inflightSemaphore: dispatch_semaphore_t?
-    
-//    var computePipelineState: MTLComputePipelineState!
     var commandQueue: MTLCommandQueue!
     var displayLink: CVDisplayLink?
     var defaultLibrary:MTLLibrary!
@@ -39,7 +37,6 @@ class MetalView: MTKView {
     
     var depthPixelFormat: MTLPixelFormat?
     var stencilPixelFormat: MTLPixelFormat?
-//    var sampleCount: Int? // already in MTKView
     
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         // TODO: create device if not already present

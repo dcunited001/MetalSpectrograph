@@ -10,6 +10,7 @@
 import Cocoa
 import MetalKit
 import Quartz
+import simd
 
 class MetalTexture {
     var texture: MTLTexture?
@@ -64,10 +65,11 @@ class BufferTexture<T: Colorable>: MetalTexture {
     private var pixelsPtr: UnsafeMutablePointer<Void> = nil
     private var pixelsVoidPtr: COpaquePointer?
     private var pixelsVertexPtr: UnsafeMutablePointer<T>?
-    
     let pixelsAlignment:Int = 0x1000
     
-//    var memPointer: UnsafeMutablePointer<UnsafeMutablePointer<Void>>
+//    var textureResourceOptions = MTLResourceOptions.CPUCacheModeDefaultCache
+    var textureResourceOptions:MTLResourceOptions = .CPUCacheModeWriteCombined
+    
     var pixelsDefault:[T] = [
         T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
         T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
@@ -109,29 +111,63 @@ class BufferTexture<T: Colorable>: MetalTexture {
         format = MTLPixelFormat.RGBA32Float
         width = Int(size.width)
         height = Int(size.height)
+    }
+    
+    override func finalize(device: MTLDevice) -> Bool {
+        let texDesc = createTextureDesc()
         
-        let totalBytes = calcTotalBytes(width, h: height)
-        posix_memalign(&pixelsPtr, pixelsAlignment, totalBytes)
-        pixelsVoidPtr = COpaquePointer(pixelsPtr)
-        pixelsVertexPtr = UnsafeMutablePointer<T>(pixelsVoidPtr!)
+        initPixels()
+        initTextureBuffer(device)
+        initTexture(device, textureDescriptor: texDesc)
+        return true
+    }
+    
+    func initPixels() {
+        pixelsPtr = malloc(calcTotalBytes())
+        memset(pixelsPtr, 0, calcTotalBytes())
+    }
+    
+    //TODO: write buffered texture view where the texture content swaps out randomly every second
+    // - init to make it look like a surface
+    //TODO: write pixelshader texture & view, revert texturedQuadRenderer to displaying image.  
+    // - properly scale pixelshader
+    // - move pixel randomization to GPU compute function
+    
+    // audio visualization with a randomized texturedquad, where the colors shift by the current input's max amplitude
+    
+    func initTextureBuffer(device: MTLDevice) {
+        texBuffer = device.newBufferWithBytes(pixelsPtr, length: calcTotalBytes(), options: .CPUCacheModeWriteCombined)
+//        texBuffer = device.newBufferWithLength(calcTotalBytes(), options: .CPUCacheModeWriteCombined)
+//        pixelsPtr = texBuffer!.contents()
+//        let totalBytes = calcTotalBytes()
+//        let totalPageBytes = calcTotalPages(totalBytes) * pixelsAlignment
+//        texBuffer = device.newBufferWithBytesNoCopy(pixelsPtr, length: totalPageBytes, options: .CPUCacheModeWriteCombined, deallocator: nil)
+    }
+    
+    func initTexture(device: MTLDevice, textureDescriptor: MTLTextureDescriptor) {
+        texture = device.newTextureWithDescriptor(textureDescriptor)
+//        texture = texBuffer!.newTextureWithDescriptor(textureDescriptor, offset: 0, bytesPerRow: calcBytesPerRow())
+    }
+    
+    func createTextureDesc() -> MTLTextureDescriptor {
+        let texDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
+        target = texDesc.textureType
+//        texDesc.resourceOptions = .CPUCacheModeWriteCombined
         
-//        particlesParticleBufferPtr = UnsafeMutableBufferPointer(start: particlesParticlePtr, count: particleCount)
-        
-//        let totalPageBytes = calcTotalPages(totalBytes) * 4096
-//        pixelsPointer = valloc(totalBytes)
-//        pixelsPointer = malloc(totalBytes)
-//        let memPointer: UnsafeMutablePointer<UnsafeMutablePointer<Void>> =
-//        posix_memalign(memPointer, 4096, totalBytes)
-//        pixelsPointer = memset(memPointer, 0, totalBytes)
+        return texDesc
+    }
+    
+    func writePixels(pixels: [T]) {
+        let region = MTLRegionMake2D(0, 0, width, height)
+        texture?.replaceRegion(region, mipmapLevel: 0, withBytes: pixels, bytesPerRow: calcBytesPerRow())
+    }
+    
+    func calcTotalPages(bytes: Int) -> Int {
+        return (bytes / pixelsAlignment) + 1
     }
     
     func calcBytesPerRow() -> Int {
         return width * sizeof(T)
-    }
-    
-    //hmmm do i deal with this using posix_memalign?
-    func calcTotalPages(bytes: Int) -> Int {
-        return (bytes / pixelsAlignment) + 1
     }
     
     func calcTotalBytes() -> Int {
@@ -139,27 +175,78 @@ class BufferTexture<T: Colorable>: MetalTexture {
     }
     
     func calcTotalBytes(w: Int, h: Int) -> Int {
+        print(w, h)
         return w * h * sizeof(T)
+    }
+
+    func randomPixels() -> [T] {
+        print(Float(arc4random())/Float(UInt32.max))
+        // no idea why i can't return type T .. takes forever to build too.  says "too complex"
+        return (0...calcTotalBytes())
+            .lazy
+            .map { _ in self.randomPixel() }
+            .map { T(chunks: [$0]) }
+    }
+
+    func randomPixel() -> float4 {
+        return float4(Float(arc4random())/Float(UInt32.max), Float(arc4random())/Float(UInt32.max), Float(arc4random())/Float(UInt32.max), 1.0)
+//        return float4(rand,1,1,1)
+//        return float4(Float(i*4) / 4.0))
+        //        return float4((i * 4) / Float(16.0), i * 8 / 16.0, i * 16 / 16.0, 1.0)
+    }
+}
+
+@available(iOS 9.0, *)
+class SharedBufferTexture<T: Colorable>: BufferTexture<T> {
+    
+    override init(size: CGSize) {
+        super.init(size: size)
+//        textureResourceOptions = MTLResourceOptions.StorageModeShared
+        
+        //TODO: choice of: 
+        // - subclass EZAudioFFT to change pointer type to T  (ColorVertex)
+        //   - list of fft return data is already processed elementwise with vDSP calls  ...  or is it?
+        //   - probably need to subclass EZAudioFFT anyways
+        // - compute function to preprocess MTLBuffer of floats into gpu-write only RAM
+        //   - going to need a compute function anyways, when translating from float4 => mesh
     }
     
     override func finalize(device: MTLDevice) -> Bool {
-        let texDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
-        target = texDesc.textureType
-        texDesc.resourceOptions = .StorageModeShared
-        
+        //TODO: readd NSAVAILABLE
         // after editing the line below in MTLBuffer.h - and removing NS_AVAILABLE_IOS(8_0)
         //- (id <MTLTexture>)newTextureWithDescriptor:(MTLTextureDescriptor*)descriptor offset:(NSUInteger)offset bytesPerRow:(NSUInteger)bytesPerRow NS_AVAILABLE_IOS(8_0);
         // => failed assertion `MTLResourceOptions (0x0) contains invalid/unsupported StorageMode.'
         // womp womp, no .StorageModeShared for OSX =/
-        texBuffer = device.newBufferWithBytesNoCopy(pixelsVertexPtr!, length: calcTotalBytes(), options: .StorageModeShared, deallocator: nil)
-        texture = texBuffer!.newTextureWithDescriptor(texDesc, offset: 0, bytesPerRow: calcBytesPerRow())
+
+//        texture = texBuffer!.newTextureWithDescriptor(texDesc, offset: 0, bytesPerRow: calcBytesPerRow())
+        //TODO: can't use this method in iOS
+        // - and not sure why @available directive isn't working above
 
         writePixels(pixelsDefault)
         
         return true
     }
     
-    func writePixels(pixels: [T]) {
+    override func initPixels() {
+        let totalBytes = calcTotalBytes(width, h: height)
+        posix_memalign(&pixelsPtr, pixelsAlignment, totalBytes)
+        pixelsVoidPtr = COpaquePointer(pixelsPtr)
+        pixelsVertexPtr = UnsafeMutablePointer<T>(pixelsVoidPtr!)
+        
+        //        let totalBytes = calcTotalBytes()
+        //        pixelsPtr = malloc(totalBytes)
+        //        writePixels(pixelsDefault)
+        //        memset(pixelsPtr, 170, calcTotalBytes())
+        //        memset(pixelsPtr, 85, calcTotalBytes())
+        //        pixelsVoidPtr = COpaquePointer(pixelsPtr)
+        //        pixelsVertexPtr = UnsafeMutablePointer<T>(pixelsVoidPtr!)
+    }
+    
+    override func initTexture(device: MTLDevice, textureDescriptor: MTLTextureDescriptor) {
+//        texture = texBuffer!.newTextureWithDescriptor(textureDescriptor, offset: 0, bytesPerRow: calcBytesPerRow())
+    }
+    
+    override func writePixels(pixels: [T]) {
         memcpy(pixelsVertexPtr!, pixels, calcTotalBytes())
     }
     

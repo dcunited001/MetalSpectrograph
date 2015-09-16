@@ -203,6 +203,7 @@ extension Uniformable {
     }
 }
 
+//TODO: rename (this is the view matrix, perspectable is the projectable matrix)
 protocol Projectable: class {
     //TODO: memoize projectable matrix?
     var projectionEye:float3 { get set }
@@ -265,7 +266,7 @@ extension Perspectable {
 
 // TODO: for cube (and other polygons),
 // - determine indexing functions for textures
-// TODO: multi-persective renderer
+// TODO: multi-perspective renderer
 
 protocol VertexBufferable {
     var vCount:Int { get set }
@@ -296,7 +297,6 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
         self.name = name
         self.device = device
         
-        // setVertexBuffer(vertices)
         self.vCount = vertices.count
         self.vBytes = Node<T>.calculateBytes(vCount)
         self.vertexBuffer = self.device.newBufferWithBytes(vertices, length: vBytes, options: .CPUCacheModeDefaultCache)
@@ -316,7 +316,6 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
     }
 }
 
-// TODO: rename to RenderEncodable?
 protocol RenderEncodable {
     func encode(renderEncoder: MTLRenderCommandEncoder)
 }
