@@ -11,8 +11,7 @@ import MetalKit
 
 // TODO: abstract textured quad behavior from image-loaded texture behavior
 class TexturedQuadImgRenderer: BaseRenderer {
-//    var inTexture: BufferTexture<TexPixel2D>?
-    var inTexture: ImageTexture?
+    var inTexture: MetalTexture?
 
     override init() {
         super.init()
