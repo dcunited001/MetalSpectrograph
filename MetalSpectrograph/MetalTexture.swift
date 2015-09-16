@@ -63,35 +63,35 @@ class BufferTexture<T: Colorable>: MetalTexture {
     var pixelSize:Int = sizeof(float4)
     var pixelsPointer: UnsafeMutablePointer<Void>?
     var pixelsDefault:[T] = [
-        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
         T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
         T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
         T(chunks: [float4(0.0, 1.0, 0.0, 1.0)]),
-        T(chunks: [float4(1.0, 0.0, 0.0, 0.0)]),
+        T(chunks: [float4(1.0, 0.0, 0.0, 1.0)]),
         
-        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
         T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 0.0, 1.0)]),
         
-        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        
-        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
         T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
         
-        T(chunks: [float4(1.0, 1.0, 1.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(0.0, 1.0, 1.0, 1.0)]),
+        
         T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 1.0, 1.0)]),
-        T(chunks: [float4(0.0, 0.0, 0.0, 1.0)])
+        T(chunks: [float4(0.0, 1.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 0.0, 1.0)]),
+        T(chunks: [float4(1.0, 0.0, 1.0, 1.0)]),
+        T(chunks: [float4(1.0, 1.0, 0.0, 1.0)])
     ]
     
     convenience override init() {
