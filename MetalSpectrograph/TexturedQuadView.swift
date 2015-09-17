@@ -30,6 +30,7 @@ class TexturedQuadViewController: NSViewController {
         renderer = TexturedQuadImgRenderer()
         metalView = TexturedQuadView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
+        renderer.uniformScale = float4(1.0, 1.0, 1.0, 1.0)
         positionTexture()
         metalView.metalViewDelegate = renderer
 
@@ -39,7 +40,7 @@ class TexturedQuadViewController: NSViewController {
     
     func positionTexture() {
         renderer.object!.modelRotation = float4(1.0, 0.0, 0.0, 90.0)
-        renderer.object!.modelPosition = float4(0.0, 0.0, 1.0, 1.0)
+        renderer.object!.modelPosition = float4(0.0, 0.0, 2.0, 1.0)
     }
     
     let panSensivity:Float = 5.0
