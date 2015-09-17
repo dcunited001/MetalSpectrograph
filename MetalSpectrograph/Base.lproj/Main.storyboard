@@ -700,6 +700,34 @@
             </objects>
             <point key="canvasLocation" x="-1050.5" y="567.5"/>
         </scene>
+        <!--Pixel Shader View Controller-->
+        <scene sceneID="zMn-f7-t3K">
+            <objects>
+                <viewController id="BGN-P1-26q" customClass="PixelShaderViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="lV9-JV-gQp">
+                        <rect key="frame" x="0.0" y="0.0" width="503" height="905"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="Kqk-c0-QTb" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-945.5" y="1309.5"/>
+        </scene>
+        <!--Audio Pixel Shader View Controller-->
+        <scene sceneID="NIG-9s-j9U">
+            <objects>
+                <viewController id="QLL-lg-vXy" customClass="AudioPixelShaderViewController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="8v8-Qp-Nm1">
+                        <rect key="frame" x="0.0" y="0.0" width="766" height="722"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="Bjs-Fd-AoN" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-258" y="1211"/>
+        </scene>
         <!--Cube View Controller-->
         <scene sceneID="YqR-Pz-VtG">
             <objects>
@@ -950,15 +978,38 @@
                                             <segue destination="qsf-K6-9q1" kind="show" id="AfX-0j-guX"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c8a-8e-Qri">
+                                        <rect key="frame" x="188" y="427" width="115" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Pixel Shader" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="maV-Ev-ovb">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="BGN-P1-26q" kind="show" id="k1E-yr-xC1"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XR8-Xb-QPJ">
+                                        <rect key="frame" x="295" y="427" width="97" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Audio Pxl" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sAO-Ib-MMG">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="QLL-lg-vXy" kind="show" id="no2-at-ti3"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" id="1f8-nH-FrD"/>
+                                    <constraint firstItem="fNF-Md-xqm" firstAttribute="leading" secondItem="uSA-cz-zKe" secondAttribute="trailing" constant="10" id="1f8-nH-FrD"/>
                                     <constraint firstItem="uSA-cz-zKe" firstAttribute="leading" secondItem="AE9-na-rG3" secondAttribute="trailing" constant="10" id="2kk-Hd-xCD"/>
                                     <constraint firstItem="AE9-na-rG3" firstAttribute="top" secondItem="vZH-pM-gqC" secondAttribute="top" constant="20" id="3QN-K1-8kb"/>
                                     <constraint firstItem="AE9-na-rG3" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="4Df-6w-1lz"/>
                                     <constraint firstItem="Hog-b2-Plf" firstAttribute="top" secondItem="AE9-na-rG3" secondAttribute="bottom" constant="20" id="cvZ-6Z-bJj"/>
                                     <constraint firstItem="Hog-b2-Plf" firstAttribute="leading" secondItem="vZH-pM-gqC" secondAttribute="leading" constant="20" id="eGX-To-vhV"/>
                                     <constraint firstItem="YyV-x3-HeM" firstAttribute="leading" secondItem="Hog-b2-Plf" secondAttribute="trailing" constant="10" id="pNq-Vg-dk4"/>
+                                    <constraint firstItem="c8a-8e-Qri" firstAttribute="leading" secondItem="YyV-x3-HeM" secondAttribute="trailing" constant="10" id="q6c-cf-Rr3"/>
                                     <constraint firstItem="jb0-qU-6cH" firstAttribute="leading" secondItem="fNF-Md-xqm" secondAttribute="trailing" constant="10" id="zB9-m2-jdE"/>
                                 </constraints>
                                 <animations/>
