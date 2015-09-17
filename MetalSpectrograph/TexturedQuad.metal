@@ -49,3 +49,29 @@ fragment float4 texQuadFragment(TexturedQuadVertexInOut     inFrag    [[ stage_i
     
     return color;
 }
+
+fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
+                                          texture2d<float>  tex2D     [[ texture(0) ]],
+                                          constant float &colorShift [[ buffer(0) ]])
+{
+    constexpr sampler quad_sampler;
+    float4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
+    
+    int quanta = 255*255;
+    float fQuanta = float(quanta);
+    
+    color += colorShift;
+    color = float4(int(color.r * quanta) % quanta / fQuanta,
+                   int(color.g * quanta) % quanta / fQuanta,
+                   int(color.b * quanta) % quanta / fQuanta,
+                   1.0);
+    
+    return color;
+}
+
+//kernel void rainbowNoise(texture2d<float, access::write> outTexture [[texture(0)]]
+//                         uint id [[ thread_position_in_grid ]]) {
+//    //TODO: figure out how use random numbers in the shader file
+////    float4 color = float(rand()) / RAND_MAX;
+////    outTexture.write(
+//}
