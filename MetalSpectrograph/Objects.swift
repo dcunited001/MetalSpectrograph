@@ -174,7 +174,7 @@ protocol Uniformable: class {
 extension Uniformable {
     func setUniformableDefaults() {
         uniformScale = float4(1.0, 1.0, 1.0, 1.0) // provides more range to place objects in world
-        uniformPosition = float4(0.0, 0.0, 0.0, 1.0)
+        uniformPosition = float4(0.0, 0.0, 1.0, 1.0)
         uniformRotation = float4(1.0, 1.0, 1.0, 90)
     }
     
@@ -245,7 +245,7 @@ extension Perspectable {
         perspectiveAngle = 35.0 // 35.0 for landscape
         perspectiveAspect = 1
         perspectiveNear = 0.01
-        perspectiveFar = 100000000.0
+        perspectiveFar = 100.0
     }
     
     func calcPerspectiveMatrix() -> float4x4 {
