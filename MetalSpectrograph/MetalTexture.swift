@@ -127,14 +127,6 @@ class BufferTexture<T: Colorable>: MetalTexture {
         memset(pixelsPtr, 0, calcTotalBytes())
     }
     
-    //TODO: write buffered texture view where the texture content swaps out randomly every second
-    // - init to make it look like a surface
-    //TODO: write pixelshader texture & view, revert texturedQuadRenderer to displaying image.  
-    // - properly scale pixelshader
-    // - move pixel randomization to GPU compute function
-    
-    // audio visualization with a randomized texturedquad, where the colors shift by the current input's max amplitude
-    
     func initTextureBuffer(device: MTLDevice) {
         texBuffer = device.newBufferWithBytes(pixelsPtr, length: calcTotalBytes(), options: .CPUCacheModeWriteCombined)
 //        texBuffer = device.newBufferWithLength(calcTotalBytes(), options: .CPUCacheModeWriteCombined)
