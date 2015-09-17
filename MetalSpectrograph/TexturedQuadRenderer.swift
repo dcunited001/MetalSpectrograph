@@ -90,11 +90,9 @@ class TexturedQuadRenderer: BaseRenderer {
         }
         
         bufferedTexture.texture?.label = "BufferTexture" as String
-        bufferedTexture.writePixels(bufferedTexture.randomPixels())
         inTexture = bufferedTexture
 
         object = TexturedQuad<TexturedVertex>(device: device!)
-        
         return true
     }
     
@@ -104,16 +102,26 @@ class TexturedQuadRenderer: BaseRenderer {
         renderEncoder.setDepthStencilState(depthState)
         renderEncoder.setRenderPipelineState(pipelineState!)
         object!.encode(renderEncoder)
+        encodeVertexBuffers(renderEncoder)
+        encodeFragmentBuffers(renderEncoder)
+        encodeDraw(renderEncoder)
+        renderEncoder.endEncoding()
+        renderEncoder.popDebugGroup()
+    }
+    
+    override func encodeVertexBuffers(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
+    }
+    
+    override func encodeFragmentBuffers(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setFragmentTexture(inTexture!.texture, atIndex: 0)
-        
+    }
+    
+    override func encodeDraw(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.drawPrimitives(.Triangle,
             vertexStart: 0,
             vertexCount: 6, //TODO: replace with constant?
             instanceCount: 1)
-        
-        renderEncoder.endEncoding()
-        renderEncoder.popDebugGroup()
     }
 }
 

@@ -142,8 +142,7 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable, 
         setProjectableDefaults()
         setUniformableDefaults()
         
-        uniformScale *= float4(1.0, Float(view.frame.width / view.frame.height), 1.0, 1.0)
-        
+        adjustUniformScale(view)
         prepareMvpBuffer(device!)
         prepareMvpPointer()
         
@@ -151,6 +150,10 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable, 
             print("Failed creating a compiled pipeline state object!")
             return
         }
+    }
+    
+    func adjustUniformScale(view: MetalView) {
+        uniformScale *= float4(1.0, Float(view.frame.width / view.frame.height), 1.0, 1.0)
     }
     
     func calcMvpMatrix(modelMatrix: float4x4) -> float4x4 {
@@ -189,8 +192,9 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable, 
         renderEncoder.pushDebugGroup(rendererDebugGroupName)
         renderEncoder.setRenderPipelineState(pipelineState!)
         object!.encode(renderEncoder)
-        renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
-        renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
+        encodeVertexBuffers(renderEncoder)
+        encodeFragmentBuffers(renderEncoder)
+        encodeDraw(renderEncoder)
         renderEncoder.endEncoding()
         renderEncoder.popDebugGroup()
     }
@@ -214,6 +218,18 @@ class BaseRenderer: MetalRenderer, MetalViewDelegate, Projectable, Uniformable, 
     
     func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         object!.updateModelMatrix()
+    }
+    
+    func encodeVertexBuffers(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
+    }
+    
+    func encodeFragmentBuffers(renderEncoder: MTLRenderCommandEncoder) {
+
+    }
+    
+    func encodeDraw(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: object!.vCount, instanceCount: 1)
     }
 }
 

@@ -203,7 +203,7 @@ class Metal3DTransforms {
     
     class func perspectiveFov(fovy:Float, aspect:Float, near:Float, far:Float) -> float4x4 {
         let angle:Float = toRadians(0.5 * fovy)
-        let yScale:Float = 1.0 / tan(angle)
+        let yScale:Float = 1.0 / tanf(angle)
         let xScale:Float = yScale / aspect
         let zScale = far / (far - near)
         
