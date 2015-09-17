@@ -57,13 +57,12 @@ fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    
     constexpr sampler quad_sampler;
     float4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
     
-    int quanta = 255*255;
+    int quanta = 255*255*255;
     float fQuanta = float(quanta);
     
-    color += colorShift;
-    color = float4(int(color.r * quanta) % quanta / fQuanta,
-                   int(color.g * quanta) % quanta / fQuanta,
-                   int(color.b * quanta) % quanta / fQuanta,
+    color = float4((int((color.x + colorShift) * quanta) % quanta) / fQuanta,
+                   (int((color.y + colorShift) * quanta) % quanta) / fQuanta,
+                   (int((color.z + colorShift) * quanta) % quanta) / fQuanta,
                    1.0);
     
     return color;

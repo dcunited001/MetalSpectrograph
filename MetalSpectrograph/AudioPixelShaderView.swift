@@ -6,6 +6,12 @@
 //  Copyright © 2015 Voxxel. All rights reserved.
 //
 
+//TODO: map random tex coords to vertices on a polygon with this texture
+//TODO: wrap textured quad in a lattice
+// - compute function to generate lattice vertices, with appropriate texcoords (or the same ones lol)
+// - compute function to update vertices for the lattice based on audio input and the surrounding vertices
+// - update the lattice wrapping for the texture while preserving approximation of the lattice tensor values
+
 import Cocoa
 import MetalKit
 import simd
@@ -17,7 +23,7 @@ class AudioPixelShaderView: PixelShaderView {
 
 class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDelegate {
     var microphone: EZMicrophone!
-    var colorShiftChangeRate: Float = 0.2
+    var colorShiftChangeRate: Float = 0.5
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +44,7 @@ class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDel
 }
 
 class AudioPixelShaderRenderer: TexturedQuadRenderer {
-    var colorShift: Float = 0 {
-        didSet { setColorShiftBuffer(self.colorShift) }
-    }
+    var colorShift: Float = 0
     private var colorShiftPtr: UnsafeMutablePointer<Void>!
     private var colorShiftBuffer: MTLBuffer!
     
@@ -67,6 +71,7 @@ class AudioPixelShaderRenderer: TexturedQuadRenderer {
     
     override func encodeFragmentBuffers(renderEncoder: MTLRenderCommandEncoder) {
         super.encodeFragmentBuffers(renderEncoder)
+        setColorShiftBuffer(self.colorShift)
         renderEncoder.setFragmentBuffer(colorShiftBuffer, offset: 0, atIndex: 0)
     }
     
