@@ -26,6 +26,10 @@ class ComputeGenerator {
         setupComputePipeline()
     }
     
+    func configure() {
+        prepareBuffers()
+    }
+    
     func setupComputePipeline() {
         kernelFunction = library.newFunctionWithName(computeFunctionName)
         do {
@@ -33,6 +37,10 @@ class ComputeGenerator {
         } catch(let err) {
             print("Failed to create pipeline state, error \(err)")
         }
+    }
+    
+    func prepareBuffers() {
+        
     }
     
     func execute(commandBuffer: MTLCommandBuffer) {
