@@ -43,10 +43,13 @@ class ComputeGenerator {
         
     }
     
+    func encode(computeEncoder: MTLComputeCommandEncoder) {
+        
+    }
+    
     func execute(commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.computeCommandEncoder()
         commandEncoder.setComputePipelineState(computePipelineState)
-        
         
     }
 }
