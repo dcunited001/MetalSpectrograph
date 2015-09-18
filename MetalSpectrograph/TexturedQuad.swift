@@ -16,14 +16,23 @@ import MetalKit
 //TODO: dynamically change mid-point of sierpinski's gasket
 
 class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable {
+    
+    // A ---- B
+    // |      |
+    // |      |
+    // D ---- C
+    
     class func texturedQuadVertices() -> [T] {
         return [
+            // D A B
             T(chunks: [float4(-1.0, -1.0, 0.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)]),
-            T(chunks: [float4( 1.0, -1.0, 0.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
             T(chunks: [float4(-1.0,  1.0, 0.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
+            T(chunks: [float4( 1.0,  1.0, 0.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)]),
+            
+            // B C D
+            T(chunks: [float4( 1.0,  1.0, 0.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)]),
             T(chunks: [float4( 1.0, -1.0, 0.0, 1.0), float4(1.0, 0.0, 0.0, 0.0)]),
-            T(chunks: [float4(-1.0,  1.0, 0.0, 1.0), float4(0.0, 1.0, 0.0, 0.0)]),
-            T(chunks: [float4( 1.0,  1.0, 0.0, 1.0), float4(1.0, 1.0, 0.0, 0.0)])
+            T(chunks: [float4(-1.0, -1.0, 0.0, 1.0), float4(0.0, 0.0, 0.0, 0.0)])
         ]
     }
     
