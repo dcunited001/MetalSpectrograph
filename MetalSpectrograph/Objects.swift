@@ -275,6 +275,9 @@ protocol VertexBufferable {
     var vertexBuffer:MTLBuffer { get set }
     var device:MTLDevice { get set }
     
+    func getVertexSize() -> Int
+    static func getVertexSize() -> Int
+    func getRawVertices() -> [Vertexable]
     func setVertexBuffer(vertices: [Vertexable])
     static func calculateBytes(vertexCount: Int) -> Int
 }
@@ -312,6 +315,18 @@ class Node<T: protocol<Vertexable, Chunkable>>: VertexBufferable, Modelable {
         let vertexBytes = Node<T>.calculateBytes(vCount)
         vertexBuffer = device.newBufferWithBytes(vertices, length: vertexBytes, options: .CPUCacheModeDefaultCache)
         vertexBuffer.label = "\(T.self) vertices"
+    }
+    
+    func getRawVertices() -> [Vertexable] {
+        return []
+    }
+    
+    func getVertexSize() -> Int {
+        return sizeof(T)
+    }
+    
+    static func getVertexSize() -> Int {
+        return sizeof(T)
     }
     
     static func calculateBytes(vertexCount: Int) -> Int {
