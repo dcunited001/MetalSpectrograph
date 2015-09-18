@@ -17,6 +17,7 @@
 		43199F791B9E5B6D0032B120 /* MetalSpectrographTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F781B9E5B6D0032B120 /* MetalSpectrographTests.swift */; };
 		43199F841B9E5B6D0032B120 /* MetalSpectrographUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */; };
 		43199F921B9E5F100032B120 /* SpectrographController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43199F911B9E5F100032B120 /* SpectrographController.swift */; settings = {ASSET_TAGS = (); }; };
+		4321DEB51BAC554B00DFF191 /* LatticeGenerator.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4321DEB41BAC554B00DFF191 /* LatticeGenerator.metal */; settings = {ASSET_TAGS = (); }; };
 		433C94EC1BA992A5000DAFE0 /* SpectrogramTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433C94EB1BA992A5000DAFE0 /* SpectrogramTexture.swift */; settings = {ASSET_TAGS = (); }; };
 		433C94EE1BA992B7000DAFE0 /* SpectrogramMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433C94ED1BA992B7000DAFE0 /* SpectrogramMesh.swift */; settings = {ASSET_TAGS = (); }; };
 		433C94F01BA992C7000DAFE0 /* Spectrogram.metal in Sources */ = {isa = PBXBuildFile; fileRef = 433C94EF1BA992C7000DAFE0 /* Spectrogram.metal */; settings = {ASSET_TAGS = (); }; };
@@ -83,6 +84,7 @@
 		43199F831B9E5B6D0032B120 /* MetalSpectrographUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalSpectrographUITests.swift; sourceTree = "<group>"; };
 		43199F851B9E5B6D0032B120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43199F911B9E5F100032B120 /* SpectrographController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrographController.swift; sourceTree = "<group>"; };
+		4321DEB41BAC554B00DFF191 /* LatticeGenerator.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = LatticeGenerator.metal; sourceTree = "<group>"; };
 		433C94EB1BA992A5000DAFE0 /* SpectrogramTexture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrogramTexture.swift; sourceTree = "<group>"; };
 		433C94ED1BA992B7000DAFE0 /* SpectrogramMesh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrogramMesh.swift; sourceTree = "<group>"; };
 		433C94EF1BA992C7000DAFE0 /* Spectrogram.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Spectrogram.metal; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				43F870031BAB77F800A102F7 /* LatticeGenerator.swift */,
+				4321DEB41BAC554B00DFF191 /* LatticeGenerator.metal */,
 			);
 			name = Lattice;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 				436965731BAA1E4300D75EB6 /* PixelShaderView.swift in Sources */,
 				435841591BA33F45005609FD /* CubeView.swift in Sources */,
 				43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */,
+				4321DEB51BAC554B00DFF191 /* LatticeGenerator.metal in Sources */,
 				43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */,
 				436D3F2F1BA1374100F50C71 /* Transforms.swift in Sources */,
 				435841571BA3148A005609FD /* Objects.swift in Sources */,
