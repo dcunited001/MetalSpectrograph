@@ -44,7 +44,13 @@ class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDel
 }
 
 class AudioPixelShaderRenderer: TexturedQuadRenderer {
-    var colorShift: Float = 0
+    var colorShift: Float = 0 {
+        didSet {
+            if colorShift >= 1.0 {
+                colorShift -= 1.0
+            }
+        }
+    }
     private var colorShiftPtr: UnsafeMutablePointer<Void>!
     private var colorShiftBuffer: MTLBuffer!
     
