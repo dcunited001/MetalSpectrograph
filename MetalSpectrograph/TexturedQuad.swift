@@ -36,6 +36,14 @@ class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable
         ]
     }
     
+    // TODO: set up TexturedQuad to store vertices
+    var vertices: [T]
+    override func getRawVertices() -> [Vertexable] {
+        // return D A B C
+        let verts = TexturedQuad<T>.texturedQuadVertices()
+        return [0,1,2,4].map { verts[$0] }
+    }
+
     var vertexIndex: Int = 0 // unsigned?  NSUInteger?
     var texCoordIndex: Int = 1
     var samplerIndex: Int = 0
@@ -45,14 +53,15 @@ class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable
     var quadScale: float2 = float2(1.0)
     
     init(device: MTLDevice) {
-        let quadVertices = TexturedQuad<T>.texturedQuadVertices()
-        super.init(name: "TexturedQuad", vertices: quadVertices, device: device)
+        
+        vertices = TexturedQuad<T>.texturedQuadVertices()
+        super.init(name: "TexturedQuad", vertices: vertices, device: device)
         
         //TODO: guard against nil device? guard in swift init?
         
         //create vertex buffer
         //  TODO: guard against fail/nil?
-        vertexBuffer = device.newBufferWithBytes(quadVertices, length: vBytes, options: MTLResourceOptions.OptionCPUCacheModeDefault)
+        vertexBuffer = device.newBufferWithBytes(vertices, length: vBytes, options: MTLResourceOptions.OptionCPUCacheModeDefault)
         vertexBuffer.label = "quad vertices"
         
         bounds = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
