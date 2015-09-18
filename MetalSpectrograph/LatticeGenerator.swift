@@ -94,7 +94,7 @@ class Lattice2D<V: protocol<Vertexable, Chunkable>>: Node<V>, Lattice, RenderEnc
 // TODO: split off some functionility into MeshGenerator
 
 // L = Lattice Type
-class LatticeGenerator<L: Lattice, N: Modelable>: ComputeGenerator {
+class LatticeGenerator<L: Lattice, N: protocol<Modelable, VertexBufferable>>: ComputeGenerator {
     var node: N?
     
     override init(device: MTLDevice, size: CGSize) {
@@ -106,13 +106,13 @@ class LatticeGenerator<L: Lattice, N: Modelable>: ComputeGenerator {
     //  - a set of vertices
     //  - or another lattice of the same dimensionality
     
-    func generateLattice(node: Modelable) -> L {
+    func generateLattice(node: N) -> L {
         //override in subclass
         return L(name: "Lattice", vertices: [], device: self.device)
     }
 }
 
-class BisectionLatticeGenerator<L: Lattice, N: Modelable>: LatticeGenerator<L, N> {
+class BisectionLatticeGenerator<L: Lattice, N: protocol<Modelable, VertexBufferable>>: LatticeGenerator<L, N> {
     
     override init(device: MTLDevice, size: CGSize) {
         super.init(device: device, size: size)
@@ -120,7 +120,7 @@ class BisectionLatticeGenerator<L: Lattice, N: Modelable>: LatticeGenerator<L, N
     }
     
     // add numIterations to params?
-    override func generateLattice(node: Modelable) -> L {
+    override func generateLattice(node: N) -> L {
         // assume 6 points input, if a base node
         // read in each triangle
         // convert it into 4 triangles
@@ -136,52 +136,87 @@ class BisectionLatticeGenerator<L: Lattice, N: Modelable>: LatticeGenerator<L, N
 //    
 //}
 
+struct QuadLatticeConfig {
+    var sizeX: Int
+    var sizeY: Int
+}
+
 //generates a rectangular lattice, composed of triangle pairs
-class QuadLatticeGenerator<L: Lattice, N: Modelable>: LatticeGenerator<L, N> {
+class QuadLatticeGenerator<L: Lattice, N: protocol<Modelable, VertexBufferable>>: LatticeGenerator<L, N> {
     var quadInBuffer: MTLBuffer?
+    var quadInVertices: [Vertexable]?
+    var quadInPtr: UnsafeMutablePointer<Void>?
     var quadInBufferId = 0
     var quadInBufferLabel = "quad lattice vertices in"
+    var quadLatticeConfig: QuadLatticeConfig
     var quadLatticeConfigBuffer: MTLBuffer?
     var quadLatticeConfigBufferId = 2
     var quadLatticeConfigBufferLabel = "quad lattice config in"
     var triangleOutBuffer: MTLBuffer?
+    var triangleOutPtr: UnsafeMutablePointer<Void>?
     var triangleOutBufferId = 1
     var triangleOutBufferLabel = "quad lattice triangles out"
     
     override init(device: MTLDevice, size: CGSize) {
+        quadLatticeConfig = QuadLatticeConfig(sizeX: Int(size.width), sizeY: Int(size.height))
         super.init(device: device, size: size)
         computeFunctionName = "quadLatticeGenerator"
     }
     
-    override func generateLattice(node: Modelable) -> L {
+    override func generateLattice(node: N) -> L {
+        prepareTriangleOutBuffer(node)
+        quadInVertices = node.getRawVertices()
+        
+        //TODO: implement BufferProvider pattern
+        //TODO: add getCommandBuffer
+        
+        //retrieve command buffer
+        //execute()  // encodes
+        
         // create output buffer of zeros
-        // create input buffer
         // set compute buffers
+        // encode and run
         
         return L(name: "Lattice", vertices: [], device: self.device)
     }
     
     override func prepareBuffers() {
-        
+        prepareQuadInBuffer()
+        prepareQuadLatticeConfigBuffer()
     }
     
-//    func prepareQuadInBuffer() {
-//        quadInBuffer = device.newBufferWithLength(
-//    }
-//    
-    func prepareQuadLatticeBuffer() {
-        
+    func prepareQuadInBuffer() {
+        quadInBuffer = device.newBufferWithLength(4 * N.getVertexSize(), options: .CPUCacheModeDefaultCache)
+        quadInPtr = quadInBuffer!.contents()
     }
     
-    func prepareTriangleOutBuffer() {
-        
+    func prepareQuadLatticeConfigBuffer() {
+        quadLatticeConfigBuffer = device.newBufferWithBytes(&quadLatticeConfig, length: sizeof(QuadLatticeConfig), options: .CPUCacheModeDefaultCache)
+    }
+    
+    func prepareTriangleOutBuffer(node: N) {
+        let triangleSize = 3 * node.getVertexSize()
+        triangleOutBuffer = device.newBufferWithLength(2 * quadLatticeConfig.sizeX * quadLatticeConfig.sizeY * triangleSize, options: .StorageModeShared)
+        triangleOutPtr = triangleOutBuffer!.contents()
+    }
+    
+    override func encode(computeEncoder: MTLComputeCommandEncoder) {
+        // TODO: move node.getRawVertices() to static method?
+        memcpy(quadInPtr!, &quadInVertices!, 4 * N.getVertexSize())
+        computeEncoder.setBuffer(quadInBuffer, offset: 0, atIndex: quadInBufferId)
+        computeEncoder.setBuffer(quadLatticeConfigBuffer!, offset: 0, atIndex: quadLatticeConfigBufferId)
+        computeEncoder.setBuffer(triangleOutBuffer!, offset: 0, atIndex: triangleOutBufferId)
+    }
+    
+    func getQuadTriangleSize(node: N) -> Int {
+        return node.getVertexSize()
     }
 }
 
 
 // generates a uniform lattice composed of equilateral triangles
 // - where every node is equidistant
-class HexLatticeGenerator<L: Lattice, N: Modelable>: LatticeGenerator<L, N> {
+class HexLatticeGenerator<L: Lattice, N: protocol<Modelable, VertexBufferable>>: LatticeGenerator<L, N> {
     
 }
 

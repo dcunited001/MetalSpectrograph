@@ -147,9 +147,7 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
         tOut[gid].v3.position = v1pos;
         tOut[gid].v3.texCoord = v1tex;
     }
-
 }
-
 
 
 // generates an nxn square quadrilateral lattice
