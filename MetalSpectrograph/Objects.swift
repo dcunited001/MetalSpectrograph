@@ -279,8 +279,10 @@ protocol VertexBufferable {
     static func calculateBytes(vertexCount: Int) -> Int
 }
 
-class Node<T: Vertexable>: VertexBufferable, Modelable {
+class Node<T: protocol<Vertexable, Chunkable>>: VertexBufferable, Modelable {
     let name:String
+    
+    // VertexBufferable
     var vCount:Int
     var vBytes:Int
     var vertexBufferId:Int = 0
@@ -293,6 +295,7 @@ class Node<T: Vertexable>: VertexBufferable, Modelable {
     var modelRotation = float4(1.0, 1.0, 1.0, 90)
     var modelMatrix: float4x4 = float4x4(diagonal: float4(1.0,1.0,1.0,1.0))
     
+    // TODO: reorder params
     init(name: String, vertices: [T], device: MTLDevice) {
         self.name = name
         self.device = device
