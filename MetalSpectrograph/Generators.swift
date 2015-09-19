@@ -54,7 +54,3 @@ class ComputeGenerator {
     }
 }
 
-class NoiseGenerator: ComputeGenerator {
-    
-}
-
