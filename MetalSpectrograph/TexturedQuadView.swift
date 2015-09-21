@@ -16,7 +16,7 @@ import simd
 //didEnterBackground
 
 class TexturedQuadView: MetalView {
-    
+    // TODO: setup renderPassDescriptor
 }
 
 class TexturedQuadViewController: NSViewController {

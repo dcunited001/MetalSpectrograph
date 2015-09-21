@@ -728,6 +728,20 @@
             </objects>
             <point key="canvasLocation" x="-258" y="1211"/>
         </scene>
+        <!--Audio Lattice Basic Wave Controller-->
+        <scene sceneID="SMi-lo-FWV">
+            <objects>
+                <viewController id="eaF-iR-Y7K" customClass="AudioLatticeBasicWaveController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="Xhv-ZP-045">
+                        <rect key="frame" x="0.0" y="0.0" width="736" height="520"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="LDb-IR-jH3" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="71" y="1078"/>
+        </scene>
         <!--Cube View Controller-->
         <scene sceneID="YqR-Pz-VtG">
             <objects>
@@ -870,7 +884,7 @@
                 </viewController>
                 <customObject id="jxT-pQ-K8X" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-118" y="576"/>
+            <point key="canvasLocation" x="-136" y="606"/>
         </scene>
         <!--Textured Quad View Controller-->
         <scene sceneID="dzI-0C-IFJ">
@@ -998,6 +1012,17 @@
                                         </buttonCell>
                                         <connections>
                                             <segue destination="QLL-lg-vXy" kind="show" id="no2-at-ti3"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="obS-T9-PjW">
+                                        <rect key="frame" x="14" y="394" width="82" height="32"/>
+                                        <animations/>
+                                        <buttonCell key="cell" type="push" title="Lattice" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1ji-PK-WKc">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <segue destination="eaF-iR-Y7K" kind="show" id="nyo-IV-ls9"/>
                                         </connections>
                                     </button>
                                 </subviews>

@@ -120,13 +120,13 @@ class TexturedQuadRenderer: BaseRenderer {
     override func encodeDraw(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.drawPrimitives(.Triangle,
             vertexStart: 0,
-            vertexCount: 6, //TODO: replace with constant?
+            vertexCount: object!.vCount,
             instanceCount: 1)
     }
 }
 
 class TexturedQuadImgRenderer: TexturedQuadRenderer {
-    let defaultFileName = "Default"
+    let defaultFileName = "metaloopa"
     let defaultFileExt = "jpg"
     
     override func prepareTexturedQuad(view: MetalView) -> Bool {
