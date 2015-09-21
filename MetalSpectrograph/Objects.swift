@@ -89,7 +89,7 @@ struct TexturedVertex: Vertexable, Texturable, Chunkable {
 //protocol Uniformable?
 // TODO: defaults for rotatable/translatable/scalable -- need to be able to access modelRotation from defaults
 
-protocol Rotatable {
+protocol Rotatable: Modelable {
     var rotationRate: Float { get set }
     func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?)
     
@@ -97,14 +97,43 @@ protocol Rotatable {
     func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float4)?)
 }
 
-protocol Translatable {
+extension Rotatable {
+    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) {
+        // TODO: clean this up.  add applyRotation? as default extension to protocol?
+        // - or set up 3D transforms as a protocol?
+        let rotation = (rotationRate * Float(t)) * (block?(self) ?? 1)
+        self.modelRotation.w += rotation
+    }
+    
+
+    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float4)?) {
+        let rVector = (rotationRate * Float(t)) * (block?(self) ?? float4(1.0, 1.0, 1.0, 0.0))
+        self.modelRotation += rVector
+    }
+}
+
+protocol Translatable: Modelable {
     var translationRate: Float { get set }
     func translateForTime(t: CFTimeInterval, block: (Translatable -> float4)?)
 }
 
-protocol Scalable {
+extension Translatable {
+    func translateForTime(t: CFTimeInterval, block: (Translatable -> float4)?) {
+        let translation = (translationRate * Float(t)) * (block?(self) ?? float4(0.0, 0.0, 0.0, 0.0))
+        self.modelPosition += translation
+    }
+}
+
+protocol Scalable: Modelable {
     var scaleRate: Float { get set }
     func scaleForTime(t: CFTimeInterval, block: (Scalable -> float4)?)
+}
+
+extension Scalable {
+    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float4)?) {
+        let scaleAmount = (scaleRate * Float(t)) * (block?(self) ?? float4(0.0, 0.0, 0.0, 0.0))
+        self.modelScale += scaleAmount
+    }
 }
 
 // nullify alphas and treat colors as though they are coordinate system.
@@ -124,6 +153,7 @@ protocol Modelable: class {
     func setModelableDefaults()
     func calcModelMatrix() -> float4x4
     func updateModelMatrix()
+    func setModelUniformsFrom(model: Modelable)
 }
 
 extension Modelable {
@@ -143,6 +173,13 @@ extension Modelable {
     
     func updateModelMatrix() {
         modelMatrix = calcModelMatrix()
+    }
+    
+    func setModelUniformsFrom(model: Modelable) {
+        modelPosition = model.modelPosition
+        modelRotation = model.modelRotation
+        modelScale = model.modelScale
+        updateModelMatrix()
     }
 }
 

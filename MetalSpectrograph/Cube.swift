@@ -12,6 +12,11 @@ import Metal
 // TODO: how to dynamically swap out vertex colors?
 class Cube<T: protocol<Vertexable, Chunkable>>: Node<T>, Rotatable, Translatable, Scalable, RenderEncodable {
     
+    var rotationRate: Float = 20.0
+    var updateRotationalVectorRate: Float = 0.5
+    var translationRate: Float = 0.5
+    var scaleRate: Float = 0.25
+    
     // TODO: how to make truly generic?
     //  i.e. make cube that works with Vertex & ColorVertex
     //  where a single cubeVertices method produces either Vertex/ColorVertex
@@ -57,38 +62,6 @@ class Cube<T: protocol<Vertexable, Chunkable>>: Node<T>, Rotatable, Translatable
     
     func encode(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, atIndex: 0)
-    }
-    
-    // Rotatable
-    
-    var rotationRate: Float = 20.0
-    func rotateForTime(t: CFTimeInterval, block: (Rotatable -> Float)?) {
-        // TODO: clean this up.  add applyRotation? as default extension to protocol?
-        // - or set up 3D transforms as a protocol?
-        let rotation = (rotationRate * Float(t)) * (block?(self) ?? 1)
-        self.modelRotation.w += rotation
-    }
-    
-    var updateRotationalVectorRate: Float = 0.5
-    func updateRotationalVectorForTime(t: CFTimeInterval, block: (Rotatable -> float4)?) {
-        let rVector = (rotationRate * Float(t)) * (block?(self) ?? float4(1.0, 1.0, 1.0, 0.0))
-        self.modelRotation += rVector
-    }
-    
-    // Translatable
-    
-    var translationRate: Float = 0.5
-    func translateForTime(t: CFTimeInterval, block: (Translatable -> float4)?) {
-        let translation = (translationRate * Float(t)) * (block?(self) ?? float4(0.0, 0.0, 0.0, 0.0))
-        self.modelPosition += translation
-    }
-    
-    // Scalable
-    
-    var scaleRate: Float = 0.25
-    func scaleForTime(t: CFTimeInterval, block: (Scalable -> float4)?) {
-        let scaleAmount = (scaleRate * Float(t)) * (block?(self) ?? float4(0.0, 0.0, 0.0, 0.0))
-        self.modelScale += scaleAmount
     }
     
 }

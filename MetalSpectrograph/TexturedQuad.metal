@@ -60,6 +60,7 @@ fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    
     int quanta = 255*255*255;
     float fQuanta = float(quanta);
     
+    //TODO: instead try with periodic functions
     color = float4((int((color.x + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.y + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.z + colorShift) * quanta) % quanta) / fQuanta,

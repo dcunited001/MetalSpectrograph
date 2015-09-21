@@ -24,6 +24,8 @@ protocol Panable {
     var lastPanLocation: CGPoint! { get set }
 }
 
+//TODO: update panable so i can pass in parameters to determine how the view controller should respond
+
 class CubeViewController: NSViewController {
     var renderer: CubeRenderer!
     var metalView: CubeView!
@@ -54,6 +56,9 @@ class CubeViewController: NSViewController {
         self.view.addSubview(metalView)
         setupGestures()
     }
+    
+    // TODO: experiment with addSubview to properly render UI elements
+    // func addSubview(_ aView: NSView, positioned place: NSWindowOrderingMode, relativeTo otherView: NSView?)
     
     func initSliders() {
         slideScaleX.minValue = 0.0
