@@ -283,7 +283,7 @@ protocol VertexBufferable {
 }
 
 class Node<T: protocol<Vertexable, Chunkable>>: VertexBufferable, Modelable {
-    let name:String
+    var name:String
     
     // VertexBufferable
     var vCount:Int
