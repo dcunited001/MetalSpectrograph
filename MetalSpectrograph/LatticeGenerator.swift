@@ -230,14 +230,14 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         commandBuffer.waitUntilCompleted()
         
         // get output data from metal/gpu into swift
-        let sizeVertices = vertexCount! * sizeof(L.VertexType.self)
-        let data = NSData(bytesNoCopy: triangleOutPtr, length: sizeVertices, freeWhenDone: false)
-        data.getBytes(&triangleOut, length: sizeVertices)
+//        let sizeVertices = vertexCount! * sizeof(L.VertexType.self)
+//        let data = NSData(bytesNoCopy: triangleOutPtr, length: sizeVertices, freeWhenDone: false)
+//        data.getBytes(&triangleOut, length: sizeVertices)
         
 //        var triangleOutOpaquePtr = COpaquePointer(triangleOutPtr)
 //        trianglePtr = UnsafeMutablePointer<L.VertexType>(triangleOutOpaquePtr)
 //        triangleBufferPtr = UnsafeMutableBufferPointer(start: trianglePtr!, count: triangleCount!)
-        
+//        
 //        for index in triangleBufferPtr!.startIndex ..< triangleBufferPtr!.endIndex
 ////            (triangleBufferPtr!.startIndex + 5)
 //        {
@@ -249,11 +249,6 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         generatedLattice.modelRotation = node.modelRotation
         generatedLattice.modelScale = node.modelScale
         generatedLattice.updateModelMatrix()
-        
-        print("Triangle Count: \(triangleCount!)")
-        print("Vertex Count: \(vertexCount!)")
-        print("Vertex Size: \(sizeof(LatticeVertexType))")
-        print("Vertex Bytes: \(vertexBytes)")
 
         return generatedLattice
     }
@@ -267,34 +262,21 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         quadInBuffer = device.newBufferWithLength(4 * N.getVertexSize(), options: .CPUCacheModeDefaultCache)
         quadInBuffer!.label = quadInBufferLabel
         quadInPtr = quadInBuffer!.contents()
-        print(quadInPtr!.memory)
     }
     
     func prepareQuadLatticeConfigBuffer() {
-        print("Lattice Config Size: \(sizeof(QuadLatticeConfig))")
         quadLatticeConfigBuffer = device.newBufferWithBytes(&quadLatticeConfig, length: sizeof(QuadLatticeConfig), options: .CPUCacheModeDefaultCache)
         quadLatticeConfigBuffer!.label = quadLatticeConfigBufferLabel
     }
     
     func prepareTriangleOutBuffer(node: N) {
-//        posix_memalign(&triangleOutPtr, triangleOutByteAlignment, vertexBytes!)
-        
         //TODO: refreshTriangleOutBuffer to free/allocate a new buffer size
-//        let triangleSize:Int32 = Int32(3 * node.getVertexSize())
-//        let numBytes = Int(2 * triangleSize * quadLatticeConfig.size.x * quadLatticeConfig.size.y)
         triangleOutBuffer = device.newBufferWithLength(vertexBytes!, options: .StorageModeShared)
-//        triangleOutBuffer = device.newBufferWithLength(vertexBytes!, options: .CPUCacheModeDefaultCache)
         triangleOutBuffer!.label = triangleOutBufferLabel
         triangleOutPtr = triangleOutBuffer!.contents()
-//        memset(triangleOutPtr, 0, vertexBytes!)
     }
     
     override func encode(computeEncoder: MTLComputeCommandEncoder) {
-        // TODO: move node.getRawVertices() to static method?
-//        print(quadInVertices)
-//        print(sizeof(float4))
-//        print("Vertex Size: \(N.getVertexSize())")
-//        print(4 * N.getVertexSize())
         memcpy(quadInPtr!, &quadInVertices!, 4 * N.getVertexSize())
         computeEncoder.setBuffer(quadInBuffer, offset: 0, atIndex: quadInBufferId)
         computeEncoder.setBuffer(triangleOutBuffer!, offset: 0, atIndex: triangleOutBufferId)

@@ -134,7 +134,7 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
         // output ABC triangle
         tOut[gid].v1.position = v1pos;
         tOut[gid].v1.texCoord = v1tex;
-        tOut[gid].v2.position = v3pos + float4(0.0, 0.0, 0.1, 0.0);
+        tOut[gid].v2.position = v3pos;
         tOut[gid].v2.texCoord = v3tex;
         tOut[gid].v3.position = v2pos;
         tOut[gid].v3.texCoord = v2tex;
@@ -143,11 +143,11 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
         float4 v3tex = findPointOnLine(qIn.A.texCoord, hDirTexture, vDirTexture, quadColNumber + 1, quadRowNumber + 1, config.size.x, config.size.y);
         
         // output BCD triangle
-        tOut[gid].v1.position = v2pos + float4(0.0, 0.0, 0.1, 0.0);;
+        tOut[gid].v1.position = v2pos;
         tOut[gid].v1.texCoord = v2tex;
         tOut[gid].v2.position = v3pos;
         tOut[gid].v2.texCoord = v3tex;
-        tOut[gid].v3.position = v1pos + float4(0.0, 0.0, 0.1, 0.0);;
+        tOut[gid].v3.position = v1pos;
         tOut[gid].v3.texCoord = v1tex;
     }
 }
