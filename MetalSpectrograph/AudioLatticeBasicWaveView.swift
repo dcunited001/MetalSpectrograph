@@ -64,10 +64,9 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     var originalObject: protocol<RenderEncodable,Modelable,VertexBufferable>?
     var latticeGenerator: LG?
     
-    // var lattice: //
-    
-    var latticeRows = 50
-    var latticeCols = 50
+    // TODO: DrawPrimitives is not drawing all the triangles, but doesn't seem to be performance related.
+    var latticeRows = 15
+    var latticeCols = 15
     
     // circular buffer
     
@@ -80,23 +79,20 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     override func configure(view: MetalView) {
         super.configure(view)
         
-        latticeGenerator = LG(device: device!, size: CGSize(width: latticeRows, height: latticeRows))
+        latticeGenerator = LG(device: device!, size: CGSize(width: latticeCols, height: latticeRows))
         latticeGenerator!.configure()
         
         originalObject = object
         object = latticeGenerator!.generateLattice(object as! TexturedQuad<VertexType>)
-        
-//        print(object!.modelPosition)
-//        print(originalObject!.modelPosition)
     }
     
     override func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
         let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
         let quad = object as! Lattice2D<TexturedVertex>
         
-//        quad.rotateForTime(timeSinceLastUpdate) { obj in
-//            return 3.0
-//        }
+        quad.rotateForTime(timeSinceLastUpdate) { obj in
+            return 3.0
+        }
         quad.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
             return -sin(Float(timeSinceStart)/4) *
                 float4(0.5, 0.5, 1.0, 0.0)
@@ -110,6 +106,10 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
 
 class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
     
+    override func setupTexture() {
+        pixelTexture = renderer.inTexture as! ImageTexture
+    }
+
     override func setupRenderer() {
         renderer = ImageLatticeRenderer()
     }

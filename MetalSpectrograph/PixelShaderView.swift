@@ -35,11 +35,8 @@ class PixelShaderViewController: NSViewController {
         metalView = PixelShaderView(frame: rect, device: MTLCreateSystemDefaultDevice())
         renderer.configure(metalView)
         renderer.uniformScale = float4(1.0, 1.0, 1.0, 1.0)
+        setupTexture()
         positionTexture()
-        
-        let bufferTexture = renderer.inTexture as! BufferTexture<TexPixel2D>
-        bufferTexture.writePixels(bufferTexture.randomPixels())
-        pixelTexture = bufferTexture
         metalView.metalViewDelegate = renderer
         
         self.view.addSubview(metalView)
@@ -48,6 +45,14 @@ class PixelShaderViewController: NSViewController {
     
     func setupRenderer() {
         renderer = TexturedQuadRenderer()
+    }
+    
+    func setupTexture() {
+        
+        let bufferTexture = renderer.inTexture as! BufferTexture<TexPixel2D>
+        bufferTexture.writePixels(bufferTexture.randomPixels())
+        pixelTexture = bufferTexture
+        
     }
 
     func positionTexture() {
