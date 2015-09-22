@@ -24,10 +24,7 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
     
     override func setupRenderer() {
         renderer = AudioLatticeRenderer()
-
     }
-    
-    
     
     override func pan(panGesture: NSPanGestureRecognizer){
         if panGesture.state == NSGestureRecognizerState.Changed{
@@ -69,8 +66,8 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     
     // var lattice: //
     
-    var latticeRows = 5 //50
-    var latticeCols = 5 //50
+    var latticeRows = 50
+    var latticeCols = 50
     
     // circular buffer
     
@@ -97,9 +94,9 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
         let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
         let quad = object as! Lattice2D<TexturedVertex>
         
-        quad.rotateForTime(timeSinceLastUpdate) { obj in
-            return 3.0
-        }
+//        quad.rotateForTime(timeSinceLastUpdate) { obj in
+//            return 3.0
+//        }
         quad.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
             return -sin(Float(timeSinceStart)/4) *
                 float4(0.5, 0.5, 1.0, 0.0)

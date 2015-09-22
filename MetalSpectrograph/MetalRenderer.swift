@@ -42,7 +42,7 @@ class MetalRenderer {
     var commandQueue: MTLCommandQueue?
     var shaderLibrary: MTLLibrary?
     var depthState: MTLDepthStencilState?
-        let kInFlightCommandBuffers = 3
+    let kInFlightCommandBuffers = 3
     
     var avaliableResourcesSemaphore: dispatch_semaphore_t
     var mConstantDataBufferIndex: Int

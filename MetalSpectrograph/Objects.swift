@@ -314,7 +314,7 @@ protocol VertexBufferable {
     
     func getVertexSize() -> Int
     static func getVertexSize() -> Int
-    func getRawVertices() -> [Vertexable]
+    func getRawVertices() -> [protocol<Vertexable, Chunkable>]
     func setVertexBuffer(vertices: [Vertexable])
     static func calculateBytes(vertexCount: Int) -> Int
 }
@@ -354,7 +354,7 @@ class Node<T: protocol<Vertexable, Chunkable>>: VertexBufferable, Modelable {
         vertexBuffer.label = "\(T.self) vertices"
     }
     
-    func getRawVertices() -> [Vertexable] {
+    func getRawVertices() -> [protocol<Vertexable, Chunkable>] {
         return []
     }
     
