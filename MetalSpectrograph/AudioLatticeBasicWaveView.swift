@@ -9,6 +9,7 @@
 import Cocoa
 import MetalKit
 import simd
+import EZAudio
 
 class AudioLatticeBasicWaveView: MetalView {
     
@@ -26,6 +27,15 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
         renderer = AudioLatticeRenderer()
     }
     
+    override func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
+            
+            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * absAverage
+        })
+    }
+    
     override func pan(panGesture: NSPanGestureRecognizer){
         if panGesture.state == NSGestureRecognizerState.Changed{
             var pointInView = panGesture.locationInView(self.view)
@@ -33,20 +43,7 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
             var xDelta = Float((lastPanLocation.x - pointInView.x)/self.view.bounds.width) * panSensivity
             var yDelta = Float((lastPanLocation.y - pointInView.y)/self.view.bounds.height) * panSensivity
             
-            //            renderer.perspectiveAngle += xDelta
-            //            renderer.perspectiveNear += yDelta/10
-            //            renderer.perspectiveFar += xDelta
-            //            renderer.projectionEye += [0.0, 0.0, yDelta]
-            //            renderer.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
-            //            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
-            //            renderer.object?.modelPosition += [0.0, 0.0, 0.0, yDelta]
-            //            renderer.object?.modelRotation += [0.0, 0.0, yDelta, 30*xDelta]
-            //                        renderer.object?.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
-            renderer.object!.modelRotation += [0.0, 0.0, yDelta, 60*xDelta]
-            //              renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
-//            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
-            //                        renderer.object?.modelScale += [xDelta, yDelta, 0.0, 0.0]
-            
+            renderer.object?.modelPosition += [xDelta, 0.0, yDelta, 0.0]
             lastPanLocation = pointInView
         } else if panGesture.state == NSGestureRecognizerState.Began{
             lastPanLocation = panGesture.locationInView(self.view)
@@ -144,5 +141,7 @@ class ImageLatticeRenderer: AudioLatticeRenderer {
         
         return true
     }
-
+    
 }
+
+

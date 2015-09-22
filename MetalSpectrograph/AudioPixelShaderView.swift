@@ -35,13 +35,9 @@ class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDel
     func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
 
         dispatch_async(dispatch_get_main_queue(), {
-            var absVector = UnsafeMutablePointer<Float>.alloc(Int(bufferSize))
-            var vectorSumResult = UnsafeMutablePointer<Float>.alloc(1)
+            let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
 
-            vDSP_vabs(buffer[0], 1, absVector, 1, UInt(bufferSize))
-            vDSP_sve(absVector, 1, vectorSumResult, UInt(bufferSize))
-
-            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * (vectorSumResult.memory / Float(bufferSize))
+            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * absAverage
         })
     }
     
