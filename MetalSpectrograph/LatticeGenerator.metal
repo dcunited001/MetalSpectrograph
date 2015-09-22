@@ -104,7 +104,7 @@ struct QuadLatticeConfig {
 kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
                                  device LatticeTextureTriangleInOut *tOut [[ buffer(0) ]],
                                  const device QuadLatticeConfig &config [[ buffer(1) ]],
-                                 const device LatticeTextureVertexInOut *qIn [[ buffer(2) ]]
+                                 const device TexturedQuadIn &qIn [[ buffer(2) ]]
                                  ) {
     
     //TODO: how to interpolate color/texture in a generic way?
@@ -114,22 +114,22 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
     int quadColNumber = (gid - quadRowNumber * elementsPerRow) / 2;
     int triangleIndex = (gid % 2);
     
-    float4 hDir = qIn[1].position - qIn[0].position;
-    float4 hDirTexture = qIn[1].texCoord - qIn[0].texCoord;
+    float4 hDir = qIn.B.position - qIn.A.position;
+    float4 hDirTexture = qIn.B.texCoord - qIn.A.texCoord;
     
-    float4 vDir = qIn[3].position - qIn[0].position;
-    float4 vDirTexture = qIn[3].texCoord - qIn[0].texCoord;
+    float4 vDir = qIn.D.position - qIn.A.position;
+    float4 vDirTexture = qIn.D.texCoord - qIn.A.texCoord;
     
-    float4 v1pos = findPointOnLine(qIn[0].position, hDir, vDir, quadColNumber, quadRowNumber + 1, config.size.x, config.size.y);
-    float4 v1tex = findPointOnLine(qIn[0].texCoord, hDirTexture, vDirTexture, quadColNumber, quadRowNumber + 1, config.size.x, config.size.y);
+    float4 v1pos = findPointOnLine(qIn.A.position, hDir, vDir, quadColNumber, quadRowNumber + 1, config.size.x, config.size.y);
+    float4 v1tex = findPointOnLine(qIn.A.texCoord, hDirTexture, vDirTexture, quadColNumber, quadRowNumber + 1, config.size.x, config.size.y);
     
-    float4 v2pos = findPointOnLine(qIn[0].position, hDir, vDir, quadColNumber + 1, quadRowNumber, config.size.x, config.size.y);
-    float4 v2tex = findPointOnLine(qIn[0].texCoord, hDirTexture, vDirTexture, quadColNumber + 1, quadRowNumber, config.size.x, config.size.y);
+    float4 v2pos = findPointOnLine(qIn.A.position, hDir, vDir, quadColNumber + 1, quadRowNumber, config.size.x, config.size.y);
+    float4 v2tex = findPointOnLine(qIn.A.texCoord, hDirTexture, vDirTexture, quadColNumber + 1, quadRowNumber, config.size.x, config.size.y);
     
     // output only triangles with vertices in order ABC or BCD
     if (triangleIndex == 0) {  // then it's the top triangle
-        float4 v3pos = findPointOnLine(qIn[0].position, hDir, vDir, quadColNumber, quadRowNumber, config.size.x, config.size.y);
-        float4 v3tex = findPointOnLine(qIn[0].texCoord, hDirTexture, vDirTexture, quadColNumber, quadRowNumber, config.size.x, config.size.y);
+        float4 v3pos = findPointOnLine(qIn.A.position, hDir, vDir, quadColNumber, quadRowNumber, config.size.x, config.size.y);
+        float4 v3tex = findPointOnLine(qIn.A.texCoord, hDirTexture, vDirTexture, quadColNumber, quadRowNumber, config.size.x, config.size.y);
         
         // output ABC triangle
         tOut[gid].v1.position = v1pos;
@@ -139,8 +139,8 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
         tOut[gid].v3.position = v2pos;
         tOut[gid].v3.texCoord = v2tex;
     } else { //  then it's the bottom triangle
-        float4 v3pos = findPointOnLine(qIn[0].position, hDir, vDir, quadColNumber + 1, quadRowNumber + 1, config.size.x, config.size.y);
-        float4 v3tex = findPointOnLine(qIn[0].texCoord, hDirTexture, vDirTexture, quadColNumber + 1, quadRowNumber + 1, config.size.x, config.size.y);
+        float4 v3pos = findPointOnLine(qIn.A.position, hDir, vDir, quadColNumber + 1, quadRowNumber + 1, config.size.x, config.size.y);
+        float4 v3tex = findPointOnLine(qIn.A.texCoord, hDirTexture, vDirTexture, quadColNumber + 1, quadRowNumber + 1, config.size.x, config.size.y);
         
         // output BCD triangle
         tOut[gid].v1.position = v2pos;

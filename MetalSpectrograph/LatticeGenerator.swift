@@ -155,12 +155,26 @@ struct QuadLatticeConfig {
     var size: int2
 }
 
+struct QuadIn<V: protocol<Vertexable,Chunkable>> {
+    var A: V
+    var B: V
+    var C: V
+    var D: V
+    
+    init(vertices: [protocol<Vertexable,Chunkable>]) {
+        A = V(chunks: vertices[0].toChunks())
+        B = V(chunks: vertices[1].toChunks())
+        C = V(chunks: vertices[2].toChunks())
+        D = V(chunks: vertices[3].toChunks())
+    }
+}
+
 //generates a rectangular lattice, composed of triangle pairs
 class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEncodable,Modelable,VertexBufferable>>: LatticeGenerator<L, N> {
     typealias LatticeVertexType = L.VertexType
     
     var quadInBuffer: MTLBuffer?
-    var quadInVertices: [Vertexable]?
+    var quadInVertices: QuadIn<LatticeVertexType>?
     var quadInPtr: UnsafeMutablePointer<Void>?
     var quadInBufferId = 2
     var quadInBufferLabel = "quad lattice vertices in"
@@ -196,7 +210,7 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         triangleOut = [LatticeVertexType](count: vertexCount!, repeatedValue: LatticeVertexType(chunks: [float4(-1.0,-1.0,0.0,1.0), float4(0.0,0.0,0.0,0.0)]))
         
         prepareTriangleOutBuffer(node)
-        quadInVertices = node.getRawVertices()
+        quadInVertices = QuadIn<LatticeVertexType>(vertices: node.getRawVertices())
         print(node.getRawVertices())
         
         let commandBuffer = commandQueue.commandBuffer()
@@ -206,17 +220,10 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
 //        
 //        commandBuffer.addCompletedHandler { (cmdBuffer) in
 //            dispatch_semaphore_signal(dispatchSemaphore)
-        //        }
-    
+//        }
+
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
-        
-        //         get output data from metal/gpu into swift
-        let sizeVertices = vertexCount! * sizeof(L.VertexType.self)
-        let data = NSData(bytesNoCopy: triangleOutPtr, length: sizeVertices, freeWhenDone: false)
-        data.getBytes(&triangleOut, length: sizeVertices)
-        
-        print(triangleOut)
         
         var generatedLattice = L(device: device, name: "Lattice", vertexPtr: triangleOutPtr, length: vertexCount!)
         generatedLattice.modelPosition = node.modelPosition
@@ -252,9 +259,7 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
     
     override func encode(computeEncoder: MTLComputeCommandEncoder) {
         memcpy(quadInPtr!, &quadInVertices!, 4 * N.getVertexSize())
-//        computeEncoder.setB
-        computeEncoder.setBytes(quadInPtr!, length: 4 * N.getVertexSize(), atIndex: quadInBufferId)
-//        (quadInBuffer, offset: 0, atIndex: quadInBufferId)
+        computeEncoder.setBuffer(quadInBuffer, offset: 0, atIndex: quadInBufferId)
         computeEncoder.setBuffer(triangleOutBuffer!, offset: 0, atIndex: triangleOutBufferId)
         computeEncoder.setBuffer(quadLatticeConfigBuffer!, offset: 0, atIndex: quadLatticeConfigBufferId)
     }

@@ -43,7 +43,7 @@ class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable
     
     // TODO: set up TexturedQuad to store vertices
     var vertices: [T]
-    override func getRawVertices() -> [Vertexable] {
+    override func getRawVertices() -> [protocol<Vertexable, Chunkable>] {
         // return D A B C
         let verts = TexturedQuad<T>.texturedQuadVertices()
         return [0,1,2,4].map { verts[$0] }
