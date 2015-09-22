@@ -120,18 +120,18 @@ kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
     // - this is probably because the GPU isn't finished drawing or something
 //    if (triangleIndex == 0) {
 //        tOut[gid].v1.position = float4(-1.0, -1.0, 0.0, 1.0);
-//        tOut[gid].v1.texCoord = float4(-1.0, -1.0, 0.0, 0.0);
+//        tOut[gid].v1.texCoord = float4(0.0, 0.0, 0.0, 0.0);
 //        tOut[gid].v2.position = float4(-1.0, 1.0, 0.0, 1.0);
-//        tOut[gid].v2.texCoord = float4(-1.0, 1.0, 0.0, 0.0);
+//        tOut[gid].v2.texCoord = float4(0.0, 1.0, 0.0, 0.0);
 //        tOut[gid].v3.position = float4(1.0, 1.0, 0.0, 1.0);
 //        tOut[gid].v3.texCoord = float4(1.0, 1.0, 0.0, 0.0);
 //    } else {
 //        tOut[gid].v1.position = float4(1.0, 1.0, 0.0, 1.0);
 //        tOut[gid].v1.texCoord = float4(1.0, 1.0, 0.0, 0.0);
 //        tOut[gid].v2.position = float4(1.0, -1.0, 0.0, 1.0);
-//        tOut[gid].v2.texCoord = float4(1.0, -1.0, 0.0, 0.0);
+//        tOut[gid].v2.texCoord = float4(1.0, 0.0, 0.0, 0.0);
 //        tOut[gid].v3.position = float4(-1.0, -1.0, 0.0, 1.0);
-//        tOut[gid].v3.texCoord = float4(-1.0, -1.0, 0.0, 0.0);
+//        tOut[gid].v3.texCoord = float4(0.0, 0.0, 0.0, 0.0);
 //    }
     
     // if i hardcode only vertex coordinate, i get a shape rendering,
