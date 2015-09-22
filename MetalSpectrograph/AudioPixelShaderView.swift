@@ -23,7 +23,7 @@ class AudioPixelShaderView: PixelShaderView {
 
 class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDelegate {
     var microphone: EZMicrophone!
-    var colorShiftChangeRate: Float = 0.5
+    var colorShiftChangeRate: Float = 0.2
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,10 +31,17 @@ class AudioPixelShaderViewController: PixelShaderViewController, EZMicrophoneDel
         self.microphone = EZMicrophone(delegate: self)
         microphone.startFetchingAudio()
     }
-    
+
     func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+
         dispatch_async(dispatch_get_main_queue(), {
-            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * abs(buffer[0].memory)
+            var absVector = UnsafeMutablePointer<Float>.alloc(Int(bufferSize))
+            var vectorSumResult = UnsafeMutablePointer<Float>.alloc(1)
+
+            vDSP_vabs(buffer[0], 1, absVector, 1, UInt(bufferSize))
+            vDSP_sve(absVector, 1, vectorSumResult, UInt(bufferSize))
+
+            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * (vectorSumResult.memory / Float(bufferSize))
         })
     }
     
