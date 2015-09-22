@@ -206,12 +206,8 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         triangleCount = 2 * Int(quadLatticeConfig.size.x * quadLatticeConfig.size.y)
         vertexCount = 3 * triangleCount!
         vertexBytes = sizeof(LatticeVertexType) * vertexCount!
-        
-        triangleOut = [LatticeVertexType](count: vertexCount!, repeatedValue: LatticeVertexType(chunks: [float4(-1.0,-1.0,0.0,1.0), float4(0.0,0.0,0.0,0.0)]))
-        
         prepareTriangleOutBuffer(node)
         quadInVertices = QuadIn<LatticeVertexType>(vertices: node.getRawVertices())
-        print(node.getRawVertices())
         
         let commandBuffer = commandQueue.commandBuffer()
         execute(commandBuffer)
@@ -225,7 +221,7 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
         
-        var generatedLattice = L(device: device, name: "Lattice", vertexPtr: triangleOutPtr, length: vertexCount!)
+        let generatedLattice = L(device: device, name: "Lattice", vertexPtr: triangleOutPtr, length: vertexCount!)
         generatedLattice.modelPosition = node.modelPosition
         generatedLattice.modelRotation = node.modelRotation
         generatedLattice.modelScale = node.modelScale
