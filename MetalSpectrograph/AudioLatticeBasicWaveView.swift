@@ -107,3 +107,42 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     }
     
 }
+
+class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
+    
+    override func setupRenderer() {
+        renderer = ImageLatticeRenderer()
+    }
+    
+}
+
+class ImageLatticeRenderer: AudioLatticeRenderer {
+    let defaultFileName = "metaloopa"
+    let defaultFileExt = "jpg"
+    
+    override init() {
+        super.init()
+        
+        latticeRows = 15
+        latticeCols = 15
+    }
+    
+    override func prepareTexturedQuad(view: MetalView) -> Bool {
+        inTexture = ImageTexture.init(name: defaultFileName as String, ext: defaultFileExt as String)
+        inTexture?.texture
+        
+        guard inTexture!.finalize(device!) else {
+            print("Failed to finalize ImageTexture")
+            return false
+        }
+        
+        inTexture!.texture!.label = "ImageTexture" as String
+        size.width = CGFloat(inTexture!.texture!.width)
+        size.width = CGFloat(inTexture!.texture!.width)
+        
+        object = TexturedQuad<TexturedVertex>(device: device!)
+        
+        return true
+    }
+
+}

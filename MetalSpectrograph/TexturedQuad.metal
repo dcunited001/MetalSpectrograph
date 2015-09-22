@@ -61,6 +61,7 @@ fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    
     float fQuanta = float(quanta);
     
     //TODO: instead try with periodic functions
+    // - also, are high values of color x,y,z limiting the range?
     color = float4((int((color.x + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.y + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.z + colorShift) * quanta) % quanta) / fQuanta,
