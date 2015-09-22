@@ -38,6 +38,8 @@
 		436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F401BA28A6400F50C71 /* ParticleLab.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F431BA2C0E000F50C71 /* BasicTriangle.swift */; settings = {ASSET_TAGS = (); }; };
 		436D3F461BA2C0EB00F50C71 /* BasicTriangleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D3F451BA2C0EB00F50C71 /* BasicTriangleRenderer.swift */; settings = {ASSET_TAGS = (); }; };
+		438238ED1BB131640066B369 /* Lattice.metal in Sources */ = {isa = PBXBuildFile; fileRef = 438238EC1BB131640066B369 /* Lattice.metal */; settings = {ASSET_TAGS = (); }; };
+		438238EF1BB13E2C0066B369 /* AudioBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438238EE1BB13E2C0066B369 /* AudioBuffer.swift */; settings = {ASSET_TAGS = (); }; };
 		439BB90C1B9E86970022BD57 /* come-with-me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB9091B9E86970022BD57 /* come-with-me.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90D1B9E86970022BD57 /* get-to-the-choppa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */; settings = {ASSET_TAGS = (); }; };
 		439BB90E1B9E86970022BD57 /* good-guys.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 439BB90B1B9E86970022BD57 /* good-guys.mp3 */; settings = {ASSET_TAGS = (); }; };
@@ -107,6 +109,8 @@
 		436D3F401BA28A6400F50C71 /* ParticleLab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleLab.swift; sourceTree = "<group>"; };
 		436D3F431BA2C0E000F50C71 /* BasicTriangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTriangle.swift; sourceTree = "<group>"; };
 		436D3F451BA2C0EB00F50C71 /* BasicTriangleRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTriangleRenderer.swift; sourceTree = "<group>"; };
+		438238EC1BB131640066B369 /* Lattice.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Lattice.metal; sourceTree = "<group>"; };
+		438238EE1BB13E2C0066B369 /* AudioBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBuffer.swift; sourceTree = "<group>"; };
 		439BB9091B9E86970022BD57 /* come-with-me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "come-with-me.mp3"; sourceTree = "<group>"; };
 		439BB90A1B9E86970022BD57 /* get-to-the-choppa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "get-to-the-choppa.mp3"; sourceTree = "<group>"; };
 		439BB90B1B9E86970022BD57 /* good-guys.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "good-guys.mp3"; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 		43199F651B9E5B6D0032B120 /* MetalSpectrograph */ = {
 			isa = PBXGroup;
 			children = (
+				438238F01BB13E450066B369 /* Audio */,
 				43AD18171BA104A5004174C1 /* MetalRenderer.swift */,
 				435D834A1BA58074008AEB47 /* BufferProvider.swift */,
 				436965721BAA1E4300D75EB6 /* PixelShaderView.swift */,
@@ -192,7 +197,6 @@
 				436D3F331BA1571300F50C71 /* Default.jpg */,
 				436D3F301BA1523700F50C71 /* TextureLoader */,
 				436D3F2D1BA1373800F50C71 /* Math */,
-				43AD18111BA0F321004174C1 /* Shaders */,
 				43199F661B9E5B6D0032B120 /* AppDelegate.swift */,
 				43199F6C1B9E5B6D0032B120 /* Main.storyboard */,
 				43199F6F1B9E5B6D0032B120 /* Info.plist */,
@@ -309,11 +313,12 @@
 			name = BasicTriangle;
 			sourceTree = "<group>";
 		};
-		43AD18111BA0F321004174C1 /* Shaders */ = {
+		438238F01BB13E450066B369 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				438238EE1BB13E2C0066B369 /* AudioBuffer.swift */,
 			);
-			name = Shaders;
+			name = Audio;
 			sourceTree = "<group>";
 		};
 		43F870021BAB77C100A102F7 /* Lattice */ = {
@@ -321,6 +326,7 @@
 			children = (
 				43F870031BAB77F800A102F7 /* LatticeGenerator.swift */,
 				4321DEB41BAC554B00DFF191 /* LatticeGenerator.metal */,
+				438238EC1BB131640066B369 /* Lattice.metal */,
 			);
 			name = Lattice;
 			sourceTree = "<group>";
@@ -528,6 +534,7 @@
 			files = (
 				436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */,
 				435841551BA31433005609FD /* Cube.swift in Sources */,
+				438238ED1BB131640066B369 /* Lattice.metal in Sources */,
 				4304EB711BA0292000F7A9A8 /* BasicTriangleView.swift in Sources */,
 				436965771BAA5BCC00D75EB6 /* AudioPixelShaderView.swift in Sources */,
 				436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */,
@@ -545,6 +552,7 @@
 				433C94F01BA992C7000DAFE0 /* Spectrogram.metal in Sources */,
 				43AD18131BA0F341004174C1 /* TexturedQuad.metal in Sources */,
 				436D3F441BA2C0E000F50C71 /* BasicTriangle.swift in Sources */,
+				438238EF1BB13E2C0066B369 /* AudioBuffer.swift in Sources */,
 				436D3F411BA28A6400F50C71 /* ParticleLab.swift in Sources */,
 				43F8518C1BAD02E5002A0E07 /* AudioLatticeBasicWaveView.swift in Sources */,
 				434F333E1BA03289000B87A2 /* ParticleController.swift in Sources */,
