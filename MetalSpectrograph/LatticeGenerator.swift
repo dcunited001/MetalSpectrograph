@@ -46,7 +46,6 @@ protocol Lattice {
 }
 
 class Lattice2D<V: protocol<Vertexable, Chunkable>>: Node<V>, Lattice, RenderEncodable, Rotatable, Translatable, Scalable {
-    
     var rotationRate: Float = 20.0
     var updateRotationalVectorRate: Float = 0.5
     var translationRate: Float = 0.5
@@ -67,9 +66,6 @@ class Lattice2D<V: protocol<Vertexable, Chunkable>>: Node<V>, Lattice, RenderEnc
         self.vCount = length
         self.vBytes = Node<V>.calculateBytes(length)
         self.vertexBuffer = self.device.newBufferWithBytes(vertexPtr, length: vBytes, options: .CPUCacheModeDefaultCache)
-        
-        print(self.vCount)
-        print(self.vBytes)
         
         updateModelMatrix()
     }
@@ -229,21 +225,6 @@ class QuadLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<RenderEn
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
         
-        // get output data from metal/gpu into swift
-//        let sizeVertices = vertexCount! * sizeof(L.VertexType.self)
-//        let data = NSData(bytesNoCopy: triangleOutPtr, length: sizeVertices, freeWhenDone: false)
-//        data.getBytes(&triangleOut, length: sizeVertices)
-        
-//        var triangleOutOpaquePtr = COpaquePointer(triangleOutPtr)
-//        trianglePtr = UnsafeMutablePointer<L.VertexType>(triangleOutOpaquePtr)
-//        triangleBufferPtr = UnsafeMutableBufferPointer(start: trianglePtr!, count: triangleCount!)
-//        
-//        for index in triangleBufferPtr!.startIndex ..< triangleBufferPtr!.endIndex
-////            (triangleBufferPtr!.startIndex + 5)
-//        {
-//            print(triangleBufferPtr![index])
-//        }
-        
         var generatedLattice = L(device: device, name: "Lattice", vertexPtr: triangleOutPtr, length: vertexCount!)
         generatedLattice.modelPosition = node.modelPosition
         generatedLattice.modelRotation = node.modelRotation
@@ -309,3 +290,18 @@ class HexLatticeGenerator<L: protocol<Modelable, Lattice>, N: protocol<Modelable
 //    
 //}
 //
+
+// get output data from metal/gpu into swift
+//        let sizeVertices = vertexCount! * sizeof(L.VertexType.self)
+//        let data = NSData(bytesNoCopy: triangleOutPtr, length: sizeVertices, freeWhenDone: false)
+//        data.getBytes(&triangleOut, length: sizeVertices)
+
+//        var triangleOutOpaquePtr = COpaquePointer(triangleOutPtr)
+//        trianglePtr = UnsafeMutablePointer<L.VertexType>(triangleOutOpaquePtr)
+//        triangleBufferPtr = UnsafeMutableBufferPointer(start: trianglePtr!, count: triangleCount!)
+//
+//        for index in triangleBufferPtr!.startIndex ..< triangleBufferPtr!.endIndex
+////            (triangleBufferPtr!.startIndex + 5)
+//        {
+//            print(triangleBufferPtr![index])
+//        }
