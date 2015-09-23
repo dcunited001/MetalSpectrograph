@@ -49,4 +49,6 @@ sides of the visualization
 - polygon tesselation oriented towards a central point or using the
   curvature of the polygon
 - spherical indexing for points (grids of spheres of various sizes)
+- distort perspective of multiple objects using audio (and groups of
+  objects)
 
