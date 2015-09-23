@@ -733,14 +733,14 @@
             <objects>
                 <viewController id="qCe-LY-Deg" customClass="ImageLatticeBasicWaveController" customModule="MetalSpectrograph" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="jwz-3q-W3k">
-                        <rect key="frame" x="0.0" y="0.0" width="700" height="434"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1234" height="1006"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
                     </view>
                 </viewController>
                 <customObject id="w8E-AL-f9t" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-31" y="1355"/>
+            <point key="canvasLocation" x="188" y="1469"/>
         </scene>
         <!--Audio Lattice Basic Wave Controller-->
         <scene sceneID="SMi-lo-FWV">
