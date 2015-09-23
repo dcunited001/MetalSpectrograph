@@ -13,7 +13,7 @@ import EZAudio
 // these classes should help streamline creation of visualizations by handline buffer data access
 // but don't know anything about the objects they expose, only bytes
 
-protocol MetalBuffer {
+protocol MetalBuffer: class {
     var buffer: MTLBuffer? { get set }
     var bufferId: Int? { get set }
     var bytecount: Int? { get set }
@@ -29,6 +29,17 @@ protocol MetalBuffer {
 }
 
 extension MetalBuffer {
+    //TODO: figure out why protocol defaults don't 
+    // work with class hierarchy (subclasses can't override functions
+    // and super is not valid
+}
+
+class ShaderBuffer: MetalBuffer {
+    var buffer: MTLBuffer?
+    var bufferId: Int?
+    var bytecount: Int?
+    var resourceOptions: MTLResourceOptions?
+    
     func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
         //either set buffer/bufferId or subclass and configure it
     }
@@ -61,13 +72,6 @@ extension MetalBuffer {
     }
 }
 
-class ShaderBuffer: MetalBuffer {
-    var buffer: MTLBuffer?
-    var bufferId: Int?
-    var bytecount: Int?
-    var resourceOptions: MTLResourceOptions?
-}
-
 // manages writing texture data
 class TextureBuffer: ShaderBuffer {
     
@@ -89,7 +93,6 @@ class CircularBuffer: ShaderBuffer {
     
     // TODO: set size of items in circular buffer
     var elementSize: Int = 4 // Default to float
-    
     var numRows: Int?
     var circularParams: BaseInput<CircularBufferParams>?
     
@@ -119,12 +122,12 @@ class CircularBuffer: ShaderBuffer {
     }
     
     func prepareCircularParams(stride: Int, start: Int = 0) {
+        numRows = bytecount! / stride / elementSize
         circularParams = BaseInput<CircularBufferParams>()
         circularParams!.data = CircularBufferParams(stride: stride, start: start)
     }
     
-    //TODO: figure out why the fuck it can't recognize that i'm overriding the default implementation
-    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
+    override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
         buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
             free(ptr)
         }
@@ -145,7 +148,8 @@ class CircularBuffer: ShaderBuffer {
         incrementBuffer()
     }
     
-    func writeVertexParams(encoder: MTLRenderCommandEncoder) {
+    override func writeVertexParams(encoder: MTLRenderCommandEncoder) {
+        super.writeVertexParams(encoder)
         circularParams!.writeVertexBytes(encoder)
     }
     
@@ -201,7 +205,7 @@ class NoCopyBuffer<T>: ShaderBuffer {
         bufferDataPtr = UnsafeMutablePointer<T>(bufferVoidPtr!)
     }
     
-    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
+    override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
         //TODO: common deallocator?
         buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .StorageModeShared, deallocator: nil)
     }
@@ -224,14 +228,19 @@ protocol ShaderInput: class {
     
     var data: InputType? { get set }
     var bufferId: Int? { get set }
-    var resourceOptions: MTLResourceOptions? { get set }
     
     func writeComputeBytes(encoder: MTLComputeCommandEncoder)
     func writeVertexBytes(encoder: MTLRenderCommandEncoder)
     func writeFragmentBytes(encoder: MTLRenderCommandEncoder)
 }
 
-extension ShaderInput {
+class BaseInput<T>: ShaderInput {
+    //TODO: evaluate generic here
+    typealias InputType = T
+    
+    var data: InputType? //TODO: can i use AnyObject here?
+    var bufferId: Int?
+    
     func writeComputeBytes(encoder: MTLComputeCommandEncoder) {
         encoder.setBytes(&data!, length: sizeof(InputType), atIndex: bufferId!)
     }
@@ -243,17 +252,6 @@ extension ShaderInput {
     func writeFragmentBytes(encoder: MTLRenderCommandEncoder) {
         encoder.setFragmentBytes(&data!, length: sizeof(InputType), atIndex: bufferId!)
     }
-}
-
-class BaseInput<T>: ShaderInput {
-    //TODO: evaluate generic here
-    typealias InputType = T
-    
-    var data: InputType?
-    var bufferId: Int?
-    var resourceOptions: MTLResourceOptions?
-    
-    // TODO: initializer for data?
 }
 
 // generalize to WaveformMetadataBuffer?
