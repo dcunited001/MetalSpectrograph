@@ -26,6 +26,7 @@ struct LatticeTextureVertexInOut {
 struct WaveformParams {
     int stride;
     int start;
+    int numElements;
 };
 
 struct QuadLatticeConfig {
@@ -34,11 +35,11 @@ struct QuadLatticeConfig {
 
 vertex LatticeTextureVertexInOut audioLatticeCircularWave
 (
- constant LatticeTextureVertexInOut* vin [[ buffer(0) ]],
- const device float4x4& mvp [[ buffer(1) ]],
- constant float* waveformBuffer [[ buffer(2) ]],
- const device WaveformParams &waveformParams [[ buffer(3) ]],
- const device QuadLatticeConfig &latticeParams [[ buffer(4) ]],
+ const device LatticeTextureVertexInOut* vin [[ buffer(0) ]],
+ constant float4x4& mvp [[ buffer(1) ]],
+ const device float* waveformBuffer [[ buffer(2) ]],
+ constant WaveformParams &waveformParams [[ buffer(3) ]],
+ constant QuadLatticeConfig &latticeParams [[ buffer(4) ]],
 // const device float4 &center [[ buffer(5) ]],
  uint vid [[ vertex_id ]])
 {
@@ -79,8 +80,8 @@ vertex LatticeTextureVertexInOut audioLatticeCircularWave
         }
     }
     
-    int waveformIndex = waveformParams.stride * latticeY + latticeX * 10;
-    float waveformZ = waveformBuffer[vid + waveformIndex];
+    int waveformIndex = (waveformParams.start + waveformParams.stride * latticeY) % waveformParams.numElements + latticeX;
+    float waveformZ = waveformBuffer[waveformIndex];
     
     LatticeTextureVertexInOut vout = vin[vid];
     vout.position = vin[vid].position;

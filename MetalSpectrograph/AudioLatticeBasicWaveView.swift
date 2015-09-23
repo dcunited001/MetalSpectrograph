@@ -12,7 +12,14 @@ import simd
 import EZAudio
 
 class AudioLatticeBasicWaveView: MetalView {
-    
+    override init(frame frameRect: CGRect, device: MTLDevice?) {
+        super.init(frame: frameRect, device: device)
+        preferredFramesPerSecond = 60
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
@@ -23,12 +30,18 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
         setupGestures()
     }
     
+    //TODO: not sure why this causes so many issues with nil
+//    override func setupMetalView(frame: CGRect) -> MetalView {
+//        return AudioLatticeBasicWaveView(frame: frame, device: MTLCreateSystemDefaultDevice())
+//    }
+    
     override func setupRenderer() {
         renderer = AudioLatticeRenderer()
     }
     
     override func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
         
+        //TODO: decide on async callback
         dispatch_async(dispatch_get_main_queue(), {
             let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
             
@@ -94,7 +107,7 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     }
     
     func prepareWaveformBuffer() {
-        let numCachedWaveforms = latticeCols
+        let numCachedWaveforms = latticeRows + 1
         let samplesPerUpdate = 512
         
         waveformBuffer = WaveformBuffer()

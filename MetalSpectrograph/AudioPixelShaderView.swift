@@ -60,7 +60,7 @@ class AudioPixelShaderRenderer: TexturedQuadRenderer {
     override init() {
         super.init()
         
-        fragmentShaderName = "texQuadFragmentColorShift"
+        fragmentShaderName = "texQuadFragmentPeriodicColorShift"
         rendererDebugGroupName = "Encode AudioPixelShader"
     }
     
