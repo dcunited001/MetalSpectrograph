@@ -57,14 +57,35 @@ fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    
     constexpr sampler quad_sampler;
     float4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
     
-    int quanta = 255*255*255;
+    int quanta = 255;
     float fQuanta = float(quanta);
     
     //TODO: instead try with periodic functions
     // - also, are high values of color x,y,z limiting the range?
+    
     color = float4((int((color.x + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.y + colorShift) * quanta) % quanta) / fQuanta,
                    (int((color.z + colorShift) * quanta) % quanta) / fQuanta,
+                   1.0);
+    
+    return color;
+}
+
+constant float4 COLOR_SHIFT_RATE = float4(1.0, 3.0, 6.0, 1.0);
+
+fragment float4 texQuadFragmentPeriodicColorShift(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
+                                          texture2d<float>  tex2D     [[ texture(0) ]],
+                                          constant float &colorShift [[ buffer(0) ]])
+{
+    constexpr sampler quad_sampler;
+    float4 color = tex2D.sample(quad_sampler, float2(inFrag.m_TexCoord.x, inFrag.m_TexCoord.y));
+    
+    float colorShiftMax = 1.0;
+    float periodicColorShift = 2 * abs(colorShift - (colorShiftMax / 2));
+//    float periodicColorShift = colorShift;
+    color = float4(sin((color.r + periodicColorShift) * COLOR_SHIFT_RATE.r),
+                   sin((color.g + periodicColorShift) * COLOR_SHIFT_RATE.g),
+                   sin((color.b + periodicColorShift) * COLOR_SHIFT_RATE.b),
                    1.0);
     
     return color;
