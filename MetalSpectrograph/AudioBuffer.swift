@@ -125,7 +125,7 @@ class CircularBuffer: ShaderBuffer {
     
     //TODO: figure out why the fuck it can't recognize that i'm overriding the default implementation
     func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
-        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
+        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
             free(ptr)
         }
     }
@@ -147,6 +147,10 @@ class CircularBuffer: ShaderBuffer {
     
     func writeVertexParams(encoder: MTLRenderCommandEncoder) {
         circularParams!.writeVertexBytes(encoder)
+    }
+    
+    func getAlignedBytecount() -> Int {
+        return ((bytecount! + bufferAlignment) / bufferAlignment) * bufferAlignment
     }
     
     //TODO: writeFragmentParams
