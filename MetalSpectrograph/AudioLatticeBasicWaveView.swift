@@ -32,7 +32,8 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
         dispatch_async(dispatch_get_main_queue(), {
             let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
             
-            (self.renderer as! AudioPixelShaderRenderer).colorShift += self.colorShiftChangeRate * absAverage
+            (self.renderer as! AudioLatticeRenderer).colorShift += self.colorShiftChangeRate * absAverage
+            (self.renderer as! AudioLatticeRenderer).waveformBuffer!.writeBufferRow(buffer[0])
         })
     }
     
@@ -65,7 +66,7 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     var latticeRows = 15
     var latticeCols = 15
     
-    // circular buffer
+    var waveformBuffer: CircularBuffer?
     
     override init() {
         super.init()
@@ -81,6 +82,18 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
         
         originalObject = object
         object = latticeGenerator!.generateLattice(object as! TexturedQuad<VertexType>)
+        
+        prepareWaveformBuffer()
+    }
+    
+    func prepareWaveformBuffer() {
+        let numCachedWaveforms = latticeCols
+        let samplesPerUpdate = 512
+        
+        waveformBuffer = WaveformBuffer()
+        waveformBuffer!.prepareMemory(samplesPerUpdate * numCachedWaveforms * sizeof(Float))
+        waveformBuffer!.prepareCircularParams(samplesPerUpdate)
+        waveformBuffer!.prepareBuffer(device!)
     }
     
     override func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
