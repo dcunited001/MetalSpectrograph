@@ -12,6 +12,12 @@ TODO: image processing camera input
 
 TODO: rewrite nodes to run in chunks? avoids triangle draw max
 
+TODO: find cause of triangle draw max problem
+
+TODO: rewrite and, for all vertex/compute shaders, destructure all
+vertex input.  pass vertices as float4 only, and simply maintain
+indexing between the various texture/color/tensor data.
+
 TODO: explore much more functional rewrite with composition and
 collections
 
