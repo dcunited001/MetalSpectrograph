@@ -20,9 +20,12 @@ protocol MetalBuffer {
     var resourceOptions: MTLResourceOptions? { get set }
     
     func prepareBuffer(device: MTLDevice, options: MTLResourceOptions)
-    func writeCompute(renderEncoder: MTLComputeCommandEncoder)
-    func writeVertex(renderEncoder: MTLRenderCommandEncoder)
-    func writeFragment(renderEncoder: MTLRenderCommandEncoder)
+    func writeCompute(encoder: MTLComputeCommandEncoder)
+    func writeComputeParams(encoder: MTLComputeCommandEncoder)
+    func writeVertex(encoder: MTLRenderCommandEncoder)
+    func writeVertexParams(encoder: MTLRenderCommandEncoder)
+    func writeFragment(encoder: MTLRenderCommandEncoder)
+    func writeFragmentParams(encoder: MTLRenderCommandEncoder)
 }
 
 extension MetalBuffer {
@@ -30,20 +33,31 @@ extension MetalBuffer {
         //either set buffer/bufferId or subclass and configure it
     }
     
-    func writeCompute(renderEncoder: MTLComputeCommandEncoder) {
-        renderEncoder.setBuffer(buffer!, offset: 0, atIndex: bufferId!)
+    func writeCompute(encoder: MTLComputeCommandEncoder) {
+        writeComputeParams(encoder)
+        encoder.setBuffer(buffer!, offset: 0, atIndex: bufferId!)
     }
     
-//    func writeComputeBytes() 
-    
-    func writeVertex(renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setVertexBuffer(buffer!, offset: 0, atIndex: bufferId!)
+    func writeComputeParams(encoder: MTLComputeCommandEncoder) {
+        // override in subclass
     }
     
-//    func writeVertexBytes()
+    func writeVertex(encoder: MTLRenderCommandEncoder) {
+        writeVertexParams(encoder)
+        encoder.setVertexBuffer(buffer!, offset: 0, atIndex: bufferId!)
+    }
     
-    func writeFragment(renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setFragmentBuffer(buffer!, offset: 0, atIndex: bufferId!)
+    func writeVertexParams(encoder: MTLRenderCommandEncoder) {
+        // override in subclass
+    }
+    
+    func writeFragment(encoder: MTLRenderCommandEncoder) {
+        writeFragmentParams(encoder)
+        encoder.setFragmentBuffer(buffer!, offset: 0, atIndex: bufferId!)
+    }
+    
+    func writeFragmentParams(encoder: MTLRenderCommandEncoder) {
+        // override in subclass
     }
 }
 
@@ -59,53 +73,108 @@ class TextureBuffer: ShaderBuffer {
     
 }
 
+struct CircularBufferParams {
+    var stride: Int // in number of elements
+    var start: Int
+}
+
 //TODO: dealloc mem!!!
 
+// works with 1D and 2D.  need separate circular buffer for 3D.
 class CircularBuffer: ShaderBuffer {
-    var stride:Int = 0
+    var bufferAlignment: Int = 0x1000
     private var bufferPtr: UnsafeMutablePointer<Void>?
+    private var currentRow: Int
+
     
-    var strideStartDelegate: ShaderInput?
+    // TODO: set size of items in circular buffer
+    var elementSize: Int = 4 // Default to float
+    
+    var numRows: Int?
+    var circularParams: BaseInput<CircularBufferParams>?
+    
+    override init() {
+        currentRow = 0
+        super.init()
+    }
     
     // circular buffers require writing the buffer and the startpoint
+    
+    func incrementBuffer() {
+        if currentRow == (numRows! - 1) {
+            resetBuffer()
+        } else {
+            currentRow++
+        }
+    }
+    
+    func resetBuffer() {
+        currentRow = 0
+    }
     
     func prepareMemory(bytecount: Int) {
         self.bytecount = bytecount
         bufferPtr = UnsafeMutablePointer<Void>.alloc(bytecount)
-        //TODO: setup start byte shader input
+        posix_memalign(&bufferPtr!, bufferAlignment, bytecount)
+    }
+    
+    func prepareCircularParams(stride: Int, start: Int = 0) {
+        circularParams = BaseInput<CircularBufferParams>()
+        circularParams!.data = CircularBufferParams(stride: stride, start: start)
+    }
+    
+    //TODO: figure out why the fuck it can't recognize that i'm overriding the default implementation
+    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
+        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
+            free(ptr)
+        }
     }
     
     func writeBuffer(ptr: UnsafeMutablePointer<Void>) {
         memcpy(bufferPtr!, ptr, bytecount!)
     }
     
-    func writeBufferRow(ptr: UnsafeMutablePointer<Void>, row: Int) {
-        let startbyte = bufferPtr!.advancedBy(stride * row);
-        let rowBytes = stride == 0 ? bytecount : (bytecount! / stride)
-        memcpy(startbyte, ptr, row)
+    func writeBufferRow(ptr: UnsafeMutablePointer<Void>) {
+        let stride = circularParams!.data!.stride
+        let rowBytes = stride == 0 ? bytecount! : (bytecount! / stride)
+        let startElement = currentRow * stride
+
+        let startbyte = bufferPtr!.advancedBy(startElement * elementSize);
+        memcpy(startbyte, ptr, rowBytes)
+        circularParams!.data!.start = startElement
+        incrementBuffer()
     }
     
-    //TODO: figure out why the fuck it can't recognize that i'm overriding the default implementation
-    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
-        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
-            free(ptr)
-        }
+    func writeVertexParams(encoder: MTLRenderCommandEncoder) {
+        circularParams!.writeVertexBytes(encoder)
     }
+    
+    //TODO: writeFragmentParams
+    //TODO: writeComputeParams
 }
 
 // TODO: class ScalarBuffer: MetalBuffer {} ??
 
 class WaveformBuffer: CircularBuffer {
+    //TODO: init stride to 512 (how to get this from the sample rate?
     //TODO: magnitude scaling for waveform?  or already clamped floats?
+    //TODO: multiple channels of audio
+    
+    func updateWithWavefrom(buffer:UnsafeMutablePointer<UnsafeMutablePointer<Float>>, numberOfChannels: UInt32) {
+        writeBufferRow(buffer[0])
+    }
 }
 
 class FFTBuffer: CircularBuffer {
+    // TODO: init stride to 2048 (how to get this?)
     //TODO: magnitude scaling?
 }
 
 class FFTAverageBuffer: CircularBuffer {
     
 }
+
+// TODO: SpectrogramBuffer // texture buffer for fft data
 
 // TODO: ManagedNoCopyBuffer ... should work in OSX, right?
 
@@ -147,52 +216,53 @@ class NoCopyBuffer<T>: ShaderBuffer {
 
 // writes bytes as input for a buffer, without using MTLBuffer
 protocol ShaderInput: class {
+    typealias InputType
+    
+    var data: InputType? { get set }
     var bufferId: Int? { get set }
-    var bytecount: Int? { get set }
     var resourceOptions: MTLResourceOptions? { get set }
     
-    func writeComputeBytes(renderEncoder: MTLComputeCommandEncoder)
-    func writeVertexBytes(renderEncoder: MTLRenderCommandEncoder)
-    func writeFragmentBytes(renderEncoder: MTLRenderCommandEncoder)
+    func writeComputeBytes(encoder: MTLComputeCommandEncoder)
+    func writeVertexBytes(encoder: MTLRenderCommandEncoder)
+    func writeFragmentBytes(encoder: MTLRenderCommandEncoder)
 }
 
 extension ShaderInput {
-    func writeComputeBytes(renderEncoder: MTLComputeCommandEncoder) {
-        
+    func writeComputeBytes(encoder: MTLComputeCommandEncoder) {
+        encoder.setBytes(&data!, length: sizeof(InputType), atIndex: bufferId!)
     }
     
-    func writeVertexBytes(renderEncoder: MTLRenderCommandEncoder) {
-        
+    func writeVertexBytes(encoder: MTLRenderCommandEncoder) {
+        encoder.setVertexBytes(&data!, length: sizeof(InputType), atIndex: bufferId!)
     }
     
-    func writeFragmentBytes(renderEncoder: MTLRenderCommandEncoder) {
-        
+    func writeFragmentBytes(encoder: MTLRenderCommandEncoder) {
+        encoder.setFragmentBytes(&data!, length: sizeof(InputType), atIndex: bufferId!)
     }
 }
 
-class BaseMetalInput: ShaderInput {
+class BaseInput<T>: ShaderInput {
+    //TODO: evaluate generic here
+    typealias InputType = T
+    
+    var data: InputType?
     var bufferId: Int?
-    var bytecount: Int?
     var resourceOptions: MTLResourceOptions?
     
+    // TODO: initializer for data?
 }
 
 // generalize to WaveformMetadataBuffer?
-class WaveformAbsAvereageInput: BaseMetalInput {
+// TODO: set up struct to contain stereo data
+class WaveformAbsAvereageInput: BaseInput<Float> {
     
-    func configure(device: MTLDevice, options: MTLResourceOptions) {
-        device.newBufferWithLength(bytecount!, options: options)
-    }
-    
-    func writeFragment(renderEncoder: MTLRenderCommandEncoder) {
-        // TODO: update pointer for buffer
-        // TODO: set data -- how to make data generic?
-//        renderEncoder.setFragmentBytes( , offset: 0, atIndex: bufferId!)
+    // TODO: change updateData to receive Float as input?
+    func updateData(buffer:UnsafeMutablePointer<UnsafeMutablePointer<Float>>, bufferSize: UInt32, numberOfChannels: UInt32) {
+        data = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
     }
     
     //TODO: calculate for stereo
     class func waveformAverage(buffer:UnsafeMutablePointer<UnsafeMutablePointer<Float>>, bufferSize: UInt32, numberOfChannels: UInt32) -> Float {
-        
         var absVector = UnsafeMutablePointer<Float>.alloc(Int(bufferSize))
         var vectorSumResult = UnsafeMutablePointer<Float>.alloc(1)
         
