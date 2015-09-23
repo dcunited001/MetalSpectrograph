@@ -42,7 +42,7 @@ class MetalView: MTKView {
         // TODO: create device if not already present
         super.init(frame: frameRect, device: device)
         framebufferOnly = false
-        preferredFramesPerSecond = 30
+        preferredFramesPerSecond = 60
         
         beforeSetupMetal()
         setupMetal()

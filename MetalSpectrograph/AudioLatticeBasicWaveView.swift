@@ -76,16 +76,17 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     var latticeGenerator: LG?
     
     // TODO: DrawPrimitives is not drawing all the triangles, but doesn't seem to be performance related.
-    var latticeRows = 15
-    var latticeCols = 15
+    var latticeRows = 100
+    var latticeCols = 100
     
     var waveformBuffer: CircularBuffer?
     var latticeConfigInput = BaseInput<QuadLatticeConfig>()
     
     override init() {
         super.init()
-        
+
         vertexShaderName = "audioLatticeCircularWave"
+        fragmentShaderName = "texQuadFragmentPeriodicColorShift"
     }
     
     override func configure(view: MetalView) {
@@ -171,8 +172,10 @@ class ImageLatticeRenderer: AudioLatticeRenderer {
     override init() {
         super.init()
         
-        latticeRows = 15
-        latticeCols = 15
+        latticeRows = 70
+        latticeCols = 70
+        
+        fragmentShaderName = "texQuadFragmentPeriodicColorShift"
     }
     
     override func prepareTexturedQuad(view: MetalView) -> Bool {
