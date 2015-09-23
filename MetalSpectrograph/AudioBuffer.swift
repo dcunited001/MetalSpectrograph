@@ -80,6 +80,7 @@ class TextureBuffer: ShaderBuffer {
 struct CircularBufferParams {
     var stride: Int // in number of elements
     var start: Int
+    var numElements: Int // TODO: anyway to access .count() in metal shader?
 }
 
 //TODO: dealloc mem!!!
@@ -124,7 +125,7 @@ class CircularBuffer: ShaderBuffer {
     func prepareCircularParams(stride: Int, start: Int = 0) {
         numRows = bytecount! / stride / elementSize
         circularParams = BaseInput<CircularBufferParams>()
-        circularParams!.data = CircularBufferParams(stride: stride, start: start)
+        circularParams!.data = CircularBufferParams(stride: stride, start: start, numElements: bytecount! / elementSize)
     }
     
     override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
