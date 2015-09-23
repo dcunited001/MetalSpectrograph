@@ -45,7 +45,6 @@ extension MetalBuffer {
     func writeFragment(renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setFragmentBuffer(buffer!, offset: 0, atIndex: bufferId!)
     }
-    
 }
 
 class ShaderBuffer: MetalBuffer {
@@ -53,8 +52,6 @@ class ShaderBuffer: MetalBuffer {
     var bufferId: Int?
     var bytecount: Int?
     var resourceOptions: MTLResourceOptions?
-    
-    
 }
 
 // manages writing texture data
@@ -62,11 +59,57 @@ class TextureBuffer: ShaderBuffer {
     
 }
 
+//TODO: dealloc mem!!!
+
 class CircularBuffer: ShaderBuffer {
+    var stride:Int = 0
+    private var bufferPtr: UnsafeMutablePointer<Void>?
+    
+    var strideStartDelegate: ShaderInput?
+    
+    // circular buffers require writing the buffer and the startpoint
+    
+    func prepareMemory(bytecount: Int) {
+        self.bytecount = bytecount
+        bufferPtr = UnsafeMutablePointer<Void>.alloc(bytecount)
+        //TODO: setup start byte shader input
+    }
+    
+    func writeBuffer(ptr: UnsafeMutablePointer<Void>) {
+        memcpy(bufferPtr!, ptr, bytecount!)
+    }
+    
+    func writeBufferRow(ptr: UnsafeMutablePointer<Void>, row: Int) {
+        let startbyte = bufferPtr!.advancedBy(stride * row);
+        let rowBytes = stride == 0 ? bytecount : (bytecount! / stride)
+        memcpy(startbyte, ptr, row)
+    }
+    
+    //TODO: figure out why the fuck it can't recognize that i'm overriding the default implementation
+    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
+        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
+            free(ptr)
+        }
+    }
+}
+
+// TODO: class ScalarBuffer: MetalBuffer {} ??
+
+class WaveformBuffer: CircularBuffer {
+    //TODO: magnitude scaling for waveform?  or already clamped floats?
+}
+
+class FFTBuffer: CircularBuffer {
+    //TODO: magnitude scaling?
+}
+
+class FFTAverageBuffer: CircularBuffer {
     
 }
 
-// highly performant circular buffer (requires iOS and CPU/GPU integrated architecture)
+// TODO: ManagedNoCopyBuffer ... should work in OSX, right?
+
+// highly performant buffer (requires iOS and CPU/GPU integrated architecture)
 // TODO: decide if generic is required?
 @available(iOS 9.0, *)
 class NoCopyBuffer<T>: ShaderBuffer {
@@ -99,20 +142,6 @@ class NoCopyBuffer<T>: ShaderBuffer {
     func writeBuffer(data: [T]) {
         memcpy(bufferDataPtr!, data, bytecount!)
     }
-}
-
-// TODO: class ScalarBuffer: MetalBuffer {} ??
-
-class WaveformBuffer: CircularBuffer {
-    //TODO: magnitude scaling for waveform?  or already clamped floats?
-}
-
-class FFTBuffer: CircularBuffer {
-    
-}
-
-class FFTAverageBuffer: CircularBuffer {
-    
 }
 
 
