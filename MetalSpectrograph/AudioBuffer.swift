@@ -19,16 +19,16 @@ protocol MetalBuffer {
     var bytecount: Int? { get set }
     var resourceOptions: MTLResourceOptions? { get set }
     
-//    func configure(device: MTLDevice, options: MTLResourceOptions)
+    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions)
     func writeCompute(renderEncoder: MTLComputeCommandEncoder)
     func writeVertex(renderEncoder: MTLRenderCommandEncoder)
     func writeFragment(renderEncoder: MTLRenderCommandEncoder)
 }
 
 extension MetalBuffer {
-//    func configure(device: MTLDevice, options: MTLResourceOptions) {
-//        //either set buffer/bufferId or subclass and configure it
-//    }
+    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
+        //either set buffer/bufferId or subclass and configure it
+    }
     
     func writeCompute(renderEncoder: MTLComputeCommandEncoder) {
         renderEncoder.setBuffer(buffer!, offset: 0, atIndex: bufferId!)
@@ -63,18 +63,56 @@ class TextureBuffer: ShaderBuffer {
 }
 
 class CircularBuffer: ShaderBuffer {
+    
+}
+
+// highly performant circular buffer (requires iOS and CPU/GPU integrated architecture)
+// TODO: decide if generic is required?
+@available(iOS 9.0, *)
+class NoCopyBuffer<T>: ShaderBuffer {
     var stride:Int?
+    var elementSize:Int = sizeof(T)
+    private var bufferPtr: UnsafeMutablePointer<Void>?
+    private var bufferVoidPtr: COpaquePointer?
+    private var bufferDataPtr: UnsafeMutablePointer<T>?
+    var bufferAlignment: Int = 0x1000 // for NoCopy buffers, memory needs needs to be mutliples of 4096
+    
+    func prepareMemory(bytecount: Int) {
+        self.bytecount = bytecount
+        bufferPtr = UnsafeMutablePointer<Void>.alloc(bytecount)
+        posix_memalign(&bufferPtr!, bufferAlignment, bytecount)
+        bufferVoidPtr = COpaquePointer(bufferPtr!)
+        bufferDataPtr = UnsafeMutablePointer<T>(bufferVoidPtr!)
+    }
+    
+    func prepareBuffer(device: MTLDevice, options: MTLResourceOptions) {
+        //TODO: common deallocator?
+        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: bytecount!, options: .StorageModeShared, deallocator: nil)
+    }
+
+    //TODO: decide on how to use similar data access patterns when buffer is specific to a texture
+//    override func initTexture(device: MTLDevice, textureDescriptor: MTLTextureDescriptor) {
+//        //        texture = texBuffer!.newTextureWithDescriptor(textureDescriptor, offset: 0, bytesPerRow: calcBytesPerRow())
+//    }
     
     //mechanism for writing specific bytes
-    
-    
-    
+    func writeBuffer(data: [T]) {
+        memcpy(bufferDataPtr!, data, bytecount!)
+    }
 }
 
 // TODO: class ScalarBuffer: MetalBuffer {} ??
 
 class WaveformBuffer: CircularBuffer {
     //TODO: magnitude scaling for waveform?  or already clamped floats?
+}
+
+class FFTBuffer: CircularBuffer {
+    
+}
+
+class FFTAverageBuffer: CircularBuffer {
+    
 }
 
 
@@ -136,15 +174,6 @@ class WaveformAbsAvereageInput: BaseMetalInput {
     }
     
 }
-
-class FFTBuffer: CircularBuffer {
-    
-}
-
-class FFTAverageBuffer: CircularBuffer {
-    
-}
-
 
 
 
