@@ -9,7 +9,6 @@
 import simd
 import MetalKit
 
-// TODO: abstract textured quad behavior from image-loaded texture behavior
 class TexturedQuadRenderer: BaseRenderer {
     var inTexture: MetalTexture?
 
@@ -82,7 +81,7 @@ class TexturedQuadRenderer: BaseRenderer {
     }
     
     func prepareTexturedQuad(view: MetalView) -> Bool {
-        let bufferedTexture = BufferTexture<TexPixel2D>(size: CGSize(width: view.frame.size.width, height: view.frame.size.height))
+        let bufferedTexture = BufferTexture<TexPixel2D>(size: CGSize(width: view.frame.size.width/4, height: view.frame.size.height/4))
         
         guard bufferedTexture.finalize(device!) else {
             print("Failed to finalize ImageTexture")
