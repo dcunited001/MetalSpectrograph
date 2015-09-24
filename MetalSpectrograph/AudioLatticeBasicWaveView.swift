@@ -220,4 +220,123 @@ class ImageLatticeRenderer: AudioLatticeRenderer {
     
 }
 
+class ImageLatticeFftController: ImageLatticeBasicWaveController {
+    let fftWindowSize:vDSP_Length = 4096
+    var fft: EZAudioFFTRolling!
+    var micSampleRate: Double!
+    
+    var updateFftBufferCounter = 0
+    var updateFftBufferEvery = 5
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        micSampleRate = microphone.audioStreamBasicDescription().mSampleRate
+        setupFFT(micSampleRate)
+        
+        //        renderer.object!.modelRotation = [0.0, 0.0, 1.0, 0.0]
+        colorShiftChangeRate = 0.05
+    }
+    
+    func setupFFT(sampleRate: Float64) {
+        // no delegate on FFT
+        self.fft = EZAudioFFTRolling.fftWithWindowSize(fftWindowSize, sampleRate: Float(sampleRate))
+    }
+    
+    override func setupRenderer() {
+        let fftRenderer = ImageLatticeFftRenderer()
+        fftRenderer.fftWindowSize = fftWindowSize
+        renderer = fftRenderer
+    }
+    
+    override func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
+            let latticeRenderer = (self.renderer as! ImageLatticeFftRenderer)
+            latticeRenderer.colorShift += self.colorShiftChangeRate * absAverage
+            
+            if self.fft != nil {
+                self.updateFftBufferCounter++
+                
+                //TODO: deal with slow FFT init time more appropriately
+                let fftVals = self.fft!.computeFFTWithBuffer(buffer[0], withBufferSize: bufferSize)
+                
+                // slow the rate of buffer updates
+                if self.updateFftBufferCounter % self.updateFftBufferEvery == 0 {
+                    latticeRenderer.fftBuffer!.writeBufferRow(fftVals)
+                }
+            }
+        })
+    }
+    
+    override func pan(panGesture: NSPanGestureRecognizer){
+        if panGesture.state == NSGestureRecognizerState.Changed{
+            var pointInView = panGesture.locationInView(self.view)
+            
+            var xDelta = Float((lastPanLocation.x - pointInView.x)/self.view.bounds.width) * panSensivity
+            var yDelta = Float((lastPanLocation.y - pointInView.y)/self.view.bounds.height) * panSensivity
+            
+            renderer.object?.modelPosition += [0.0, 0.0, yDelta, 0.0]
+            renderer.object?.modelRotation += [0.0, 0.0, 0.0, 90 * xDelta]
+            lastPanLocation = pointInView
+        } else if panGesture.state == NSGestureRecognizerState.Began{
+            lastPanLocation = panGesture.locationInView(self.view)
+        }
+    }
+}
+
+class ImageLatticeFftRenderer: ImageLatticeRenderer {
+    var fftWindowSize:vDSP_Length = 4096
+    var fftBuffer: FFTBuffer?
+//    var latticeConfigInput = BaseInput<QuadLatticeConfig>()
+    
+    override init() {
+        super.init()
+        
+        latticeRows = 15
+        latticeCols = 80
+        fragmentShaderName = "texQuadFragmentPeriodicColorShift"
+    }
+    
+    override func prepareBuffers() {
+        prepareFftBuffers()
+    }
+    
+    func prepareFftBuffers() {
+        let numCachedFft = latticeRows + 1
+        let fftSliceSize = Int(fftWindowSize / 2)
+        
+        fftBuffer = FFTBuffer()
+        fftBuffer!.bufferId = 2
+        fftBuffer!.prepareMemory(fftSliceSize * numCachedFft * sizeof(Float))
+        fftBuffer!.prepareCircularParams(fftSliceSize)
+        fftBuffer!.circularParams!.bufferId = 3
+        //fftParams?
+        fftBuffer!.prepareBuffer(device!)
+    }
+    
+    override func encodeVertexBuffers(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setVertexBuffer(mvpBuffer, offset: 0, atIndex: mvpBufferId)
+        fftBuffer!.writeVertex(renderEncoder)
+        latticeConfigInput.writeVertexBytes(renderEncoder)
+    }
+    
+    override func updateLogic(timeSinceLastUpdate: CFTimeInterval) {
+        let timeSinceStart: CFTimeInterval = CFAbsoluteTimeGetCurrent() - startTime
+        let quad = object as! Lattice2D<TexturedVertex>
+        
+//        quad.rotateForTime(timeSinceLastUpdate) { obj in
+//            return 2.0
+//        }
+//        quad.updateRotationalVectorForTime(timeSinceLastUpdate) { obj in
+//            return -sin(Float(timeSinceStart)/4) *
+//                float4(0.5, 0.5, 1.0, 0.0)
+//        }
+        
+        object!.updateModelMatrix()
+        //update vertex lattice (possibly modulating rows & columns
+    }
+    
+}
 
