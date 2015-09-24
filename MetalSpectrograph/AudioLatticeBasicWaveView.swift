@@ -100,6 +100,7 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
         
         prepareLatticeConfig()
         prepareWaveformBuffer()
+        scaleQuadForLattice()
     }
     
     func prepareLatticeConfig() {
@@ -117,6 +118,10 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
         waveformBuffer!.prepareCircularParams(samplesPerUpdate)
         waveformBuffer!.circularParams!.bufferId = 3
         waveformBuffer!.prepareBuffer(device!)
+    }
+    
+    func scaleQuadForLattice() {
+        object!.modelScale *= float4(Float(latticeRows)/10.0, Float(latticeCols)/10.0, 1.0, 1.0)
     }
     
     override func encodeVertexBuffers(renderEncoder: MTLRenderCommandEncoder) {
