@@ -5,6 +5,13 @@ Metal Spectrograph
 
 TODO: check the quad lattice
 
+TODO: resolve tearing and draw order problems in lattice (change
+backface culling, i think)
+
+TODO: tensors for texture coordinates
+
+TODO: resolve circular buffer problems
+
 TODO: figure out how to modularize the shader files and functions, esp
   to handle mutliple vertex types
 
