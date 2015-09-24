@@ -1,50 +1,6 @@
 Metal Spectrograph
 ==================
 
-### To Do:
-
-TODO: check the quad lattice
-
-TODO: resolve tearing and draw order problems in lattice (change
-backface culling, i think)
-
-TODO: tensors for texture coordinates
-
-TODO: resolve circular buffer problems
-
-TODO: figure out how to modularize the shader files and functions, esp
-  to handle mutliple vertex types
-
-TODO: image processing camera input
-
-TODO: rewrite nodes to run in chunks? avoids triangle draw max
-
-TODO: find cause of triangle draw max problem
-
-TODO: rewrite and, for all vertex/compute shaders, destructure all
-vertex input.  pass vertices as float4 only, and simply maintain
-indexing between the various texture/color/tensor data.
-
-TODO: explore much more functional rewrite with composition and
-collections
-
-TODO: MTLRenderPipelineReflection
-
-TODO: fragment shader where color is distance to point
-
-TODO: vertex shader where position is modified by distance to point
-
-TODO: repetitive image quad shader
-
-TODO: repetitive color triangle shader, where color is changed by impact
-of adjacent cells
-
-TODO: compute functions with pointers.  write maps 4 the triangle to row/col
-& 1D and index on other
-
-TODO: vertex/fragment shaders that stream stereo data into opposite
-sides of the visualization
-
 ### Math ideas:
 
 - update quad lattice generator to just reference triangles?
