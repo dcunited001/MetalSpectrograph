@@ -91,7 +91,6 @@ class CircularBuffer: ShaderBuffer {
     private var bufferPtr: UnsafeMutablePointer<Void>?
     private var currentRow: Int
 
-    
     // TODO: set size of items in circular buffer
     var elementSize: Int = 4 // Default to float
     var numRows: Int?
@@ -129,7 +128,7 @@ class CircularBuffer: ShaderBuffer {
     }
     
     override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
-        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: .CPUCacheModeWriteCombined) { (ptr, bytes) in
+        buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: .StorageModeManaged) { (ptr, bytes) in
             free(ptr)
         }
     }
@@ -146,6 +145,7 @@ class CircularBuffer: ShaderBuffer {
         let startbyte = bufferPtr!.advancedBy(startElement * elementSize);
         memcpy(startbyte, ptr, rowBytes)
         circularParams!.data!.start = startElement
+        buffer!.didModifyRange(NSMakeRange(startbyte.hashValue - rowBytes, startbyte.hashValue))
         incrementBuffer()
     }
     
