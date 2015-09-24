@@ -47,18 +47,22 @@ vertex LatticeTextureVertexInOut audioLatticeCircularWave
     int triangleIndex = triangleId % 2;
     int triangleVertex = vid % 3;
     
-    int elementsPerRow = (2 * latticeParams.size.x);
-    int latticeRow = triangleId / elementsPerRow;
-    int latticeCol = (triangleId - latticeRow * elementsPerRow) / 2;
+    int trianglesPerRow = (2 * latticeParams.size.x);
+    int latticeRow = triangleId / trianglesPerRow;
+    int latticeCol = (triangleId - latticeRow * trianglesPerRow) / 2;
     
     int latticeX = latticeCol;
     int latticeY = latticeRow;
     
-    // A ---- B ---- W
+    // A ---- B ---- X
     // | 0   /| 2   /|
     // |   /  |   /  |
-    // | /  1 | /   3|
-    // D ---- C ---- X
+    // | /  1 | /  3 |
+    // D ---- C ---- Y
+    // | 4   /| 6   /|
+    // |   /  |   /  |
+    // | /  5 | /  7 |
+    // E ---- F ---- Z
     
     if (triangleIndex == 0) {
         if (triangleVertex == 0) {

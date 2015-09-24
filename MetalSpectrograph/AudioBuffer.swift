@@ -139,13 +139,16 @@ class CircularBuffer: ShaderBuffer {
     
     func writeBufferRow(ptr: UnsafeMutablePointer<Void>) {
         let stride = circularParams!.data!.stride
-        let rowBytes = stride == 0 ? bytecount! : (bytecount! / stride)
+        let colBytes = stride == 0 ? bytecount! : (bytecount! / stride)
+        let rowBytes = stride * elementSize
         let startElement = currentRow * stride
 
         let startbyte = bufferPtr!.advancedBy(startElement * elementSize);
+        
         memcpy(startbyte, ptr, rowBytes)
         circularParams!.data!.start = startElement
-        buffer!.didModifyRange(NSMakeRange(startbyte.hashValue - rowBytes, startbyte.hashValue))
+        //NOTE: looks pretty cool when didModifyRange is removed
+        buffer!.didModifyRange(NSMakeRange(startElement * elementSize, startElement * elementSize + rowBytes))
         incrementBuffer()
     }
     
