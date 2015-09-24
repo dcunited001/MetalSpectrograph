@@ -76,8 +76,8 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
     var latticeGenerator: LG?
     
     // TODO: DrawPrimitives is not drawing all the triangles, but doesn't seem to be performance related.
-    var latticeRows = 100
-    var latticeCols = 100
+    var latticeRows = 25
+    var latticeCols = 20
     
     var waveformBuffer: CircularBuffer?
     var latticeConfigInput = BaseInput<QuadLatticeConfig>()
@@ -172,8 +172,8 @@ class ImageLatticeRenderer: AudioLatticeRenderer {
     override init() {
         super.init()
         
-        latticeRows = 70
-        latticeCols = 70
+        latticeRows = 25
+        latticeCols = 20
         
         fragmentShaderName = "texQuadFragmentPeriodicColorShift"
     }
