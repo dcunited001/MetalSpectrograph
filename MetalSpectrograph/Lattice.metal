@@ -38,7 +38,7 @@ vertex LatticeTextureVertexInOut audioLatticeCircularWave
  const device LatticeTextureVertexInOut* vin [[ buffer(0) ]],
  constant float4x4& mvp [[ buffer(1) ]],
  const device float* waveformBuffer [[ buffer(2) ]],
- constant WaveformParams &waveformParams [[ buffer(3) ]],
+ const device WaveformParams &waveformParams [[ buffer(3) ]],
  constant QuadLatticeConfig &latticeParams [[ buffer(4) ]],
 // const device float4 &center [[ buffer(5) ]],
  uint vid [[ vertex_id ]])
@@ -84,8 +84,8 @@ vertex LatticeTextureVertexInOut audioLatticeCircularWave
         }
     }
     
-    int waveformIndex = (waveformParams.start + waveformParams.stride * latticeY) % waveformParams.numElements + latticeX;
-    float waveformZ = waveformBuffer[waveformIndex];
+    int waveformStartIndex = (waveformParams.start + waveformParams.stride * latticeY) % waveformParams.numElements;
+    float waveformZ = waveformBuffer[waveformStartIndex + latticeX*10];
     
     LatticeTextureVertexInOut vout = vin[vid];
     vout.position = vin[vid].position;
