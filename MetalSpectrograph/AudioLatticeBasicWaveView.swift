@@ -150,9 +150,6 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
 
 class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
     
-    var callsToMicrophone = 0
-    var callsToUpdate = 0
-    
     override func setupTexture() {
         pixelTexture = renderer.inTexture as! ImageTexture
     }
@@ -163,10 +160,7 @@ class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
     
     override func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
         
-        print("In Microphone: \(callsToMicrophone++)")
-        
         dispatch_async(dispatch_get_main_queue(), {
-            print("In Async: \(self.callsToUpdate++)")
             let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
             
             (self.renderer as! AudioLatticeRenderer).colorShift += self.colorShiftChangeRate * absAverage
