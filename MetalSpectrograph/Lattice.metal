@@ -84,8 +84,14 @@ vertex LatticeTextureVertexInOut audioLatticeCircularWave
         }
     }
     
-    int waveformStartIndex = (waveformParams.start + waveformParams.stride * latticeY) % waveformParams.numElements;
-    float waveformZ = waveformBuffer[waveformStartIndex + latticeX*10];
+//    int sampleSpacing = 10;
+    int sampleSpacing = 2;
+    int waveformStartIndex = (waveformParams.start + waveformParams.stride * latticeY) % waveformParams.numElements + latticeX*sampleSpacing;
+    
+    //TODO: try step() function
+    
+    float waveformZ = (waveformBuffer[waveformStartIndex] +
+    waveformBuffer[waveformStartIndex + sampleSpacing/2]) / 2;
     
     LatticeTextureVertexInOut vout = vin[vid];
     vout.position = vin[vid].position;

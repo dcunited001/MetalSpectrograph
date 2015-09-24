@@ -71,7 +71,7 @@ fragment float4 texQuadFragmentColorShift(TexturedQuadVertexInOut     inFrag    
     return color;
 }
 
-constant float4 COLOR_SHIFT_RATE = float4(1.0, 3.0, 6.0, 1.0);
+constant float4 COLOR_SHIFT_RATE = float4(1.0, 3.0, 5.0, 1.0);
 
 fragment float4 texQuadFragmentPeriodicColorShift(TexturedQuadVertexInOut     inFrag    [[ stage_in ]],
                                           texture2d<float>  tex2D     [[ texture(0) ]],

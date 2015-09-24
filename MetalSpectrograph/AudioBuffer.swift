@@ -128,6 +128,7 @@ class CircularBuffer: ShaderBuffer {
     }
     
     override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
+        // apparently 421KB is too many bytes
         buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: .StorageModeManaged) { (ptr, bytes) in
             free(ptr)
         }
@@ -168,8 +169,8 @@ class CircularBuffer: ShaderBuffer {
 // TODO: class ScalarBuffer: MetalBuffer {} ??
 
 class WaveformBuffer: CircularBuffer {
-    //TODO: init stride to 512 (how to get this from the sample rate?
-    //TODO: magnitude scaling for waveform?  or already clamped floats?
+    //TODO: init stride to 512 (how to get this from EZAudio?)
+    //TODO: magnitude scaling for waveform? or already clamped floats?
     //TODO: multiple channels of audio
     
     func updateWithWavefrom(buffer:UnsafeMutablePointer<UnsafeMutablePointer<Float>>, numberOfChannels: UInt32) {
@@ -180,6 +181,10 @@ class WaveformBuffer: CircularBuffer {
 class FFTBuffer: CircularBuffer {
     // TODO: init stride to 2048 (how to get this?)
     //TODO: magnitude scaling?
+    
+    func updateWithFft(buffer:UnsafeMutablePointer<Float>, numberOfChannels: UInt32) {
+        writeBufferRow(buffer)
+    }
 }
 
 class FFTAverageBuffer: CircularBuffer {

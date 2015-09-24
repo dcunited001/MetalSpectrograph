@@ -99,13 +99,17 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
         object = latticeGenerator!.generateLattice(object as! TexturedQuad<VertexType>)
         
         prepareLatticeConfig()
-        prepareWaveformBuffer()
+        prepareBuffers()
         scaleQuadForLattice()
     }
     
     func prepareLatticeConfig() {
         latticeConfigInput.data = QuadLatticeConfig(size: int2(Int32(latticeCols), Int32(latticeRows)))
         latticeConfigInput.bufferId = 4
+    }
+    
+    func prepareBuffers() {
+        prepareWaveformBuffer()
     }
     
     func prepareWaveformBuffer() {
@@ -150,6 +154,14 @@ class AudioLatticeRenderer: AudioPixelShaderRenderer {
 
 class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
     
+    var updateWaveformBufferCounter = 0
+    var updateWaveformBufferEvery = 5
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        colorShiftChangeRate = 0.05
+    }
+    
     override func setupTexture() {
         pixelTexture = renderer.inTexture as! ImageTexture
     }
@@ -163,8 +175,13 @@ class ImageLatticeBasicWaveController: AudioPixelShaderViewController {
         dispatch_async(dispatch_get_main_queue(), {
             let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
             
+            self.updateWaveformBufferCounter++
+            
             (self.renderer as! AudioLatticeRenderer).colorShift += self.colorShiftChangeRate * absAverage
-            (self.renderer as! AudioLatticeRenderer).waveformBuffer!.writeBufferRow(buffer[0])
+            
+            if self.updateWaveformBufferCounter % self.updateWaveformBufferEvery == 0 {
+                (self.renderer as! AudioLatticeRenderer).waveformBuffer!.writeBufferRow(buffer[0])
+            }
         })
     }
     
@@ -177,7 +194,7 @@ class ImageLatticeRenderer: AudioLatticeRenderer {
     override init() {
         super.init()
         
-        latticeRows = 25
+        latticeRows = 50
         latticeCols = 20
         
         fragmentShaderName = "texQuadFragmentPeriodicColorShift"
