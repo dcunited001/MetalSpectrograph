@@ -44,6 +44,7 @@
 		43AD18131BA0F341004174C1 /* TexturedQuad.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18121BA0F341004174C1 /* TexturedQuad.metal */; settings = {ASSET_TAGS = (); }; };
 		43AD18181BA104A5004174C1 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AD18171BA104A5004174C1 /* MetalRenderer.swift */; settings = {ASSET_TAGS = (); }; };
 		43DC06211B9F9ABD0087357D /* MetalLooperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DC06201B9F9ABD0087357D /* MetalLooperController.swift */; settings = {ASSET_TAGS = (); }; };
+		43F7EF031BB3FF7D00FB1E61 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F7EF021BB3FF7D00FB1E61 /* Node.swift */; settings = {ASSET_TAGS = (); }; };
 		43F8518C1BAD02E5002A0E07 /* AudioLatticeBasicWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F8518B1BAD02E5002A0E07 /* AudioLatticeBasicWaveView.swift */; settings = {ASSET_TAGS = (); }; };
 		43F851901BAE01DD002A0E07 /* metaloopa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 43F8518F1BAE01DD002A0E07 /* metaloopa.jpg */; settings = {ASSET_TAGS = (); }; };
 		43F870011BAB77B800A102F7 /* Generators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F870001BAB77B800A102F7 /* Generators.swift */; settings = {ASSET_TAGS = (); }; };
@@ -111,6 +112,7 @@
 		43AD18121BA0F341004174C1 /* TexturedQuad.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = TexturedQuad.metal; sourceTree = "<group>"; };
 		43AD18171BA104A5004174C1 /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		43DC06201B9F9ABD0087357D /* MetalLooperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalLooperController.swift; sourceTree = "<group>"; };
+		43F7EF021BB3FF7D00FB1E61 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		43F8518B1BAD02E5002A0E07 /* AudioLatticeBasicWaveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioLatticeBasicWaveView.swift; sourceTree = "<group>"; };
 		43F8518F1BAE01DD002A0E07 /* metaloopa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = metaloopa.jpg; sourceTree = "<group>"; };
 		43F870001BAB77B800A102F7 /* Generators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Generators.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				436D3F381BA288A500F50C71 /* TexturedQuad */,
 				435841561BA3148A005609FD /* Objects.swift */,
 				43F870001BAB77B800A102F7 /* Generators.swift */,
+				43F7EF021BB3FF7D00FB1E61 /* Node.swift */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				436D3F3F1BA2897F00F50C71 /* TexturedQuadRenderer.swift in Sources */,
 				435841551BA31433005609FD /* Cube.swift in Sources */,
 				438238ED1BB131640066B369 /* Lattice.metal in Sources */,
+				43F7EF031BB3FF7D00FB1E61 /* Node.swift in Sources */,
 				4304EB711BA0292000F7A9A8 /* BasicTriangleView.swift in Sources */,
 				436965771BAA5BCC00D75EB6 /* AudioPixelShaderView.swift in Sources */,
 				436D3F321BA1524E00F50C71 /* MetalTexture.swift in Sources */,

@@ -13,7 +13,7 @@ import EZAudio
 // these classes should help streamline creation of visualizations by handline buffer data access
 // but don't know anything about the objects they expose, only bytes
 
-protocol MetalBuffer: class {
+protocol SpectraMetalBuffer: class {
     var buffer: MTLBuffer? { get set }
     var bufferId: Int? { get set }
     var bytecount: Int? { get set }
@@ -28,13 +28,7 @@ protocol MetalBuffer: class {
     func writeFragmentParams(encoder: MTLRenderCommandEncoder)
 }
 
-extension MetalBuffer {
-    //TODO: figure out why protocol defaults don't 
-    // work with class hierarchy (subclasses can't override functions
-    // and super is not valid
-}
-
-class ShaderBuffer: MetalBuffer {
+class SpectraBuffer: SpectraMetalBuffer {
     var buffer: MTLBuffer?
     var bufferId: Int?
     var bytecount: Int?
@@ -73,9 +67,11 @@ class ShaderBuffer: MetalBuffer {
 }
 
 // manages writing texture data
-class TextureBuffer: ShaderBuffer {
-    
-}
+//class TextureBuffer: ShaderBuffer {
+//    
+//}
+
+// class TensorBuffer
 
 struct CircularBufferParams {
     var stride: Int // in number of elements
@@ -86,7 +82,7 @@ struct CircularBufferParams {
 //TODO: dealloc mem!!!
 
 // works with 1D and 2D.  need separate circular buffer for 3D.
-class CircularBuffer: ShaderBuffer {
+class CircularBuffer: SpectraBuffer {
     var bufferAlignment: Int = 0x1000
     private var bufferPtr: UnsafeMutablePointer<Void>?
     private var currentRow: Int
@@ -149,7 +145,8 @@ class CircularBuffer: ShaderBuffer {
         memcpy(startbyte, ptr, rowBytes)
         circularParams!.data!.start = startElement
         //NOTE: looks pretty cool when didModifyRange is removed
-        buffer!.didModifyRange(NSMakeRange(startElement * elementSize, startElement * elementSize + rowBytes))
+//        buffer!.didModifyRange(NSMakeRange(startElement * elementSize, startElement * elementSize + rowBytes))
+        buffer!.didModifyRange(NSMakeRange(0, bytecount!))
         incrementBuffer()
     }
     
@@ -198,7 +195,7 @@ class FFTAverageBuffer: CircularBuffer {
 // highly performant buffer (requires iOS and CPU/GPU integrated architecture)
 // TODO: decide if generic is required?
 @available(iOS 9.0, *)
-class NoCopyBuffer<T>: ShaderBuffer {
+class NoCopyBuffer<T>: SpectraBuffer {
     var stride:Int?
     var elementSize:Int = sizeof(T)
     private var bufferPtr: UnsafeMutablePointer<Void>?
@@ -232,7 +229,7 @@ class NoCopyBuffer<T>: ShaderBuffer {
 
 
 // writes bytes as input for a buffer, without using MTLBuffer
-protocol ShaderInput: class {
+protocol SpectraMetalInput: class {
     typealias InputType
     
     var data: InputType? { get set }
@@ -243,7 +240,8 @@ protocol ShaderInput: class {
     func writeFragmentBytes(encoder: MTLRenderCommandEncoder)
 }
 
-class BaseInput<T>: ShaderInput {
+// genericize with float4 & float4x4
+class SpectraInput<T>: SpectraMetalInput {
     //TODO: evaluate generic here
     typealias InputType = T
     
@@ -265,7 +263,7 @@ class BaseInput<T>: ShaderInput {
 
 // generalize to WaveformMetadataBuffer?
 // TODO: set up struct to contain stereo data
-class WaveformAbsAvereageInput: BaseInput<Float> {
+class WaveformAbsAvereageInput: SpectraInput<Float> {
     
     // TODO: change updateData to receive Float as input?
     func updateData(buffer:UnsafeMutablePointer<UnsafeMutablePointer<Float>>, bufferSize: UInt32, numberOfChannels: UInt32) {
