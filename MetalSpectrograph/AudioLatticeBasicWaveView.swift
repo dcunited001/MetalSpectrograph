@@ -24,13 +24,16 @@ class AudioLatticeBasicWaveView: MetalView {
 
 class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
     
+    var updateWaveformBufferCounter = 0
+    var updateWaveformBufferEvery = 5
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         renderer.object!.setModelUniformsFrom((renderer as! AudioLatticeRenderer).originalObject!)
         setupGestures()
     }
-    
-    //TODO: not sure why this causes so many issues with nil
+
+// TODO: not sure why this causes so many issues with nil
 //    override func setupMetalView(frame: CGRect) -> MetalView {
 //        return AudioLatticeBasicWaveView(frame: frame, device: MTLCreateSystemDefaultDevice())
 //    }
@@ -45,8 +48,13 @@ class AudioLatticeBasicWaveController: AudioPixelShaderViewController {
         dispatch_async(dispatch_get_main_queue(), {
             let absAverage = WaveformAbsAvereageInput.waveformAverage(buffer, bufferSize: bufferSize, numberOfChannels: numberOfChannels)
             
+            self.updateWaveformBufferCounter++
+            
             (self.renderer as! AudioLatticeRenderer).colorShift += self.colorShiftChangeRate * absAverage
-            (self.renderer as! AudioLatticeRenderer).waveformBuffer!.writeBufferRow(buffer[0])
+            
+            if self.updateWaveformBufferCounter % self.updateWaveformBufferEvery == 0 {
+                (self.renderer as! AudioLatticeRenderer).waveformBuffer!.writeBufferRow(buffer[0])
+            }
         })
     }
     
