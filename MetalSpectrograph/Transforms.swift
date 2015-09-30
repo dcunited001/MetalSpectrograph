@@ -220,6 +220,23 @@ class Metal3DTransforms {
         
         return float4x4([P, Q, R, S])
     }
+//    
+//    static matrix_float4x4 matrix_from_perspective_fov_aspectLH(const float fovY, const float aspect, const float nearZ, const float farZ) {
+//    // 1 / tan == cot
+//    float yscale = 1.0f / tanf(fovY * 0.5f);
+//    float xscale = yscale / aspect;
+//    float q = farZ / (farZ - nearZ);
+//    
+//    matrix_float4x4 m = {
+//    .columns[0] = { xscale, 0.0f, 0.0f, 0.0f },
+//    .columns[1] = { 0.0f, yscale, 0.0f, 0.0f },
+//    .columns[2] = { 0.0f, 0.0f, q, 1.0f },
+//    .columns[3] = { 0.0f, 0.0f, q * -nearZ, 0.0f }
+//    };
+//    
+//    return m;
+//    }
+    
     
     class func perspectiveFov(fovy:Float, width:Float, height:Float, near:Float, far:Float) -> float4x4 {
         let aspect:Float = width / height

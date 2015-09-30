@@ -103,6 +103,23 @@ struct QuadLatticeConfig {
 // - to produce new lattice with num triangles t(n) = 2 * size.x * size.y
 kernel void quadLatticeGenerator(uint gid [[ thread_position_in_grid ]],
                                  device LatticeTextureTriangleInOut *tOut [[ buffer(0) ]],
+                                 //
+                                 
+                                 //triangle-vertex map
+                                 // 1 -> [1,2,3] ; 2 -> [2,3,4]
+                                 
+                                 // array float4x4
+                                 // 
+                                 
+                                 // 1 -> [1,2,3] ; 2 -> [4,5,6]
+                                 
+                                 // vertex-triangle map
+                                 // 1 -> 1 ; 2 -> 1 ; 3 -> 1 ...
+                                 // 1 -> [1,4]
+                                 
+                                 // vertex-tensor map
+                                 // 1 -> [2, 3, 4, 5, 6, 7]
+                                 // 1 -> [2, 3, 4, .... 12, 13]
                                  const device QuadLatticeConfig &config [[ buffer(1) ]],
                                  const device TexturedQuadIn &qIn [[ buffer(2) ]]
                                  ) {

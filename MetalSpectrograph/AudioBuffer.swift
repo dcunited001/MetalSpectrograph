@@ -82,7 +82,7 @@ struct CircularBufferParams {
 
 // works with 1D and 2D.  need separate circular buffer for 3D.
 class CircularBuffer: ShaderBuffer {
-    var bufferAlignment: Int = 0x1000
+    var bufferAlignment: Int = 0x1000 // 4096
     private var bufferPtr: UnsafeMutablePointer<Void>?
     private var currentRow: Int
 
@@ -99,10 +99,10 @@ class CircularBuffer: ShaderBuffer {
     // circular buffers require writing the buffer and the startpoint
     
     func incrementBuffer() {
-        if currentRow == (numRows! - 1) {
-            resetBuffer()
-        } else {
+        if currentRow < numRows! {
             currentRow++
+        } else {
+            resetBuffer()
         }
     }
     
@@ -112,6 +112,10 @@ class CircularBuffer: ShaderBuffer {
     
     func prepareMemory(bytecount: Int) {
         self.bytecount = bytecount
+        
+        // TODO: look into problems with bytecount & alignment
+        // - requesting memory here
+        // - then asking for a different size of memory in prepareBuffer
         bufferPtr = UnsafeMutablePointer<Void>.alloc(bytecount)
         posix_memalign(&bufferPtr!, bufferAlignment, bytecount)
     }
@@ -122,7 +126,8 @@ class CircularBuffer: ShaderBuffer {
         circularParams!.data = CircularBufferParams(stride: stride, start: start, numElements: bytecount! / elementSize)
     }
     
-    override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
+//    override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .CPUCacheModeWriteCombined) {
+    override func prepareBuffer(device: MTLDevice, options: MTLResourceOptions = .StorageModeManaged) {
         // apparently 421KB is too many bytes
         buffer = device.newBufferWithBytesNoCopy(bufferPtr!, length: getAlignedBytecount(), options: options) { (ptr, bytes) in
             free(ptr)
@@ -139,12 +144,14 @@ class CircularBuffer: ShaderBuffer {
         let rowBytes = stride * elementSize
         let startElement = currentRow * stride
 
-        let startbyte = bufferPtr!.advancedBy(startElement * elementSize);
+//        let startbyte = bufferPtr!.advancedBy(startElement * elementSize);
+        let startbyte = bufferPtr!.advancedBy(startElement);
         
         memcpy(startbyte, ptr, rowBytes)
         circularParams!.data!.start = startElement
-        //NOTE: looks pretty cool when didModifyRange is removed
-        buffer!.didModifyRange(NSMakeRange(startElement * elementSize, startElement * elementSize + rowBytes))
+//        //NOTE: looks pretty cool when didModifyRange is removed
+//        buffer!.didModifyRange(NSMakeRange(startElement * sizeof(float4), startElement * sizeof(float4) + rowBytes))
+        buffer!.didModifyRange(NSMakeRange(startElement, startElement + stride))
         incrementBuffer()
     }
     
