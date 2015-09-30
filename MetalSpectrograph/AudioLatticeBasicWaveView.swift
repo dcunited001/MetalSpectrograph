@@ -234,7 +234,7 @@ class ImageLatticeFftController: ImageLatticeBasicWaveController {
     var micSampleRate: Double!
     
     var updateFftBufferCounter = 0
-    var updateFftBufferEvery = 5
+    var updateFftBufferEvery = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()

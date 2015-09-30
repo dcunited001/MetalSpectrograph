@@ -7,8 +7,7 @@
 //  Copyright © 2015 Voxxel. All rights reserved.
 //
 
-import Foundation
-import Cocoa
+//import Cocoa
 import MetalKit
 
 let AAPLBuffersInflightBuffers: Int = 3;
@@ -16,7 +15,7 @@ let AAPLBuffersInflightBuffers: Int = 3;
 protocol MetalViewDelegate: class {
     func updateLogic(timeSinceLastUpdate: CFTimeInterval)
     func renderObjects(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
-    func encode(renderEncoder: MTLRenderCommandEncoder)
+//    func encode(renderEncoder: MTLRenderCommandEncoder)
 }
 
 //TODO: set default behaviors when setup delegates aren't implemented?
@@ -41,7 +40,9 @@ class MetalView: MTKView {
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         // TODO: create device if not already present
         super.init(frame: frameRect, device: device)
-        framebufferOnly = false
+        
+        //TODO: framebufferOnly might be why particleLab failed on OSX!
+        framebufferOnly = true
         preferredFramesPerSecond = 60
         
         beforeSetupMetal()

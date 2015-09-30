@@ -13,7 +13,6 @@ Metal Renderer for Metal Basic 3D. Acts as the update and render delegate for th
 */
 
 import simd
-import Cocoa
 import MetalKit
 
 // TODO: merge MetalRenderer & MetalView(MTKView)
@@ -64,7 +63,7 @@ class MetalRenderer {
         view.depthPixelFormat = .Depth32Float
         view.colorPixelFormat = MTLPixelFormat.BGRA8Unorm // ?? correct
         view.stencilPixelFormat = MTLPixelFormat.Invalid
-        view.sampleCount = 1
+        view.sampleCount = 2
         
         guard let viewDevice = view.device else {
             print("Failed retrieving device from view")

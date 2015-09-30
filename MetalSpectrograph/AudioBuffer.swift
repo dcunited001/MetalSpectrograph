@@ -190,8 +190,6 @@ class FFTAverageBuffer: CircularBuffer {
 
 // TODO: ManagedNoCopyBuffer ... should work in OSX, right?
 
-
-
 // writes bytes as input for a buffer, without using MTLBuffer
 protocol ShaderInput: class {
     typealias InputType
