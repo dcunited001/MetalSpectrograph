@@ -674,7 +674,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0CB7BD44A089D32869BAAA06 /* Pods-MetalSpectrograph.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MetalSpectrograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -687,7 +686,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8F61A2C54C542F45C30821AC /* Pods-MetalSpectrograph.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MetalSpectrograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

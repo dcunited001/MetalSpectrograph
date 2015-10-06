@@ -57,7 +57,6 @@ class TexturedQuad<T: protocol<Vertexable, Chunkable>>: Node<T>, RenderEncodable
     var quadScale: float2 = float2(1.0)
     
     init(device: MTLDevice) {
-        
         vertices = TexturedQuad<T>.texturedQuadVertices()
         super.init(name: "TexturedQuad", vertices: vertices, device: device)
         

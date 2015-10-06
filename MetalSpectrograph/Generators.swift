@@ -73,8 +73,6 @@ class ComputeGenerator {
         let threadExecutionWidth = getThreadExecutionWidth()
         let threadsPerThreadgroup = getThreadsPerThreadgroup(threadExecutionWidth)
         let threadgroupsPerGrid = getThreadgroupsPerGrid(threadExecutionWidth)
-        
-        print(threadExecutionWidth, threadsPerThreadgroup, threadgroupsPerGrid)
 
         computeEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
         computeEncoder.endEncoding()

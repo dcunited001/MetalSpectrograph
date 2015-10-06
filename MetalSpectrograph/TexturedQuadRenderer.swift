@@ -56,9 +56,7 @@ class TexturedQuadRenderer: BaseRenderer {
         
 //        pipelineStateDescriptor.depthAttachmentPixelFormat = view.depthPixelFormat!
         pipelineStateDescriptor.depthAttachmentPixelFormat = .Invalid
-
         pipelineStateDescriptor.stencilAttachmentPixelFormat = view.stencilPixelFormat!
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
         pipelineStateDescriptor.sampleCount = view.sampleCount
         
         do {

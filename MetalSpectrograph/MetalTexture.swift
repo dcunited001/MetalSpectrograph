@@ -6,7 +6,6 @@
 //  Copyright © 2015 Voxxel. All rights reserved.
 //
 
-
 import Cocoa
 import MetalKit
 import Quartz
@@ -59,8 +58,6 @@ struct TexPixel2D: Colorable {
 }
 
 class BufferTexture<T: Colorable>: MetalTexture {
-    var texBuffer: MTLBuffer?
-    
     var pixelSize:Int = sizeof(T)
     private var pixelsPtr: UnsafeMutablePointer<Void> = nil
     private var pixelsVoidPtr: COpaquePointer?
@@ -117,7 +114,6 @@ class BufferTexture<T: Colorable>: MetalTexture {
         let texDesc = createTextureDesc()
         
         initPixels()
-        initTextureBuffer(device)
         initTexture(device, textureDescriptor: texDesc)
         return true
     }
@@ -127,24 +123,13 @@ class BufferTexture<T: Colorable>: MetalTexture {
         memset(pixelsPtr, 0, calcTotalBytes())
     }
     
-    func initTextureBuffer(device: MTLDevice) {
-        texBuffer = device.newBufferWithBytes(pixelsPtr, length: calcTotalBytes(), options: .CPUCacheModeWriteCombined)
-//        texBuffer = device.newBufferWithLength(calcTotalBytes(), options: .CPUCacheModeWriteCombined)
-//        pixelsPtr = texBuffer!.contents()
-//        let totalBytes = calcTotalBytes()
-//        let totalPageBytes = calcTotalPages(totalBytes) * pixelsAlignment
-//        texBuffer = device.newBufferWithBytesNoCopy(pixelsPtr, length: totalPageBytes, options: .CPUCacheModeWriteCombined, deallocator: nil)
-    }
-    
     func initTexture(device: MTLDevice, textureDescriptor: MTLTextureDescriptor) {
         texture = device.newTextureWithDescriptor(textureDescriptor)
-//        texture = texBuffer!.newTextureWithDescriptor(textureDescriptor, offset: 0, bytesPerRow: calcBytesPerRow())
     }
     
     func createTextureDesc() -> MTLTextureDescriptor {
         let texDesc = MTLTextureDescriptor.texture2DDescriptorWithPixelFormat(format, width: width, height: height, mipmapped: false)
         target = texDesc.textureType
-//        texDesc.resourceOptions = .CPUCacheModeWriteCombined
         
         return texDesc
     }
