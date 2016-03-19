@@ -181,7 +181,7 @@ class ParticleLabView: MetalView, MetalViewDelegate {
     func afterRender() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0))
             {
-                particleLabDelegate?.particleLabDidUpdate()
+                self.particleLabDelegate?.particleLabDidUpdate()
         }
     }
     
